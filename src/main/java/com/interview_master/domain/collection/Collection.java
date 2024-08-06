@@ -3,15 +3,18 @@ package com.interview_master.domain.collection;
 import com.interview_master.domain.Access;
 import com.interview_master.domain.BaseEntity;
 import jakarta.persistence.Embedded;
-import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 
 @Entity
 public class Collection extends BaseEntity {
-    @EmbeddedId
-    private CollectionId id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
     @Embedded
     private CollectionName name;

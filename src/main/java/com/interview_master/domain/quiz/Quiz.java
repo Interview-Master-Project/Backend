@@ -4,18 +4,21 @@ import com.interview_master.domain.Access;
 import com.interview_master.domain.BaseEntity;
 import jakarta.persistence.AccessType;
 import jakarta.persistence.Embedded;
-import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "quiz")
 @jakarta.persistence.Access(AccessType.FIELD)
 public class Quiz extends BaseEntity {
-    @EmbeddedId
-    private QuizId id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
     @Embedded
     private CollectionInfo collectionInfo;
