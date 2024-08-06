@@ -1,4 +1,4 @@
-package com.interview_master.domain.quiz;
+package com.interview_master.domain.collection;
 
 import jakarta.persistence.Embeddable;
 import lombok.AllArgsConstructor;
@@ -9,6 +9,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
-public class Answer {
-    private String answer;
+public class CollectionName {
+    private String name;
 }
