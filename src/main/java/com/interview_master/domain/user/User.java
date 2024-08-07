@@ -1,12 +1,8 @@
 package com.interview_master.domain.user;
 
 import com.interview_master.domain.BaseEntity;
-import jakarta.persistence.Embedded;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import com.interview_master.login.OAuthProvider;
+import jakarta.persistence.*;
 import lombok.Getter;
 
 @Entity
@@ -23,11 +19,15 @@ public class User extends BaseEntity {
     @Embedded
     private Email email;
 
+    @Enumerated(EnumType.STRING)
+    private OAuthProvider oAuthProvider;
+
     protected User() {}
 
-    public User(Nickname nickname, Email email) {
+    public User(Nickname nickname, Email email, OAuthProvider oAuthProvider) {
         setNickname(nickname);
         setEmail(email);
+        setOAuthProvider(oAuthProvider);
     }
 
     private void setNickname(Nickname nickname) {
@@ -36,6 +36,10 @@ public class User extends BaseEntity {
 
     private void setEmail(Email email) {
         this.email = email;
+    }
+
+    private void setOAuthProvider(OAuthProvider oAuthProvider) {
+        this.oAuthProvider = oAuthProvider;
     }
 }
 
