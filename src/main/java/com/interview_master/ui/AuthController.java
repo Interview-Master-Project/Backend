@@ -1,5 +1,7 @@
 package com.interview_master.ui;
 
+import static com.interview_master.common.constant.SessionConst.LOGIN_USER;
+
 import com.interview_master.domain.user.User;
 import com.interview_master.login.NaverLoginParams;
 import com.interview_master.login.OAuthLoginService;
@@ -31,7 +33,7 @@ public class AuthController {
         User user = oAuthLoginService.login(params);
 
         HttpSession session = request.getSession();
-        session.setAttribute("user", user);
+        session.setAttribute(LOGIN_USER, user);
         
         return ResponseEntity.ok(user);
     }
