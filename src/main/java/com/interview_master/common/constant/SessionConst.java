@@ -1,0 +1,9 @@
+package com.interview_master.common.constant;
+
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
+
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
+public class SessionConst {
+    public static final String LOGIN_USER = "user";
+}
