@@ -2,13 +2,7 @@ package com.interview_master.domain.collection;
 
 import com.interview_master.domain.Access;
 import com.interview_master.domain.BaseEntity;
-import jakarta.persistence.Embedded;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 @Entity
 public class Collection extends BaseEntity {
@@ -19,13 +13,16 @@ public class Collection extends BaseEntity {
     @Embedded
     private CollectionName name;
 
+    private Long creatorId;
+
     @Enumerated(EnumType.STRING)
     private Access access;
 
     protected Collection() {}
 
-    public Collection(CollectionName name, Access access) {
+    public Collection(CollectionName name, Long creatorId, Access access) {
         setName(name);
+        setCreatorId(creatorId);
         setAccess(access);
     }
 
@@ -52,5 +49,9 @@ public class Collection extends BaseEntity {
 
     private void setAccess(Access access) {
         this.access = access;
+    }
+
+    private void setCreatorId(Long creatorId) {
+        this.creatorId = creatorId;
     }
 }

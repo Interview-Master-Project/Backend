@@ -4,9 +4,8 @@ import com.interview_master.domain.quiz.Answer;
 import com.interview_master.domain.quiz.CollectionInfo;
 import com.interview_master.domain.quiz.Question;
 import com.interview_master.domain.quiz.Quiz;
-import com.interview_master.domain.quiz.QuizCreator;
-import com.interview_master.infrastructure.QuizRepository;
 import com.interview_master.domain.user.User;
+import com.interview_master.infrastructure.QuizRepository;
 import com.interview_master.ui.QuizRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -24,8 +23,7 @@ public class CreateQuizService {
             quizRequest.getCollectionId(), quizRequest.getCollectionName());
 
         Quiz newQuiz = new Quiz(collectionInfo, new Question(quizRequest.getQuestion()),
-            new Answer(quizRequest.getAnswer()), new QuizCreator(user.getId(), user.getNickname()),
-            quizRequest.getAccess());
+            new Answer(quizRequest.getAnswer()), user.getId(), quizRequest.getAccess());
 
         quizRepository.save(newQuiz);
     }
