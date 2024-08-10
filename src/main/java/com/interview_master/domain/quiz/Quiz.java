@@ -12,14 +12,13 @@ public class Quiz extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Embedded
-    private CollectionInfo collectionInfo;
+    @Column(name = "collection_id")
+    private Long collectionId;
 
-    @Embedded
-    private Question question;
+    private String question;
 
-    @Embedded
-    private Answer answer;
+    @Column(columnDefinition = "TEXT")
+    private String answer;
 
     private Long creatorId;
 
@@ -29,8 +28,8 @@ public class Quiz extends BaseEntity {
     protected Quiz() {
     }
 
-    public Quiz(CollectionInfo collectionInfo, Question question, Answer answer, Long creatorId, Access access) {
-        setCollectionInfo(collectionInfo);
+    public Quiz(Long collectionId, String question, String answer, Long creatorId, Access access) {
+        setCollectionInfo(collectionId);
         setQuestion(question);
         setAnswer(answer);
         setCreatorId(creatorId);
@@ -39,8 +38,8 @@ public class Quiz extends BaseEntity {
 
     // domain logic
     public void edit(EditQuizDTO editQuizDTO) {
-        Question newQuestion = editQuizDTO.getNewQuestion();
-        Answer newAnswer = editQuizDTO.getNewAnswer();
+        String newQuestion = editQuizDTO.getNewQuestion();
+        String newAnswer = editQuizDTO.getNewAnswer();
         Access newAccess = editQuizDTO.getNewAccess();
 
         boolean questionChanged = newQuestion != null && !newQuestion.equals(this.question);
@@ -59,17 +58,17 @@ public class Quiz extends BaseEntity {
     }
 
     // setter
-    private void setCollectionInfo(CollectionInfo collectionInfo) {
-        if (collectionInfo == null) throw new IllegalArgumentException("no collection info");
-        this.collectionInfo = collectionInfo;
+    private void setCollectionInfo(Long collectionId) {
+        if (collectionId == null) throw new IllegalArgumentException("no collection info");
+        this.collectionId = collectionId;
     }
 
-    private void setQuestion(Question question) {
+    private void setQuestion(String question) {
         if (question == null) throw new IllegalArgumentException("no question");
         this.question = question;
     }
 
-    private void setAnswer(Answer answer) {
+    private void setAnswer(String answer) {
         if (answer == null) throw new IllegalArgumentException("no answer");
         this.answer = answer;
     }

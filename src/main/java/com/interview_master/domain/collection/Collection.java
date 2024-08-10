@@ -10,8 +10,7 @@ public class Collection extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Embedded
-    private CollectionName name;
+    private String name;
 
     private Long creatorId;
 
@@ -20,7 +19,7 @@ public class Collection extends BaseEntity {
 
     protected Collection() {}
 
-    public Collection(CollectionName name, Long creatorId, Access access) {
+    public Collection(String name, Long creatorId, Access access) {
         setName(name);
         setCreatorId(creatorId);
         setAccess(access);
@@ -29,7 +28,7 @@ public class Collection extends BaseEntity {
     // domain logic
 
     public void editCollection(EditCollectionDTO editCollectionDTO) {
-        CollectionName newName = editCollectionDTO.getNewName();
+        String newName = editCollectionDTO.getNewName();
         Access newAccess = editCollectionDTO.getNewAccess();
 
         boolean nameChanged = newName != null && !newName.equals(this.name);
@@ -43,7 +42,7 @@ public class Collection extends BaseEntity {
         }
     }
 
-    private void setName(CollectionName name) {
+    private void setName(String name) {
         this.name = name;
     }
 

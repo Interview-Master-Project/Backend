@@ -1,8 +1,5 @@
 package com.interview_master.application;
 
-import com.interview_master.domain.quiz.Answer;
-import com.interview_master.domain.quiz.CollectionInfo;
-import com.interview_master.domain.quiz.Question;
 import com.interview_master.domain.quiz.Quiz;
 import com.interview_master.domain.user.User;
 import com.interview_master.infrastructure.QuizRepository;
@@ -19,11 +16,8 @@ public class CreateQuizService {
 
     @Transactional
     public void createQuiz(QuizRequest quizRequest, User user) {
-        CollectionInfo collectionInfo = new CollectionInfo(
-            quizRequest.getCollectionId(), quizRequest.getCollectionName());
-
-        Quiz newQuiz = new Quiz(collectionInfo, new Question(quizRequest.getQuestion()),
-            new Answer(quizRequest.getAnswer()), user.getId(), quizRequest.getAccess());
+        Quiz newQuiz = new Quiz(quizRequest.getCollectionId(), quizRequest.getQuestion(),
+                quizRequest.getAnswer(), user.getId(), quizRequest.getAccess());
 
         quizRepository.save(newQuiz);
     }

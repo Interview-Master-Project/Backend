@@ -5,6 +5,6 @@ import lombok.Getter;
 
 @Getter
 public class EditCollectionDTO {
-    private CollectionName newName;
+    private String newName;
     private Access newAccess;
 }
