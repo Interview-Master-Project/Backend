@@ -1,7 +1,9 @@
-package com.interview_master.login;
+package com.interview_master.login.naver;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.interview_master.login.OAuthInfoResponse;
+import com.interview_master.login.OAuthProvider;
 import lombok.Getter;
 
 @Getter

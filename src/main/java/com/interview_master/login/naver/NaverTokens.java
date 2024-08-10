@@ -1,4 +1,4 @@
-package com.interview_master.login;
+package com.interview_master.login.naver;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;

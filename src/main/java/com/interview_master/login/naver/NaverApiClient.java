@@ -1,5 +1,9 @@
-package com.interview_master.login;
+package com.interview_master.login.naver;
 
+import com.interview_master.login.OAuthApiClient;
+import com.interview_master.login.OAuthInfoResponse;
+import com.interview_master.login.OAuthLoginParams;
+import com.interview_master.login.OAuthProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
