@@ -2,15 +2,7 @@ package com.interview_master.domain.quiz;
 
 import com.interview_master.domain.Access;
 import com.interview_master.domain.BaseEntity;
-import jakarta.persistence.AccessType;
-import jakarta.persistence.Embedded;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
 @Entity
 @Table(name = "quiz")
@@ -29,8 +21,7 @@ public class Quiz extends BaseEntity {
     @Embedded
     private Answer answer;
 
-    @Embedded
-    private QuizCreator creator;
+    private Long creatorId;
 
     @Enumerated(EnumType.STRING)
     private Access access;
@@ -38,11 +29,11 @@ public class Quiz extends BaseEntity {
     protected Quiz() {
     }
 
-    public Quiz(CollectionInfo collectionInfo, Question question, Answer answer, QuizCreator creator, Access access) {
+    public Quiz(CollectionInfo collectionInfo, Question question, Answer answer, Long creatorId, Access access) {
         setCollectionInfo(collectionInfo);
         setQuestion(question);
         setAnswer(answer);
-        setCreator(creator);
+        setCreatorId(creatorId);
         this.access = access;
     }
 
@@ -83,9 +74,9 @@ public class Quiz extends BaseEntity {
         this.answer = answer;
     }
 
-    private void setCreator(QuizCreator creator) {
-        if (creator == null) throw new IllegalArgumentException("no creator");
-        this.creator = creator;
+    private void setCreatorId(Long creatorId) {
+        if (creatorId == null) throw new IllegalArgumentException("no creator");
+        this.creatorId = creatorId;
     }
 }
 
