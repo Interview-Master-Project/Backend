@@ -1,5 +1,7 @@
-package com.interview_master.login;
+package com.interview_master.login.naver;
 
+import com.interview_master.login.OAuthLoginParams;
+import com.interview_master.login.OAuthProvider;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -9,7 +11,7 @@ import org.springframework.util.MultiValueMap;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class NaverLoginParams implements OAuthLoginParams{
+public class NaverLoginParams implements OAuthLoginParams {
     private String authorizationCode;
     private String state;
 
