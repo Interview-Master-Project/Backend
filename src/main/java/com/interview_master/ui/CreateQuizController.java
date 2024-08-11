@@ -1,6 +1,7 @@
 package com.interview_master.ui;
 
 import com.interview_master.application.CreateQuizService;
+import com.interview_master.ui.request.QuizInput;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -16,7 +17,7 @@ public class CreateQuizController {
     private final CreateQuizService createQuizService;
 
     @PostMapping()
-    public ResponseEntity<String> createQuiz(@RequestBody @Valid QuizRequest quizRequest ) {
+    public ResponseEntity<String> createQuiz(@RequestBody @Valid QuizInput quizInput) {
 
         return ResponseEntity.ok("질문 생성 성공!");
     }

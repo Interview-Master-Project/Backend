@@ -15,7 +15,7 @@ type Collection {
     id: ID!
     name: String!
     access: Access!
-    creator: Member
+    creatorId: ID!
     quizzes: [Quiz]
     isDeleted: Boolean!
     createdAt: String!
@@ -41,8 +41,8 @@ type Quiz {
     id: ID!
     question: String!
     answer: String!
-    collection: Collection
-    creator: Member
+    collectionId: ID!
+    creatorId: ID!
     access: Access!
     quizResults: [QuizResult]
     isDeleted: Boolean!
@@ -54,7 +54,7 @@ type Quiz {
 type QuizResult {
     id: ID!
     quiz: Quiz!
-    user: Member!
+    userId: ID!
     correctAttempts: Int!
     wrongAttempts: Int!
     isDeleted: Boolean!
@@ -71,4 +71,17 @@ enum Access {
 enum OAuthProvider {
     KAKAO
     NAVER
+}
+
+# Mutation (Read 제외 CUD 담당)
+type Mutation {
+    createQuiz(quizInput: QuizInput!): String!
+}
+
+input QuizInput {
+    question: String!
+    answer: String!
+    collectionId: ID!
+    creatorId: ID!
+    access: Access!
 }

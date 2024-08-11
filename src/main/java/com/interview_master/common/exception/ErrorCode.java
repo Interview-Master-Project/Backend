@@ -11,7 +11,11 @@ public enum ErrorCode {
     UNAUTHORIZED_USER(HttpStatus.UNAUTHORIZED, "미인증 유저의 요청입니다."),
 
     // QUIZ
-    QUIZ_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 질문은 없는 질문입니다."),
+    QUIZ_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 질문은 존재하지 않습니다."),
+
+
+    // COLLECTION
+    COLLECTION_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 컬렉션은 존재하지 않습니다."),
 
     ;
 
