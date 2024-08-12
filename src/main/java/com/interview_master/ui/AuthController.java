@@ -36,6 +36,7 @@ public class AuthController {
     public ResponseEntity<User> loginNaver(@RequestBody NaverLoginParams params, HttpServletRequest request) {
         log.info("{} login params {}, {}", "Naver", params.getAuthorizationCode(), params.getState());
         User user = login(params, request);
+        log.info("{} login user info {}, {}", "Naver", user.getId(), user.getNickname());
 
         return ResponseEntity.ok(user);
     }
