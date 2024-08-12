@@ -13,28 +13,26 @@ public class User extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Embedded
-    private Nickname nickname;
+    private String nickname;
 
-    @Embedded
-    private Email email;
+    private String email;
 
     @Enumerated(EnumType.STRING)
     private OAuthProvider oAuthProvider;
 
     protected User() {}
 
-    public User(Nickname nickname, Email email, OAuthProvider oAuthProvider) {
+    public User(String nickname, String email, OAuthProvider oAuthProvider) {
         setNickname(nickname);
         setEmail(email);
         setOAuthProvider(oAuthProvider);
     }
 
-    private void setNickname(Nickname nickname) {
+    private void setNickname(String nickname) {
         this.nickname = nickname;
     }
 
-    private void setEmail(Email email) {
+    private void setEmail(String email) {
         this.email = email;
     }
 

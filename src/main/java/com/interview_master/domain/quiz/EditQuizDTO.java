@@ -5,12 +5,10 @@ import lombok.Getter;
 
 @Getter
 public class EditQuizDTO {
-    private final Question newQuestion;
-    private final Answer newAnswer;
+    private final String newAnswer;
     private final Access newAccess;
 
-    public EditQuizDTO(Question newQuestion, Answer newAnswer, Access newAccess) {
-        this.newQuestion = newQuestion;
+    public EditQuizDTO(String newAnswer, Access newAccess) {
         this.newAnswer = newAnswer;
         this.newAccess = newAccess;
     }

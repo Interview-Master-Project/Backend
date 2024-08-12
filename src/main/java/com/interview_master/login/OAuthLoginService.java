@@ -1,7 +1,6 @@
 package com.interview_master.login;
 
 import com.interview_master.domain.user.Email;
-import com.interview_master.domain.user.Nickname;
 import com.interview_master.domain.user.User;
 import com.interview_master.infrastructure.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -25,8 +24,8 @@ public class OAuthLoginService {
 
     private User newUser(OAuthInfoResponse oAuthInfoResponse) {
         User newUser = new User(
-                new Nickname(oAuthInfoResponse.getNickname()),
-                new Email(oAuthInfoResponse.getEmail()),
+                oAuthInfoResponse.getNickname(),
+                oAuthInfoResponse.getEmail(),
                 oAuthInfoResponse.getOAuthProvider());
         return userRepository.save(newUser);
     }
