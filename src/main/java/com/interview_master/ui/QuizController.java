@@ -33,8 +33,8 @@ public class QuizController {
 
     @QueryMapping
     public List<Quiz> getMyQuiz() {
-        Long userId = ExtractUserId.extractUserIdFromContextHolder();
-        log.info("======== getMyQuiz : {}", userId);
-        return quizService.findByUserId(userId);
+        Long currentUserId = ExtractUserId.extractUserIdFromContextHolder();
+        log.info("======== getMyQuiz : {}", currentUserId);
+        return quizService.findByUserId(currentUserId);
     }
 }
