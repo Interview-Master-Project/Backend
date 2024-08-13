@@ -23,6 +23,4 @@ public class QuizInput {
 
     @NotNull(message = "공개 여부 선택은 필수 입니다.")
     private Access access;
-
-    private Long creatorId;
 }
