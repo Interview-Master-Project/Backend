@@ -1,15 +1,18 @@
 package com.interview_master.common.interceptor;
 
-import static com.interview_master.common.constant.TokenConst.TOKEN_HEADER;
+import static com.interview_master.common.constant.Constant.TOKEN_KEY;
+import static com.interview_master.common.constant.Constant.USER_ID;
 
 import com.interview_master.common.exception.ApiException;
 import com.interview_master.common.exception.ErrorCode;
 import com.interview_master.common.token.AuthTokenGenerator;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
@@ -28,18 +31,33 @@ public class LoginCheckInterceptor implements HandlerInterceptor {
         String requestURI = request.getRequestURI();
         log.info("인증 체크 인터셉터 실행 {}", requestURI);
 
-        String accessToken = request.getHeader(TOKEN_HEADER);
+        // CORS 방지 : OPTIONS 메서드로 사전 요청 오면 다 pass
+        if (HttpMethod.OPTIONS.matches(request.getMethod())) {
+            return true;
+        }
 
-        if (accessToken == null) {
+        String token = null;
+
+        // 모든 쿠키를 가져와서 "authorization-token" 쿠키를 찾음
+        if (request.getCookies() != null) {
+            for (Cookie cookie : request.getCookies()) {
+                if (TOKEN_KEY.equals(cookie.getName())) {
+                    token = cookie.getValue();
+                    break;
+                }
+            }
+        }
+
+        if (token == null) {
             throw new ApiException(ErrorCode.AUTHORIZATION_TOKEN_NOT_FOUND);
         }
 
-        Long userId = authTokenGenerator.extractUserId(accessToken);
+        Long userId = authTokenGenerator.extractUserId(token);
 
         if (userId != null) {
             RequestAttributes requestContext = Objects.requireNonNull(
                 RequestContextHolder.getRequestAttributes());
-            requestContext.setAttribute("userId", userId,
+            requestContext.setAttribute(USER_ID, userId,
                 RequestAttributes.SCOPE_REQUEST);
             return true;
         }
