@@ -1,5 +1,7 @@
 package com.interview_master.login;
 
+import com.interview_master.common.token.AuthTokenGenerator;
+import com.interview_master.common.token.AuthTokens;
 import com.interview_master.domain.user.User;
 import com.interview_master.infrastructure.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -10,22 +12,24 @@ import org.springframework.stereotype.Service;
 public class OAuthLoginService {
     private final UserRepository userRepository;
     private final RequestOAuthInfoService requestOAuthInfoService;
-
-    public User login(OAuthLoginParams params) {
+    private final AuthTokenGenerator authTokenGenerator;
+    public AuthTokens login(OAuthLoginParams params) {
         OAuthInfoResponse oAuthInfoResponse = requestOAuthInfoService.request(params);
-        return findOrCreateUser(oAuthInfoResponse);
+        Long userId = findOrCreateUser(oAuthInfoResponse);
+        return authTokenGenerator.generate(userId);
     }
 
-    private User findOrCreateUser(OAuthInfoResponse oAuthInfoResponse) {
+    private Long findOrCreateUser(OAuthInfoResponse oAuthInfoResponse) {
         return userRepository.findByEmail(oAuthInfoResponse.getEmail())
-                .orElseGet(() -> newUser(oAuthInfoResponse));
+            .map(User::getId)
+            .orElseGet(() -> newUser(oAuthInfoResponse));
     }
 
-    private User newUser(OAuthInfoResponse oAuthInfoResponse) {
+    private Long newUser(OAuthInfoResponse oAuthInfoResponse) {
         User newUser = new User(
                 oAuthInfoResponse.getNickname(),
                 oAuthInfoResponse.getEmail(),
                 oAuthInfoResponse.getOAuthProvider());
-        return userRepository.save(newUser);
+        return userRepository.save(newUser).getId();
     }
 }

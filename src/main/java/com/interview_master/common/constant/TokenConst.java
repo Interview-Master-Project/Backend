@@ -4,6 +4,6 @@ import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class SessionConst {
-    public static final String LOGIN_USER = "user";
+public class TokenConst {
+    public static final String TOKEN_HEADER = "authorization-token";
 }
