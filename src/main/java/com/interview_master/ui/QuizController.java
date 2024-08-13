@@ -3,7 +3,6 @@ package com.interview_master.ui;
 import com.interview_master.application.QuizService;
 import com.interview_master.domain.quiz.Quiz;
 import com.interview_master.ui.request.QuizInput;
-import com.interview_master.util.ExtractUserId;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -33,8 +32,6 @@ public class QuizController {
 
     @QueryMapping
     public List<Quiz> getMyQuiz() {
-        Long currentUserId = ExtractUserId.extractUserIdFromContextHolder();
-        log.info("======== getMyQuiz : {}", currentUserId);
-        return quizService.findByUserId(currentUserId);
+        return quizService.findMyQuiz();
     }
 }
