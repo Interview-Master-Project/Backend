@@ -9,6 +9,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class QuizService {
@@ -27,5 +29,9 @@ public class QuizService {
             quizInput.getAccess());
 
         quizRepository.save(newQuiz);
+    }
+
+    public List<Quiz> findByUserId(Long userId) {
+        return quizRepository.findByCreatorIdOrderByIdDesc(userId);
     }
 }

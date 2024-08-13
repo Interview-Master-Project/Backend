@@ -9,6 +9,8 @@ import org.springframework.graphql.data.method.annotation.MutationMapping;
 import org.springframework.graphql.data.method.annotation.QueryMapping;
 import org.springframework.stereotype.Controller;
 
+import java.util.List;
+
 @Controller
 @RequiredArgsConstructor
 public class QuizController {
@@ -21,10 +23,16 @@ public class QuizController {
     }
 
     @MutationMapping
-    public String createQuiz(@Argument QuizInput quizInput) { // @Login User user
-//        createQuizInput.setCreatorId(user.getId);
+    public String createQuiz(@Argument QuizInput quizInput) {
         quizService.createQuiz(quizInput);
 
         return "질문 생성에 성공했습니다!";
     }
+
+    @QueryMapping
+    public List<Quiz> getMyQuiz() {
+        return quizService.findByUserId(4L);
+    }
+
+
 }

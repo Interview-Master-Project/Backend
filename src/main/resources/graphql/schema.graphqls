@@ -6,6 +6,7 @@ type Query {
     memberById(id: ID!): Member
     quizzes: [Quiz]
     quizById(id: ID!): Quiz
+    getMyQuiz: [Quiz]
     quizResults: [QuizResult]
     quizResultById(id: ID!): QuizResult
 }
