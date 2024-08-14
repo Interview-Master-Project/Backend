@@ -6,7 +6,8 @@ type Query {
     memberById(id: ID!): Member
     quizzes: [Quiz]
     quizById(id: ID!): Quiz
-    getMyQuiz: [QuizWithCollectionNameAndResults]
+    getMyQuiz: [QuizWithCollectionAndResults]
+    quizByCollectionId(id: ID!): [QuizWithCollectionAndResults]
     quizResults: [QuizResult]
     quizResultById(id: ID!): QuizResult
 }
@@ -29,9 +30,6 @@ type Member {
     email: String
     nickname: String
     oAuthProvider: OAuthProvider
-    collections: [Collection]
-    createdQuizzes: [Quiz]
-    quizResults: [QuizResult]
     isDeleted: Boolean!
     createdAt: String!
     updatedAt: String!
@@ -74,11 +72,10 @@ enum OAuthProvider {
     NAVER
 }
 
-type QuizWithCollectionNameAndResults {
+type QuizWithCollectionAndResults {
     quiz: Quiz!
-    collectionName: String!
-    correctAttempts: Int
-    wrongAttempts: Int
+    collection: Collection!
+    quizResult: QuizResult  # 추후에 NOTNULL 처리하기
 }
 
 # Mutation (Read 제외 CUD 담당)

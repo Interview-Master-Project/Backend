@@ -1,10 +1,16 @@
 package com.interview_master.domain.collection;
 
+import com.interview_master.common.exception.ApiException;
 import com.interview_master.domain.Access;
 import com.interview_master.domain.BaseEntity;
 import jakarta.persistence.*;
+import lombok.Getter;
+
+import static com.interview_master.common.exception.ErrorCode.FORBIDDEN_ACCESS;
+import static com.interview_master.domain.Access.PUBLIC;
 
 @Entity
+@Getter
 public class Collection extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -49,6 +55,16 @@ public class Collection extends BaseEntity {
             setAccess(newAccess);
         }
     }
+
+    public void canAccess(Long userId) {
+        boolean isCreator = this.creatorId.equals(userId);
+        boolean isPublic = this.getAccess().equals(PUBLIC);
+
+        if (!isCreator && !isPublic) {
+            throw new ApiException(FORBIDDEN_ACCESS, "접근 불가능함");
+        }
+    }
+
 
     // setter
     private void setName(String name) {

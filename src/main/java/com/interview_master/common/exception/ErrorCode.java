@@ -19,7 +19,12 @@ public enum ErrorCode {
 
     // TOKEN
     AUTHORIZATION_TOKEN_NOT_FOUND(HttpStatus.NOT_FOUND, "로그인이 필요합니다."),
-    BAD_REQUEST(HttpStatus.BAD_REQUEST, "bad request");
+    BAD_REQUEST(HttpStatus.BAD_REQUEST, "bad request"),
+
+    // ACCESS
+    FORBIDDEN_ACCESS(HttpStatus.FORBIDDEN, "접근 권한이 없습니다!"),
+
+    ;
 
     private final HttpStatus httpStatusCode;
     private final String description;

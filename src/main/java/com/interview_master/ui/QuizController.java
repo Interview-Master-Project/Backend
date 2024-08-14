@@ -5,7 +5,7 @@ import com.interview_master.domain.quiz.Quiz;
 import com.interview_master.ui.request.QuizInput;
 import java.util.List;
 
-import com.interview_master.ui.response.QuizWithCollectionNameAndResults;
+import com.interview_master.ui.response.QuizWithCollectionAndResults;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.graphql.data.method.annotation.Argument;
@@ -33,7 +33,12 @@ public class QuizController {
     }
 
     @QueryMapping
-    public List<QuizWithCollectionNameAndResults> getMyQuiz() {
+    public List<QuizWithCollectionAndResults> getMyQuiz() {
         return quizService.findMyQuizWithCollectionNameAndResults();
+    }
+
+    @QueryMapping
+    public List<QuizWithCollectionAndResults> quizByCollectionId(@Argument Long id) {
+        return quizService.findByCollectionId(id);
     }
 }
