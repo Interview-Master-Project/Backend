@@ -1,6 +1,5 @@
 package com.interview_master.domain.category;
 
-import com.interview_master.domain.BaseEntity;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
