@@ -4,7 +4,9 @@ import com.interview_master.domain.Access;
 import lombok.Getter;
 
 @Getter
-public class EditCollectionDTO {
+public class EditCollectionInput {
+
     private String newName;
+    private Long categoryId;
     private Access newAccess;
 }

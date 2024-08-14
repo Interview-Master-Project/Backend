@@ -14,12 +14,15 @@ public class Collection extends BaseEntity {
 
     private Long creatorId;
 
+    private Long categoryId;
+
     @Enumerated(EnumType.STRING)
     private Access access;
 
     protected Collection() {}
 
-    public Collection(String name, Long creatorId, Access access) {
+    public Collection(String name, Long creatorId, Long categoryId, Access access) {
+        setCategoryId(categoryId);
         setName(name);
         setCreatorId(creatorId);
         setAccess(access);
@@ -27,21 +30,27 @@ public class Collection extends BaseEntity {
 
     // domain logic
 
-    public void editCollection(EditCollectionDTO editCollectionDTO) {
-        String newName = editCollectionDTO.getNewName();
-        Access newAccess = editCollectionDTO.getNewAccess();
+    public void editCollection(EditCollectionInput editCollectionInput) {
+        String newName = editCollectionInput.getNewName();
+        Long newCategoryId = editCollectionInput.getCategoryId();
+        Access newAccess = editCollectionInput.getNewAccess();
 
         boolean nameChanged = newName != null && !newName.equals(this.name);
+        boolean categoryChanged = newCategoryId != null && !newCategoryId.equals(this.categoryId);
         boolean accessChanged = newAccess != null && newAccess != this.access;
 
         if (nameChanged) {
             setName(newName);
+        }
+        if (categoryChanged) {
+            setCategoryId(newCategoryId);
         }
         if (accessChanged) {
             setAccess(newAccess);
         }
     }
 
+    // setter
     private void setName(String name) {
         this.name = name;
     }
@@ -52,5 +61,9 @@ public class Collection extends BaseEntity {
 
     private void setCreatorId(Long creatorId) {
         this.creatorId = creatorId;
+    }
+
+    private void setCategoryId(Long categoryId) {
+        this.categoryId = categoryId;
     }
 }
