@@ -4,6 +4,8 @@ import com.interview_master.application.QuizService;
 import com.interview_master.domain.quiz.Quiz;
 import com.interview_master.ui.request.QuizInput;
 import java.util.List;
+
+import com.interview_master.ui.response.QuizWithCollectionNameAndResults;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.graphql.data.method.annotation.Argument;
@@ -31,7 +33,7 @@ public class QuizController {
     }
 
     @QueryMapping
-    public List<Quiz> getMyQuiz() {
-        return quizService.findMyQuiz();
+    public List<QuizWithCollectionNameAndResults> getMyQuiz() {
+        return quizService.findMyQuizWithCollectionNameAndResults();
     }
 }

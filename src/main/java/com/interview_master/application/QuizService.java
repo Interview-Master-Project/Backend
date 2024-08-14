@@ -5,12 +5,16 @@ import com.interview_master.common.exception.ErrorCode;
 import com.interview_master.domain.quiz.Quiz;
 import com.interview_master.infrastructure.QuizRepository;
 import com.interview_master.ui.request.QuizInput;
+import com.interview_master.ui.response.QuizWithCollectionNameAndResults;
 import com.interview_master.util.ExtractUserId;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class QuizService {
@@ -34,8 +38,9 @@ public class QuizService {
         quizRepository.save(newQuiz);
     }
 
-    public List<Quiz> findMyQuiz() {
+    public List<QuizWithCollectionNameAndResults> findMyQuizWithCollectionNameAndResults() {
         Long currentUserId = ExtractUserId.extractUserIdFromContextHolder();
-        return quizRepository.findByCreatorIdOrderByIdDesc(currentUserId);
+        log.info("=============== current userId = {}", currentUserId);
+        return quizRepository.findQuizzesWithCollectionNameAndResults(currentUserId);
     }
 }

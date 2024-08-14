@@ -6,7 +6,7 @@ type Query {
     memberById(id: ID!): Member
     quizzes: [Quiz]
     quizById(id: ID!): Quiz
-    getMyQuiz: [Quiz]
+    getMyQuiz: [QuizWithCollectionNameAndResults]
     quizResults: [QuizResult]
     quizResultById(id: ID!): QuizResult
 }
@@ -72,6 +72,13 @@ enum Access {
 enum OAuthProvider {
     KAKAO
     NAVER
+}
+
+type QuizWithCollectionNameAndResults {
+    quiz: Quiz!
+    collectionName: String!
+    correctAttempts: Int
+    wrongAttempts: Int
 }
 
 # Mutation (Read 제외 CUD 담당)
