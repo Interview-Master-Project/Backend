@@ -4,8 +4,10 @@ import com.interview_master.common.token.AuthTokens;
 import com.interview_master.login.OAuthLoginService;
 import com.interview_master.login.kakao.KakaoLoginParams;
 import com.interview_master.login.naver.NaverLoginParams;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -20,16 +22,33 @@ public class AuthController {
 
     private final OAuthLoginService oAuthLoginService;
 
+    private void setCookie(String accessToken, HttpServletResponse response) {
+        ResponseCookie cookie = ResponseCookie.from("authorization-token", accessToken)
+            .httpOnly(true)
+            //.secure(true)
+            .path("/")
+            .maxAge(1800000)
+            .sameSite("Strict")
+            .build();
+        response.addHeader("Set-Cookie", cookie.toString());
+    }
+
     @PostMapping("/kakao")
-    public ResponseEntity<AuthTokens> loginKakao(@RequestBody KakaoLoginParams params) {
+    public ResponseEntity<String> loginKakao(@RequestBody KakaoLoginParams params, HttpServletResponse response) {
         log.info("{} login params {}", "Kakao", params.getAuthorizationCode());
-        return ResponseEntity.ok(oAuthLoginService.login(params));
+        AuthTokens tokens = oAuthLoginService.login(params);
+        setCookie(tokens.getAccessToken(), response);
+        return ResponseEntity.ok("로그인에 성공했습니다!");
     }
 
     @PostMapping("/naver")
-    public ResponseEntity<AuthTokens> loginNaver(@RequestBody NaverLoginParams params) {
+    public ResponseEntity<String> loginNaver(@RequestBody NaverLoginParams params, HttpServletResponse response) {
         log.info("{} login params {}, {}", "Naver", params.getAuthorizationCode(),
             params.getState());
-        return ResponseEntity.ok(oAuthLoginService.login(params));
+        AuthTokens tokens = oAuthLoginService.login(params);
+        setCookie(tokens.getAccessToken(), response);
+        return ResponseEntity.ok("로그인에 성공했습니다!");
     }
+
+
 }
