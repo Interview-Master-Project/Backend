@@ -1,4 +1,4 @@
-package com.interview_master.domain.quiz;
+package com.interview_master.ui.request;
 
 import com.interview_master.domain.Access;
 import lombok.Getter;

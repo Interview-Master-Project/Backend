@@ -2,6 +2,7 @@ package com.interview_master.domain.quiz;
 
 import com.interview_master.domain.Access;
 import com.interview_master.domain.BaseEntity;
+import com.interview_master.ui.request.EditQuizDTO;
 import jakarta.persistence.*;
 
 @Entity
