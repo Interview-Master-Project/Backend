@@ -42,12 +42,12 @@ public class Quiz extends BaseEntity {
     }
 
     // domain logic
-    public void edit(EditQuizInput editQuizDTO) {
+    public void edit(EditQuizInput editQuizInput) {
         // 수정할 때는 null이면 그냥 pass하면 된다 -> 예외 던지지 말고
-        setQuestion(editQuizDTO.question());
-        setAnswer(editQuizDTO.answer());
-        setCollectionId(editQuizDTO.collectionId());
-        setAccess(editQuizDTO.access());
+        if (editQuizInput.question() != null) setQuestion(editQuizInput.question());
+        if (editQuizInput.answer() != null) setAnswer(editQuizInput.answer());
+        if (editQuizInput.collectionId() != null) setCollectionId(editQuizInput.collectionId());
+        if (editQuizInput.access() != null ) setAccess(editQuizInput.access());
     }
 
     // setter
