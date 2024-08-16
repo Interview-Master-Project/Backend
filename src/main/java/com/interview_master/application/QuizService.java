@@ -18,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class QuizService {
 
     private final QuizRepository quizRepository;
+    private final PermissionService permissionService;
 
     @Transactional
     public void createQuiz(CreateQuizInput quizInput) {
@@ -25,7 +26,6 @@ public class QuizService {
 
         Quiz newQuiz = new Quiz(quizInput.getCollectionId(), quizInput.getQuestion(),
             quizInput.getAnswer(), currentUserId, quizInput.getAccess());
-
         quizRepository.save(newQuiz);
     }
 
@@ -33,16 +33,21 @@ public class QuizService {
     public void editQuiz(Long quizId, EditQuizInput editQuizInput) {
         Long currentUserId = ExtractUserId.extractUserIdFromContextHolder();
 
-        Quiz findQuiz = quizRepository.findById(quizId)
+        Quiz quiz = quizRepository.findById(quizId)
                 .orElseThrow(() -> new ApiException(ErrorCode.QUIZ_NOT_FOUND));
-
-        checkEditPermission(currentUserId, findQuiz);
-        findQuiz.edit(editQuizInput);
+        quiz.checkExistence();
+        permissionService.checkEditPermission(currentUserId, quiz);
+        quiz.edit(editQuizInput);
     }
 
-    private void checkEditPermission(Long userId, Quiz quiz) {
-        if (!userId.equals(quiz.getCreatorId())) {
-            throw new ApiException(ErrorCode.FORBIDDEN_ACCESS);
-        }
+    @Transactional
+    public void delete(Long quizId) {
+        Long currentUserId = ExtractUserId.extractUserIdFromContextHolder();
+
+        Quiz quiz = quizRepository.findById(quizId)
+                .orElseThrow(() -> new ApiException(ErrorCode.QUIZ_NOT_FOUND));
+        quiz.checkExistence();
+        permissionService.checkEditPermission(currentUserId, quiz);
+        quiz.markDeleted();
     }
 }

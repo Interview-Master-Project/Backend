@@ -82,6 +82,7 @@ type QuizWithCollectionAndResults {
 type Mutation {
     createQuiz(createQuizInput: CreateQuizInput!): String!
     editQuiz(id: ID!, editQuizInput: EditQuizInput!): String!
+    deleteQuiz(id: ID!): String!
 }
 
 input CreateQuizInput {

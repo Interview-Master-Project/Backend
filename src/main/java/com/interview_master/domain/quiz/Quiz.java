@@ -41,7 +41,7 @@ public class Quiz extends BaseEntity {
         setAccess(access);
     }
 
-    // domain logic
+    //==== domain logic ====//
     public void edit(EditQuizInput editQuizInput) {
         // 수정할 때는 null이면 그냥 pass하면 된다 -> 예외 던지지 말고
         if (editQuizInput.question() != null) setQuestion(editQuizInput.question());
@@ -50,7 +50,11 @@ public class Quiz extends BaseEntity {
         if (editQuizInput.access() != null ) setAccess(editQuizInput.access());
     }
 
-    // setter
+    public void checkExistence() {
+        if(this.getIsDeleted()) throw new ApiException(ErrorCode.QUIZ_NOT_FOUND);
+    }
+
+    //==== setter ====//
     private void setCollectionId(Long collectionId) {
         if (collectionId == null) throw new ApiException(ErrorCode.NULL_EXCEPTION, "no collectionId");
         if (!collectionId.equals(this.collectionId)) {
