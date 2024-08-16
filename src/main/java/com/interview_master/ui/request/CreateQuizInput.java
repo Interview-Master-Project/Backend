@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class QuizInput {
+public class CreateQuizInput {
 
     private Long collectionId;
 
