@@ -7,6 +7,9 @@ import org.springframework.http.HttpStatus;
 @Getter
 public enum ErrorCode {
 
+    // COMMON
+    NULL_EXCEPTION(HttpStatus.BAD_REQUEST, "해당 값이 null 입니다."),
+
     // USER
     UNAUTHORIZED_USER(HttpStatus.UNAUTHORIZED, "미인증 유저의 요청입니다."),
 
