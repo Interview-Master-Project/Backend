@@ -1,6 +1,7 @@
 package com.interview_master.domain.collection;
 
 import com.interview_master.common.exception.ApiException;
+import com.interview_master.common.exception.ErrorCode;
 import com.interview_master.domain.Access;
 import com.interview_master.domain.BaseEntity;
 import jakarta.persistence.*;
@@ -37,23 +38,9 @@ public class Collection extends BaseEntity {
     // domain logic
 
     public void editCollection(EditCollectionInput editCollectionInput) {
-        String newName = editCollectionInput.getNewName();
-        Long newCategoryId = editCollectionInput.getCategoryId();
-        Access newAccess = editCollectionInput.getNewAccess();
-
-        boolean nameChanged = newName != null && !newName.equals(this.name);
-        boolean categoryChanged = newCategoryId != null && !newCategoryId.equals(this.categoryId);
-        boolean accessChanged = newAccess != null && newAccess != this.access;
-
-        if (nameChanged) {
-            setName(newName);
-        }
-        if (categoryChanged) {
-            setCategoryId(newCategoryId);
-        }
-        if (accessChanged) {
-            setAccess(newAccess);
-        }
+        if (editCollectionInput.name() != null) setName(editCollectionInput.name());
+        if (editCollectionInput.categoryId() != null) setCategoryId(editCollectionInput.categoryId());
+        if (editCollectionInput.access() != null) setAccess(editCollectionInput.access());
     }
 
     public void canAccess(Long userId) {
@@ -68,18 +55,22 @@ public class Collection extends BaseEntity {
 
     // setter
     private void setName(String name) {
-        this.name = name;
+        if (name == null) throw new ApiException(ErrorCode.NULL_EXCEPTION, "no collection name");
+        if (!name.trim().isEmpty()) this.name = name;
     }
 
     private void setAccess(Access access) {
+        if (access == null) throw new ApiException(ErrorCode.NULL_EXCEPTION, "no collection access");
         this.access = access;
     }
 
     private void setCreatorId(Long creatorId) {
+        if (creatorId == null) throw new ApiException(ErrorCode.NULL_EXCEPTION, "no creator id");
         this.creatorId = creatorId;
     }
 
     private void setCategoryId(Long categoryId) {
+        if (categoryId == null) throw new ApiException(ErrorCode.NULL_EXCEPTION, "no category id");
         this.categoryId = categoryId;
     }
 }
