@@ -47,4 +47,8 @@ public interface QuizRepository extends Repository<Quiz, Long> {
             "WHERE q.collectionId = :collectionId AND c.isDeleted = false AND q.isDeleted = false " +
             "ORDER BY q.id DESC ")
     List<QuizWithCollectionAndResults> findByCollectionId(@Param("collectionId") Long collectionId);
+
+    List<Quiz> findByIsDeletedTrue();
+
+    void deleteAllByIdInBatch(List<Long> ids);
 }
