@@ -2,10 +2,12 @@ package com.interview_master.infrastructure;
 
 import com.interview_master.domain.quiz.Quiz;
 import com.interview_master.ui.response.QuizWithCollectionAndResults;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.Repository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.graphql.data.GraphQlRepository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -48,7 +50,8 @@ public interface QuizRepository extends Repository<Quiz, Long> {
             "ORDER BY q.id DESC ")
     List<QuizWithCollectionAndResults> findByCollectionId(@Param("collectionId") Long collectionId);
 
-    List<Quiz> findByIsDeletedTrue();
-
-    void deleteAllByIdInBatch(List<Long> ids);
+    @Modifying
+    @Transactional
+    @Query("DELETE FROM Quiz q WHERE q.isDeleted = true")
+    void deleteAllByIsDeletedTrueDirect();
 }
