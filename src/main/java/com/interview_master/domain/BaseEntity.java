@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 
 @MappedSuperclass
 @Getter
-public abstract class BaseEntity {
+public class BaseEntity {
 
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
@@ -20,13 +20,13 @@ public abstract class BaseEntity {
     @Column(name = "is_deleted", nullable = false)
     private Boolean isDeleted;
 
-    protected BaseEntity() {
+    public BaseEntity() {
         this.createdAt = LocalDateTime.now();
         this.updatedAt = LocalDateTime.now();
         this.isDeleted = false;
     }
 
-    public void delete() {
+    public void markDeleted() {
         this.isDeleted = true;
     }
 
