@@ -2,7 +2,7 @@
 type Query {
     collections: [Collection]
     collectionById(id: ID!): Collection
-    collectionsByUserId(id: ID!): [Collection]
+    getMyCollections: [CollectionWithCategoryAndQuizCountAndResults]
 
     members: [Member]
     memberById(id: ID!): Member

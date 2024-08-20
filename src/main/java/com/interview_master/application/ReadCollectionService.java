@@ -1,7 +1,7 @@
 package com.interview_master.application;
 
 import com.interview_master.infrastructure.CollectionRepository;
-import com.interview_master.ui.response.CollectionWithCategoryAndQuizCount;
+import com.interview_master.ui.response.CollectionWithCategoryAndQuizCountAndResults;
 import com.interview_master.util.ExtractUserId;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -14,11 +14,10 @@ public class ReadCollectionService {
 
     private final CollectionRepository collectionRepository;
 
-    public List<CollectionWithCategoryAndQuizCount> getMyCollections() {
-        Long currentUserId = ExtractUserId.extractUserIdFromContextHolder();
+    public List<CollectionWithCategoryAndQuizCountAndResults> getMyCollections() {
+//        Long currentUserId = ExtractUserId.extractUserIdFromContextHolder();
 
-        return collectionRepository.findCollectionsByUserId(currentUserId);
-
+        return collectionRepository.findCollectionsByUserId(4L);
     }
 
 }

@@ -8,7 +8,7 @@ import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class CollectionWithCategoryAndQuizCount {
+public class CollectionWithCategoryAndQuizCountAndResults {
 
     private Long quizCount;
     private Long correctAttempts;
