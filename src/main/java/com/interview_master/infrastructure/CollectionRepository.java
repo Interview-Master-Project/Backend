@@ -21,7 +21,7 @@ public interface CollectionRepository extends Repository<Collection, Long> {
             "(select count(distinct q.id) from Quiz q where q.collectionId = c.id), sum(qr.correctAttempts), sum(qr.wrongAttempts), c, cg) from Collection c " +
             "join Category cg on c.categoryId = cg.id " +
             "left join Quiz q on c.id = q.collectionId " +
-            "left join QuizResult qr on q.id = qr.quizId " +
+            "left join QuizResult qr on q.id = qr.quizId and qr.userId = :creatorId " +
             "where c.isDeleted = false and c.creatorId = :creatorId " +
             "group by c.id, cg.id " +
             "order by c.id desc")
