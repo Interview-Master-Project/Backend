@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+
 @Service
 @RequiredArgsConstructor
 public class ReadCollectionService {
@@ -20,4 +21,7 @@ public class ReadCollectionService {
         return collectionRepository.findCollectionsByUserId(4L);
     }
 
+    public List<CollectionWithCategoryAndQuizCountAndResults> getCollectionsByCategoryId(Long categoryId) {
+        return collectionRepository.findByCategoryIdAndAccessPUBLIC(categoryId);
+    }
 }

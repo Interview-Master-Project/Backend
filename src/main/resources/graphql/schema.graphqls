@@ -3,6 +3,7 @@ type Query {
     collections: [Collection]
     collectionById(id: ID!): Collection
     getMyCollections: [CollectionWithCategoryAndQuizCountAndResults]
+    getCollectionsByCategoryId(categoryId: ID!): [CollectionWithCategoryAndQuizCountAndResults]
 
     members: [Member]
     memberById(id: ID!): Member
@@ -84,7 +85,7 @@ enum OAuthProvider {
 type QuizWithCollectionAndResults {
     quiz: Quiz!
     collection: Collection!
-    quizResult: QuizResult  # 추후에 NOTNULL 처리하기
+    quizResult: QuizResult!  # 추후에 NOTNULL 처리하기
 }
 
 type CollectionWithCategoryAndQuizCountAndResults {
