@@ -28,7 +28,7 @@ public interface QuizRepository extends Repository<Quiz, Long> {
     Optional<Quiz> findByIdAndUserId(@Param("id") Long id, @Param("userId") Long userId);
 
     /**
-     * 내 질문 목록 가져오기( quiz + collection + quizResult 모두 조인해서)
+     * creatorId의 질문 목록 가져오기( quiz + collection + quizResult 모두 조인해서)
      */
     @Query("SELECT new com.interview_master.ui.response.QuizWithCollectionAndResults(q, c, qr) " +
             "FROM Quiz q " +
@@ -37,7 +37,6 @@ public interface QuizRepository extends Repository<Quiz, Long> {
             "WHERE q.isDeleted = false AND q.creatorId = :creatorId " +
             "ORDER BY q.id DESC ")
     List<QuizWithCollectionAndResults> findQuizzesWithCollectionNameAndResults(@Param("creatorId") Long creatorId);
-
 
     /**
      * collectionId에 해당하는 질문 목록 가져오기
@@ -50,6 +49,9 @@ public interface QuizRepository extends Repository<Quiz, Long> {
             "ORDER BY q.id DESC ")
     List<QuizWithCollectionAndResults> findByCollectionId(@Param("collectionId") Long collectionId);
 
+    /**
+     * 삭제 마킹된 quiz들 한번에 삭제하기
+     */
     @Modifying
     @Transactional
     @Query("DELETE FROM Quiz q WHERE q.isDeleted = true")
