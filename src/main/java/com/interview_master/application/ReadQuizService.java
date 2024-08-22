@@ -24,7 +24,6 @@ public class ReadQuizService {
     private final QuizRepository quizRepository;
     private final CollectionRepository collectionRepository;
 
-
     public Quiz findById(Long quizId) {
         Long currentUserId = ExtractUserId.extractUserIdFromContextHolder();
 
@@ -40,6 +39,7 @@ public class ReadQuizService {
 
     public List<QuizWithCollectionAndResults> findByCollectionId(Long collectionId) {
         Long currentUserId = ExtractUserId.extractUserIdFromContextHolder();
+        log.info("=============== current userId = {}", currentUserId);
 
         Collection findCollection = collectionRepository.findById(collectionId)
                 .orElseThrow(() -> new ApiException(COLLECTION_NOT_FOUND));
