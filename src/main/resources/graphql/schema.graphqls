@@ -9,9 +9,9 @@ type Query {
     memberById(id: ID!): Member
 
     quizzes: [Quiz]
-    quizById(id: ID!): Quiz
+    quizById(quizId: ID!): Quiz
     getMyQuiz: [QuizWithCollectionAndResults]
-    quizByCollectionId(id: ID!): [QuizWithCollectionAndResults]
+    getQuizzesByCollectionId(collectionId: ID!): [QuizWithCollectionAndResults]
 
     quizResults: [QuizResult]
     quizResultById(id: ID!): QuizResult
@@ -85,7 +85,7 @@ enum OAuthProvider {
 type QuizWithCollectionAndResults {
     quiz: Quiz!
     collection: Collection!
-    quizResult: QuizResult!  # 추후에 NOTNULL 처리하기
+    quizResult: QuizResult  # 해당 퀴즈에 대한 결과가 없을 수 있음 -> Nullable 처리
 }
 
 type CollectionWithCategoryAndQuizCountAndResults {
