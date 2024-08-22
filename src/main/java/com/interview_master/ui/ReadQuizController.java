@@ -19,8 +19,8 @@ public class ReadQuizController {
     private final ReadQuizService readQuizService;
 
     @QueryMapping
-    public Quiz quizById(@Argument Long id) {
-        return readQuizService.findById(id);
+    public Quiz quizById(@Argument Long quizId) {
+        return readQuizService.findById(quizId);
     }
 
     @QueryMapping
@@ -29,7 +29,7 @@ public class ReadQuizController {
     }
 
     @QueryMapping
-    public List<QuizWithCollectionAndResults> quizByCollectionId(@Argument Long id) {
-        return readQuizService.findByCollectionId(id);
+    public List<QuizWithCollectionAndResults> getQuizzesByCollectionId(@Argument Long collectionId) {
+        return readQuizService.findByCollectionId(collectionId);
     }
 }
