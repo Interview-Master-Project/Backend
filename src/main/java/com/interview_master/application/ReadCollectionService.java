@@ -16,9 +16,9 @@ public class ReadCollectionService {
     private final CollectionRepository collectionRepository;
 
     public List<CollectionWithCategoryAndQuizCountAndResults> getMyCollections() {
-//        Long currentUserId = ExtractUserId.extractUserIdFromContextHolder();
+        Long currentUserId = ExtractUserId.extractUserIdFromContextHolder();
 
-        return collectionRepository.findCollectionsByUserId(4L);
+        return collectionRepository.findCollectionsByUserId(currentUserId);
     }
 
     public List<CollectionWithCategoryAndQuizCountAndResults> getCollectionsByCategoryId(Long categoryId) {
