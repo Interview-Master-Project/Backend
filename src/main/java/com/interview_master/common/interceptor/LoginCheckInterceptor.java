@@ -36,6 +36,9 @@ public class LoginCheckInterceptor implements HandlerInterceptor {
             return true;
         }
 
+        /*
+
+
         String token = null;
 
         // 모든 쿠키를 가져와서 "authorization-token" 쿠키를 찾음
@@ -53,7 +56,9 @@ public class LoginCheckInterceptor implements HandlerInterceptor {
         }
 
         Long userId = authTokenGenerator.extractUserId(token);
-
+        */
+        // 테스트 용
+        Long userId = 4L;
         if (userId != null) {
             RequestAttributes requestContext = Objects.requireNonNull(
                 RequestContextHolder.getRequestAttributes());
