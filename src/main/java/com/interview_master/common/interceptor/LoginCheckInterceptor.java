@@ -59,6 +59,7 @@ public class LoginCheckInterceptor implements HandlerInterceptor {
         */
         // 테스트 용
         Long userId = 4L;
+
         if (userId != null) {
             RequestAttributes requestContext = Objects.requireNonNull(
                 RequestContextHolder.getRequestAttributes());
