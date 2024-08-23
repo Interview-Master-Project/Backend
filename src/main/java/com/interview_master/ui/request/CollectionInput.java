@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class CollectionInput {
 
-    @NotEmpty(message = "컬렉션 이름을 필수 입력입니다.")
+    @NotEmpty(message = "컬렉션 이름은 필수 입력입니다.")
     private String name;
     private Long categoryId;
     private Access access;

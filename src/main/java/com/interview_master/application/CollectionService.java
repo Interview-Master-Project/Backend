@@ -21,7 +21,7 @@ public class CollectionService {
     public void createCollection(CollectionInput input) {
         Long currentUserId = ExtractUserId.extractUserIdFromContextHolder();
 
-        // 기본값을 설정
+        // default 설정
         Long categoryId = input.getCategoryId() != null ? input.getCategoryId() : 999L;
         Access access = input.getAccess() != null ? input.getAccess() : PUBLIC;
 
