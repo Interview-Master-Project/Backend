@@ -98,11 +98,16 @@ type CollectionWithCategoryAndQuizCountAndResults {
 
 # Mutation (Read 제외 CUD 담당)
 type Mutation {
+    # Quiz
     createQuiz(createQuizInput: CreateQuizInput!): String!
     editQuiz(id: ID!, editQuizInput: EditQuizInput!): String!
     deleteQuiz(id: ID!): String!
+
+    # Collection
+    createCollection(createCollectionInput: CreateCollectionInput!): String!
 }
 
+# Quiz
 input CreateQuizInput {
     question: String!
     answer: String!
@@ -117,4 +122,12 @@ input EditQuizInput {
     collectionId: ID
     access: Access
 }
+
+# Collection
+input CreateCollectionInput {
+    name: String!
+    categoryId: Int
+    access: Access
+}
+
 

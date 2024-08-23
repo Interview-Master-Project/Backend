@@ -12,6 +12,8 @@ import org.springframework.data.repository.query.Param;
 
 public interface CollectionRepository extends Repository<Collection, Long> {
 
+    void save(Collection collection);
+
     Optional<Collection> findById(Long id);
 
     /**

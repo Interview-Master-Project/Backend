@@ -5,6 +5,8 @@ import com.interview_master.common.exception.ErrorCode;
 import com.interview_master.domain.Access;
 import com.interview_master.domain.BaseEntity;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 
 import static com.interview_master.common.exception.ErrorCode.FORBIDDEN_ACCESS;
@@ -12,6 +14,8 @@ import static com.interview_master.domain.Access.PUBLIC;
 
 @Entity
 @Getter
+@Builder
+@AllArgsConstructor
 public class Collection extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,13 +31,6 @@ public class Collection extends BaseEntity {
     private Access access;
 
     protected Collection() {}
-
-    public Collection(String name, Long creatorId, Long categoryId, Access access) {
-        setCategoryId(categoryId);
-        setName(name);
-        setCreatorId(creatorId);
-        setAccess(access);
-    }
 
     // domain logic
 
