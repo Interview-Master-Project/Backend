@@ -3,6 +3,7 @@ package com.interview_master.application;
 import com.interview_master.common.exception.ApiException;
 import com.interview_master.common.exception.ErrorCode;
 import com.interview_master.domain.quiz.Quiz;
+import com.interview_master.infrastructure.CollectionRepository;
 import com.interview_master.infrastructure.QuizRepository;
 import com.interview_master.ui.request.CreateQuizInput;
 import com.interview_master.ui.request.EditQuizInput;
@@ -18,11 +19,16 @@ import org.springframework.transaction.annotation.Transactional;
 public class QuizService {
 
     private final QuizRepository quizRepository;
+    private final CollectionRepository collectionRepository;
+
     private final PermissionService permissionService;
 
     @Transactional
     public void createQuiz(CreateQuizInput quizInput) {
         Long currentUserId = ExtractUserId.extractUserIdFromContextHolder();
+
+        collectionRepository.findById(quizInput.getCollectionId())
+                .orElseThrow(() -> new ApiException(ErrorCode.COLLECTION_NOT_FOUND));
 
         Quiz newQuiz = new Quiz(quizInput.getCollectionId(), quizInput.getQuestion(),
             quizInput.getAnswer(), currentUserId, quizInput.getAccess());

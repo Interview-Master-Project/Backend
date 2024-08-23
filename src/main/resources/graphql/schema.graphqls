@@ -104,7 +104,8 @@ type Mutation {
     deleteQuiz(id: ID!): String!
 
     # Collection
-    createCollection(collectionInput: CollectionInput!): String!
+    createCollection(createCollectionInput: CreateCollectionInput!): String!
+    editCollection(collectionId: ID!, editCollectionInput: EditCollectionInput!): String!
 }
 
 # Quiz
@@ -124,10 +125,17 @@ input EditQuizInput {
 }
 
 # Collection
-input CollectionInput {
+input CreateCollectionInput {
     name: String
     categoryId: Int
     access: Access
 }
+
+input EditCollectionInput {
+    name: String
+    categoryId: Int
+    access: Access
+}
+
 
 

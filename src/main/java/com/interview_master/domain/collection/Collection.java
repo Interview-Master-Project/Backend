@@ -4,6 +4,7 @@ import com.interview_master.common.exception.ApiException;
 import com.interview_master.common.exception.ErrorCode;
 import com.interview_master.domain.Access;
 import com.interview_master.domain.BaseEntity;
+import com.interview_master.ui.request.EditCollectionInput;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -35,9 +36,9 @@ public class Collection extends BaseEntity {
     // domain logic
 
     public void editCollection(EditCollectionInput editCollectionInput) {
-        if (editCollectionInput.name() != null) setName(editCollectionInput.name());
-        if (editCollectionInput.categoryId() != null) setCategoryId(editCollectionInput.categoryId());
-        if (editCollectionInput.access() != null) setAccess(editCollectionInput.access());
+        if (editCollectionInput.getName() != null) setName(editCollectionInput.getName());
+        if (editCollectionInput.getCategoryId() != null) setCategoryId(editCollectionInput.getCategoryId());
+        if (editCollectionInput.getAccess() != null) setAccess(editCollectionInput.getAccess());
     }
 
     public void canAccess(Long userId) {
@@ -49,6 +50,9 @@ public class Collection extends BaseEntity {
         }
     }
 
+    public void checkExistence() {
+        if(this.getIsDeleted()) throw new ApiException(ErrorCode.COLLECTION_NOT_FOUND);
+    }
 
     // setter
     private void setName(String name) {

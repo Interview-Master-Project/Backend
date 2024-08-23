@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class CollectionInput {
+public class CreateCollectionInput {
 
     @NotEmpty(message = "컬렉션 이름은 필수 입력입니다.")
     private String name;
