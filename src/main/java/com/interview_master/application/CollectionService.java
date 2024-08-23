@@ -3,7 +3,7 @@ package com.interview_master.application;
 import com.interview_master.domain.Access;
 import com.interview_master.domain.collection.Collection;
 import com.interview_master.infrastructure.CollectionRepository;
-import com.interview_master.ui.request.CreateCollectionInput;
+import com.interview_master.ui.request.CollectionInput;
 import com.interview_master.util.ExtractUserId;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -18,7 +18,7 @@ public class CollectionService {
     private final CollectionRepository collectionRepository;
 
     @Transactional
-    public void createCollection(CreateCollectionInput input) {
+    public void createCollection(CollectionInput input) {
         Long currentUserId = ExtractUserId.extractUserIdFromContextHolder();
 
         // 기본값을 설정
