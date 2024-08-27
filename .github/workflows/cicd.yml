@@ -48,6 +48,10 @@ jobs:
           format: YYYY-MM-DDTHH-mm-ss
           utcOffset: "+09:00"
 
+
+      - name: Install sshpass
+        run: sudo apt-get install -y sshpass
+
       - name: Download build artifact
         uses: actions/download-artifact@v2
         with:
@@ -55,17 +59,13 @@ jobs:
           path: build/libs/
       - name: NCP Deploy
         env:
-          NCP_SSH_PRIVATE_KEY: ${{ secrets.NCP_SSH_PRIVATE_KEY }}
+          NCP_PASSWORD: ${{ secrets.NCP_PASSWORD }}
           NCP_HOST: ${{ secrets.NCP_HOST }}
           NCP_USER: ${{ secrets.NCP_USER }}
 
-        run: |
-          # SSH Key 파일 생성
-          echo "$NCP_SSH_PRIVATE_KEY" > ncp_ssh_key
-          chmod 600 ncp_ssh_key
-          
+        run: |       
           # 패키지 파일을 EC2 인스턴스로 복사
-          scp -i ncp_ssh_key -o StrictHostKeyChecking=no build/libs/interview-0.0.1-SNAPSHOT.jar ${NCP_USER}@${NCP_HOST}:/home/${NCP_USER}/interview-server
+          sshpass -p "$NCP_PASSWORD" scp -o StrictHostKeyChecking=no build/libs/interview-0.0.1-SNAPSHOT.jar ${NCP_USER}@${NCP_HOST}:/home/${NCP_USER}/interview-server
           
           # 인스턴스에서 JAR 파일 실행
-          ssh -i ncp_ssh_key -o StrictHostKeyChecking=no ${NCP_USER}@${NCP_HOST} "pgrep java | xargs kill -9; nohup java -jar /home/${NCP_USER}/interview-server/interview-0.0.1-SNAPSHOT.jar > /home/${NCP_USER}/interview-server/log/app.log 2>&1 &"
+          sshpass -p "$NCP_PASSWORD" ssh -o StrictHostKeyChecking=no ${NCP_USER}@${NCP_HOST} "pgrep java | xargs kill -9; nohup java -jar /home/${NCP_USER}/interview-server/interview-0.0.1-SNAPSHOT.jar > /home/${NCP_USER}/interview-server/log/app.log 2>&1 &"
