@@ -34,6 +34,7 @@ on:
           with:
             name: interview
             path: build/libs/interview-0.0.1-SNAPSHOT.jar
+
   deploy:
     needs: build
     runs-on: ubuntu-latest
