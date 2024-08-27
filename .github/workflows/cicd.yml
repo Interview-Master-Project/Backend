@@ -22,13 +22,14 @@ jobs:
       - name: Setup application yml
         run: |
           echo "${{ secrets.APPLICATION }}" > ./src/main/resources/application.yml
+
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
       - name: Build with Gradle
         run : ./gradlew clean build -x test
 
-      # 빌드해서 생긴 JAR 파일을 깃허브 아티팩트로 업로드!!
+      # 빌드해서 생긴 JAR 파일을 깃허브 아티팩트로 업로드
       - name: Upload build artifact
         uses: actions/upload-artifact@v2
         with:
@@ -40,7 +41,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # 현재 시간 가져오기-오디에 쓰는거야
+      # 현재 시간 가져오기
       - name: Get current time
         uses: josStorer/get-current-time@v2.0.2
         id: current-time
@@ -57,6 +58,7 @@ jobs:
         with:
           name: interview
           path: build/libs/
+
       - name: NCP Deploy
         env:
           NCP_PASSWORD: ${{ secrets.NCP_PASSWORD }}
@@ -64,7 +66,7 @@ jobs:
           NCP_USER: ${{ secrets.NCP_USER }}
 
         run: |       
-          # 패키지 파일을 EC2 인스턴스로 복사
+          # 패키지 파일을 NCP 인스턴스로 복사
           sshpass -p "$NCP_PASSWORD" scp -o StrictHostKeyChecking=no build/libs/interview-0.0.1-SNAPSHOT.jar ${NCP_USER}@${NCP_HOST}:/home/${NCP_USER}/interview-server
           
           # 인스턴스에서 JAR 파일 실행
