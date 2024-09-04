@@ -1,9 +1,12 @@
 package com.interview_master.ui;
 
+import com.interview_master.common.token.AuthTokenGenerator;
 import com.interview_master.common.token.AuthTokens;
+import com.interview_master.domain.user.User;
 import com.interview_master.login.OAuthLoginService;
 import com.interview_master.login.kakao.KakaoLoginParams;
 import com.interview_master.login.naver.NaverLoginParams;
+import com.interview_master.ui.response.LoginRes;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,6 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class AuthController {
 
     private final OAuthLoginService oAuthLoginService;
+    private final AuthTokenGenerator authTokenGenerator;
 
     private void setCookie(String accessToken, HttpServletResponse response) {
         ResponseCookie cookie = ResponseCookie.from("authorization-token", accessToken)
@@ -34,20 +38,32 @@ public class AuthController {
     }
 
     @PostMapping("/kakao")
-    public ResponseEntity<String> loginKakao(@RequestBody KakaoLoginParams params, HttpServletResponse response) {
+    public ResponseEntity<LoginRes> loginKakao(@RequestBody KakaoLoginParams params, HttpServletResponse response) {
         log.info("{} login params {}", "Kakao", params.getAuthorizationCode());
-        AuthTokens tokens = oAuthLoginService.login(params);
+        User user = oAuthLoginService.login(params);
+        AuthTokens tokens = authTokenGenerator.generate(user.getId());
         setCookie(tokens.getAccessToken(), response);
-        return ResponseEntity.ok("로그인에 성공했습니다!");
+        return ResponseEntity.ok(
+                LoginRes.builder()
+                        .userId(user.getId())
+                        .nickname(user.getNickname())
+                        .build()
+        );
     }
 
     @PostMapping("/naver")
-    public ResponseEntity<String> loginNaver(@RequestBody NaverLoginParams params, HttpServletResponse response) {
+    public ResponseEntity<LoginRes> loginNaver(@RequestBody NaverLoginParams params, HttpServletResponse response) {
         log.info("{} login params {}, {}", "Naver", params.getAuthorizationCode(),
             params.getState());
-        AuthTokens tokens = oAuthLoginService.login(params);
+        User user = oAuthLoginService.login(params);
+        AuthTokens tokens = authTokenGenerator.generate(user.getId());
         setCookie(tokens.getAccessToken(), response);
-        return ResponseEntity.ok("로그인에 성공했습니다!");
+        return ResponseEntity.ok(
+                LoginRes.builder()
+                        .userId(user.getId())
+                        .nickname(user.getNickname())
+                        .build()
+        );
     }
 
 
