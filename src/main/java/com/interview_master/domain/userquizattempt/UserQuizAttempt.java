@@ -4,6 +4,7 @@ import com.interview_master.domain.quiz.Quiz;
 import com.interview_master.domain.usercollectionattempt.UserCollectionAttempt;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -14,6 +15,7 @@ import java.time.LocalDateTime;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class UserQuizAttempt {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
