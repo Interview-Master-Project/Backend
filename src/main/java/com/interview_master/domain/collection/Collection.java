@@ -88,4 +88,12 @@ public class Collection extends BaseEntity {
     private void setCategory(Category category) {
         this.category = category;
     }
+
+    private void setDescription(String description) {
+        this.description = description;
+    }
+
+    private void setImgUrl(String imgUrl) {
+        this.imgUrl = imgUrl;
+    }
 }
