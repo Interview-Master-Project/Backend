@@ -25,10 +25,11 @@ public class OAuthLoginService {
     }
 
     private User newUser(OAuthInfoResponse oAuthInfoResponse) {
-        User newUser = new User(
-                oAuthInfoResponse.getNickname(),
-                oAuthInfoResponse.getEmail(),
-                oAuthInfoResponse.getOAuthProvider());
+        User newUser = User.builder()
+                .email(oAuthInfoResponse.getEmail())
+                .nickname(oAuthInfoResponse.getNickname())
+                .oAuthProvider(oAuthInfoResponse.getOAuthProvider())
+                .build();
         return userRepository.save(newUser);
     }
 }

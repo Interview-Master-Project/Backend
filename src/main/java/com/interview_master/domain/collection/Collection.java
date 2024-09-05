@@ -7,6 +7,7 @@ import com.interview_master.domain.category.Category;
 import com.interview_master.domain.user.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -18,6 +19,7 @@ import static com.interview_master.domain.Access.PUBLIC;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class Collection extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -4,6 +4,7 @@ import com.interview_master.domain.collection.Collection;
 import com.interview_master.domain.user.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -14,6 +15,7 @@ import java.time.LocalDateTime;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class UserCollectionAttempt {
 
     @Id

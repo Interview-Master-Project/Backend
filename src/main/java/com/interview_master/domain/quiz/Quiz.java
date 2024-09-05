@@ -7,12 +7,17 @@ import com.interview_master.domain.BaseEntity;
 import com.interview_master.domain.collection.Collection;
 import com.interview_master.domain.user.User;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "quizzes")
-@jakarta.persistence.Access(AccessType.FIELD)
 @Getter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Quiz extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -34,17 +39,6 @@ public class Quiz extends BaseEntity {
 
     @Enumerated(EnumType.STRING)
     private Access access;
-
-    protected Quiz() {
-    }
-
-    public Quiz(Collection collection, String question, String answer, User creator, Access access) {
-        setCollection(collection);
-        setQuestion(question);
-        setAnswer(answer);
-        setCreator(creator);
-        setAccess(access);
-    }
 
     //==== domain logic ====//
 //    public void edit(EditQuizInput editQuizInput) {
