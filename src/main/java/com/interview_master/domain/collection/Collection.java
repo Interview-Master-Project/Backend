@@ -6,7 +6,9 @@ import com.interview_master.domain.BaseEntity;
 import com.interview_master.domain.category.Category;
 import com.interview_master.domain.user.User;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import static com.interview_master.common.exception.ErrorCode.FORBIDDEN_ACCESS;
 import static com.interview_master.domain.Access.PUBLIC;
@@ -14,6 +16,8 @@ import static com.interview_master.domain.Access.PUBLIC;
 @Entity
 @Table(name = "collections")
 @Getter
+@NoArgsConstructor
+@AllArgsConstructor
 public class Collection extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,6 +26,8 @@ public class Collection extends BaseEntity {
     private String name;
 
     private String description;
+
+    private String imgUrl;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "creator_id")
@@ -33,15 +39,6 @@ public class Collection extends BaseEntity {
 
     @Enumerated(EnumType.STRING)
     private Access access;
-
-    protected Collection() {}
-
-    public Collection(String name, User creator, Category category, Access access) {
-        setCategory(category);
-        setName(name);
-        setCreator(creator);
-        setAccess(access);
-    }
 
     // domain logic
 
