@@ -1,11 +1,17 @@
 # Root Query type
 type Query {
-    myPage(userId: ID!): MyPage
+    myPage(userId: ID!, offset: Int!, limit: Int!): MyPage
 }
 
 type MyPage {
     user: User!
+    collectionPage: CollectionPage!
+}
+
+type CollectionPage {
     collections: [Collection!]
+    totalCount: Int!
+    hasNext: Boolean!
 }
 
 # Collection type
