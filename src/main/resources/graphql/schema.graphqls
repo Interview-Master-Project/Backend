@@ -78,26 +78,3 @@ enum OAuthProvider {
     KAKAO
     NAVER
 }
-
-# Mutation (Read 제외 CUD 담당)
-type Mutation {
-    createQuiz(createQuizInput: CreateQuizInput!): String!
-    editQuiz(id: ID!, editQuizInput: EditQuizInput!): String!
-    deleteQuiz(id: ID!): String!
-}
-
-input CreateQuizInput {
-    question: String!
-    answer: String!
-    collectionId: ID!
-    creatorId: ID!
-    access: Access!
-}
-
-input EditQuizInput {
-    question: String
-    answer: String
-    collectionId: ID
-    access: Access
-}
-
