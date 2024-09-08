@@ -17,7 +17,6 @@ public enum ErrorCode {
     // QUIZ
     QUIZ_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 질문은 존재하지 않습니다."),
 
-
     // COLLECTION
     COLLECTION_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 컬렉션은 존재하지 않습니다."),
 
@@ -29,7 +28,6 @@ public enum ErrorCode {
     FORBIDDEN_ACCESS(HttpStatus.FORBIDDEN, "접근 권한이 없습니다!"),
 
     // NCP_BUCKET
-    // S3 관련 에러 코드,
     EMPTY_FILE_EXCEPTION(HttpStatus.BAD_REQUEST, "빈 파일입니다."),
     NO_FILE_EXTENTION(HttpStatus.BAD_REQUEST, "확장자가 없습니다."),
     INVALID_FILE_EXTENTION(HttpStatus.BAD_REQUEST, "부적절한 이미지 확장자입니다."),
@@ -37,6 +35,9 @@ public enum ErrorCode {
     PUT_OBJECT_EXCEPTION(HttpStatus.INTERNAL_SERVER_ERROR, "S3에 이미지 업로드 중 에러가 발생했습니다."),
     IO_EXCEPTION_ON_IMAGE_DELETE(HttpStatus.INTERNAL_SERVER_ERROR, "이미지 삭제 중 에러가 발생했습니다."),
     SAVE_IMAGE_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "DB에 이미지 정보 저장에 실패했습니다."),
+
+    // CATEGORY
+    CATEGORY_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 카테고리는 존재하지 않습니다."),
 
     ;
 
