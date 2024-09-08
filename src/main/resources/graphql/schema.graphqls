@@ -1,6 +1,7 @@
 # Root Query type
 type Query {
     myPage(userId: ID!, offset: Int!, limit: Int!): MyPage
+    userAttemptedCollections(userId: ID!, offset: Int!, limit: Int!): CollectionPage
 }
 
 type MyPage {

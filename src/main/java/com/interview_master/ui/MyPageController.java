@@ -30,4 +30,11 @@ public class MyPageController {
                 .collectionPage(collectionPage)
                 .build();
     }
+
+    @QueryMapping
+    public CollectionPage userAttemptedCollections(@Argument Long userId, @Argument Integer offset, @Argument Integer limit) {
+        log.info("========== user attempted collections\t userId: {}, offset: {}, limit: {}", userId, offset, limit);
+
+        return collectionService.userAttemptedCollections(userId, offset, limit);
+    }
 }

@@ -11,13 +11,12 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-
 import static com.interview_master.common.constant.Constant.DEFAULT_PAGE_SIZE;
 
 @Service
 @RequiredArgsConstructor
 public class CollectionService {
+
     private final CollectionRepository collectionRepository;
 
     /**
@@ -25,20 +24,46 @@ public class CollectionService {
      */
     @Transactional(readOnly = true)
     public CollectionPage userCollections(Long userId, Integer offset, Integer limit) {
-        int pageSize = (limit != null) ? limit : DEFAULT_PAGE_SIZE;
-        int pageNumber = (offset != null) ? offset / pageSize : 0;
+        PaginationParams pageParams = calculatePaginationParams(offset, limit);
 
-        Pageable pageable = PageRequest.of(pageNumber, pageSize, Sort.by("updatedAt").descending());
+        Pageable pageable = PageRequest.of(pageParams.pageNumber(), pageParams.pageSize(), Sort.by("updatedAt").descending());
         Page<Collection> collectionPage = collectionRepository.findByCreatorIdAndIsDeletedFalse(userId, pageable);
+        
+        return CollectionPage.builder()
+                .collections(collectionPage.getContent())
+                .totalCount(collectionPage.getTotalElements())
+                .hasNext(collectionPage.hasNext())
+                .build();
+    }
 
-        List<Collection> collections = collectionPage.getContent();
-        long totalCount = collectionPage.getTotalElements();    // 전체 데이터 수
-        boolean hasNext = collectionPage.hasNext(); // 다음 페이지 존재 여부
+
+    /**
+     * user의 히스토리 반환
+     */
+    @Transactional(readOnly = true)
+    public CollectionPage userAttemptedCollections(Long userId, Integer offset, Integer limit) {
+        PaginationParams pageParams = calculatePaginationParams(offset, limit);
+
+        Pageable pageable = PageRequest.of(pageParams.pageNumber(), pageParams.pageSize(), Sort.by("uca.startedAt").descending());
+        Page<Collection> collectionPage = collectionRepository.findAttemptedCollectionsByUserOrderByLatestAttempt(userId, pageable);
 
         return CollectionPage.builder()
-                .collections(collections)
-                .totalCount(totalCount)
-                .hasNext(hasNext)
+                .collections(collectionPage.getContent())
+                .totalCount(collectionPage.getTotalElements())
+                .hasNext(collectionPage.hasNext())
                 .build();
+
+    }
+
+    /**
+     * 페이징 매개변수 검증하는 로직
+     */
+    private static PaginationParams calculatePaginationParams(Integer offset, Integer limit) {
+        int pageSize = (limit != null) ? limit : DEFAULT_PAGE_SIZE;
+        int pageNumber = (offset != null) ? offset / pageSize : 0;
+        return new PaginationParams(pageSize, pageNumber);
+    }
+
+    private record PaginationParams(int pageSize, int pageNumber) {
     }
 }
