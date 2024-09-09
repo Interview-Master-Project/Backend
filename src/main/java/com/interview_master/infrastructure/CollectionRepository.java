@@ -9,6 +9,8 @@ import org.springframework.data.repository.query.Param;
 
 public interface CollectionRepository extends Repository<Collection, Long> {
 
+    Collection save(Collection collection);
+
     /**
      * user의 컬렉션 리스트
      */

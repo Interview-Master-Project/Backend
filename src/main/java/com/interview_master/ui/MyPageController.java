@@ -1,6 +1,6 @@
 package com.interview_master.ui;
 
-import com.interview_master.application.CollectionService;
+import com.interview_master.application.MyPageService;
 import com.interview_master.application.UserProfileService;
 import com.interview_master.domain.user.User;
 import com.interview_master.dto.CollectionPage;
@@ -16,7 +16,7 @@ import org.springframework.stereotype.Controller;
 @Slf4j
 public class MyPageController {
     private final UserProfileService userProfileService;
-    private final CollectionService collectionService;
+    private final MyPageService collectionService;
 
     @QueryMapping
     public MyPage myPage(@Argument Long userId, @Argument Integer offset, @Argument Integer limit) {

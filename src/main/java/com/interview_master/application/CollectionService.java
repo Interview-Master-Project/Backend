@@ -1,69 +1,58 @@
 package com.interview_master.application;
 
+import com.interview_master.common.exception.ApiException;
+import com.interview_master.common.exception.ErrorCode;
+import com.interview_master.domain.category.Category;
 import com.interview_master.domain.collection.Collection;
-import com.interview_master.dto.CollectionPage;
+import com.interview_master.domain.user.User;
+import com.interview_master.infrastructure.CategoryRepository;
 import com.interview_master.infrastructure.CollectionRepository;
+import com.interview_master.infrastructure.UserRepository;
+import com.interview_master.ui.request.CreateCollectionReq;
+import com.interview_master.util.ExtractUserId;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import static com.interview_master.common.constant.Constant.DEFAULT_PAGE_SIZE;
 
 @Service
 @RequiredArgsConstructor
 public class CollectionService {
 
     private final CollectionRepository collectionRepository;
+    private final UserRepository userRepository;
+    private final NcpImageService imageService;
+    private final CategoryRepository categoryRepository;
 
-    /**
-     * user의 컬렉션을 offset 기반으로 페이징 + 최신 수정 순으로
-     */
-    @Transactional(readOnly = true)
-    public CollectionPage userCollections(Long userId, Integer offset, Integer limit) {
-        PaginationParams pageParams = calculatePaginationParams(offset, limit);
+    @Transactional
+    public void saveCollection(CreateCollectionReq createCollectionReq) {
+        // token의 userId 가져오기
+        Long userId = ExtractUserId.extractUserIdFromContextHolder();
 
-        Pageable pageable = PageRequest.of(pageParams.pageNumber(), pageParams.pageSize(), Sort.by("updatedAt").descending());
-        Page<Collection> collectionPage = collectionRepository.findByCreatorIdAndIsDeletedFalse(userId, pageable);
-        
-        return CollectionPage.builder()
-                .collections(collectionPage.getContent())
-                .totalCount(collectionPage.getTotalElements())
-                .hasNext(collectionPage.hasNext())
-                .build();
-    }
+        // 이미지 저장
+        String imgUrl = "";
+        if (createCollectionReq.getImage() != null) {
+            imgUrl = imageService.uploadImage(createCollectionReq.getImage());
+        }
 
+        // 카테고리 존재 여부 검증
+        Category category = categoryRepository.findById(createCollectionReq.getCategoryId())
+                .orElseThrow(() -> new ApiException(ErrorCode.CATEGORY_NOT_FOUND));
 
-    /**
-     * user의 히스토리 반환
-     */
-    @Transactional(readOnly = true)
-    public CollectionPage userAttemptedCollections(Long userId, Integer offset, Integer limit) {
-        PaginationParams pageParams = calculatePaginationParams(offset, limit);
+        // 유저 존재 여부 검증
+        User user = userRepository.findByIdAndIsDeletedFalse(userId)
+                .orElseThrow(() -> new ApiException(ErrorCode.USER_NOT_FOUND));
 
-        Pageable pageable = PageRequest.of(pageParams.pageNumber(), pageParams.pageSize(), Sort.by("uca.startedAt").descending());
-        Page<Collection> collectionPage = collectionRepository.findAttemptedCollectionsByUserOrderByLatestAttempt(userId, pageable);
-
-        return CollectionPage.builder()
-                .collections(collectionPage.getContent())
-                .totalCount(collectionPage.getTotalElements())
-                .hasNext(collectionPage.hasNext())
+        // 컬렉션 생성
+        Collection newCollection = Collection.builder()
+                .name(createCollectionReq.getName())
+                .description(createCollectionReq.getDescription())
+                .access(createCollectionReq.getAccess())
+                .category(category)
+                .imgUrl(imgUrl)
+                .creator(user)
                 .build();
 
-    }
-
-    /**
-     * 페이징 매개변수 검증하는 로직
-     */
-    private static PaginationParams calculatePaginationParams(Integer offset, Integer limit) {
-        int pageSize = (limit != null) ? limit : DEFAULT_PAGE_SIZE;
-        int pageNumber = (offset != null) ? offset / pageSize : 0;
-        return new PaginationParams(pageSize, pageNumber);
-    }
-
-    private record PaginationParams(int pageSize, int pageNumber) {
+        // 컬렉션 저장
+        collectionRepository.save(newCollection);
     }
 }
