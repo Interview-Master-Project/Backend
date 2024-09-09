@@ -20,9 +20,7 @@ public class CreateCollectionController {
 
     @PostMapping("/api/collections")
     public ResponseEntity<String> createCollection(@ModelAttribute @Valid CreateCollectionReq createCollectionReq) {
-        // TODO : token에서 userId 추출하기
-
-        collectionService.saveCollection(createCollectionReq, 2L);
+        collectionService.saveCollection(createCollectionReq);
 
         return ResponseEntity.ok("success");
     }

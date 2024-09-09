@@ -2,6 +2,7 @@ package com.interview_master.ui.request;
 
 import com.interview_master.domain.Access;
 import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -22,9 +23,9 @@ public class CreateCollectionReq {
     @NotEmpty(message = "컬렉션 설명은 필수 값입니다.")
     private String description;
 
-    @NotEmpty(message = "공개 범위 설정은 필수입니다.")
+    @NotNull(message = "공개 범위 설정은 필수입니다.")
     private Access access;
 
-    @NotEmpty(message = "카테고리 선택은 필수입니다.")
+    @NotNull(message = "카테고리 선택은 필수입니다.")
     private Long categoryId;
 }

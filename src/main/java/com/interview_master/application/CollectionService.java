@@ -9,6 +9,7 @@ import com.interview_master.infrastructure.CategoryRepository;
 import com.interview_master.infrastructure.CollectionRepository;
 import com.interview_master.infrastructure.UserRepository;
 import com.interview_master.ui.request.CreateCollectionReq;
+import com.interview_master.util.ExtractUserId;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,7 +24,10 @@ public class CollectionService {
     private final CategoryRepository categoryRepository;
 
     @Transactional
-    public Collection saveCollection(CreateCollectionReq createCollectionReq, Long userId) {
+    public void saveCollection(CreateCollectionReq createCollectionReq) {
+        // token의 userId 가져오기
+        Long userId = ExtractUserId.extractUserIdFromContextHolder();
+
         // 이미지 저장
         String imgUrl = "";
         if (createCollectionReq.getImage() != null) {
@@ -49,6 +53,6 @@ public class CollectionService {
                 .build();
 
         // 컬렉션 저장
-        return collectionRepository.save(newCollection);
+        collectionRepository.save(newCollection);
     }
 }
