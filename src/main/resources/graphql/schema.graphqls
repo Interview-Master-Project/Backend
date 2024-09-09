@@ -78,3 +78,13 @@ enum OAuthProvider {
     KAKAO
     NAVER
 }
+
+type Mutation {
+    createQuiz(createQuizInput: CreateQuizInput!): String!
+}
+
+input CreateQuizInput {
+    question: String!
+    answer: String!
+    collectionId: Int!
+}
