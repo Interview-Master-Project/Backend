@@ -19,6 +19,7 @@ public enum ErrorCode {
 
     // COLLECTION
     COLLECTION_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 컬렉션은 존재하지 않습니다."),
+    UNAUTHORIZED_COLLECTION_MODIFICATION(HttpStatus.FORBIDDEN, "컬렉션 주인만이 퀴즈를 생성할 수 있습니다."),
 
     // TOKEN
     AUTHORIZATION_TOKEN_NOT_FOUND(HttpStatus.NOT_FOUND, "로그인이 필요합니다."),

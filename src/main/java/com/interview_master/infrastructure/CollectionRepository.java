@@ -7,10 +7,13 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.Repository;
 import org.springframework.data.repository.query.Param;
 
+import java.util.Optional;
+
 public interface CollectionRepository extends Repository<Collection, Long> {
 
-    Collection save(Collection collection);
+    void save(Collection collection);
 
+    Optional<Collection> findByIdAndIsDeletedFalse(Long id);
     /**
      * user의 컬렉션 리스트
      */

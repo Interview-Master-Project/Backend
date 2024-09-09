@@ -1,6 +1,7 @@
 package com.interview_master.domain.collection;
 
 import com.interview_master.common.exception.ApiException;
+import com.interview_master.common.exception.ErrorCode;
 import com.interview_master.domain.Access;
 import com.interview_master.domain.BaseEntity;
 import com.interview_master.domain.category.Category;
@@ -73,6 +74,15 @@ public class Collection extends BaseEntity {
         }
     }
 
+    /**
+     * collection 주인인지 검증하는 로직
+     */
+    public void isOwner(Long userId) {
+        boolean isCreator = this.creator.getId().equals(userId);
+        if (!isCreator) {
+            throw new ApiException(ErrorCode.UNAUTHORIZED_COLLECTION_MODIFICATION);
+        }
+    }
 
     // setter
     private void setName(String name) {
