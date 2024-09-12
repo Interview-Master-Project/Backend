@@ -1,12 +1,20 @@
 # Root Query type
 type Query {
-    myPage(userId: ID!, offset: Int!, limit: Int!): MyPage
+    myPage(userId: ID!, offset: Int!, limit: Int!, startDate: String!, endDate: String!): MyPage
     userAttemptedCollections(userId: ID!, offset: Int!, limit: Int!): CollectionPage
 }
 
 type MyPage {
     user: User!
     collectionPage: CollectionPage!
+    quizGardens: [QuizGarden!]!
+}
+
+type QuizGarden {
+    date: String!
+    quizzesSolved: Int!
+    dayIndex: Int!
+    weekIndex: Int!
 }
 
 type CollectionPage {
