@@ -40,6 +40,13 @@ public class Quiz extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private Access access;
 
+    public Quiz(String question, String answer, Collection collection, User creator, Access access) {
+        setQuestion(question);
+        setAnswer(answer);
+        setCollection(collection);
+        setCreator(creator);
+        setAccess(access);
+    }
     //==== domain logic ====//
 //    public void edit(EditQuizInput editQuizInput) {
 //        // 수정할 때는 null이면 그냥 pass하면 된다 -> 예외 던지지 말고
@@ -49,39 +56,37 @@ public class Quiz extends BaseEntity {
 //        if (editQuizInput.access() != null ) setAccess(editQuizInput.access());
 //    }
 
-    public void checkExistence() {
-        if(this.getIsDeleted()) throw new ApiException(ErrorCode.QUIZ_NOT_FOUND);
-    }
+//    public void checkExistence() {
+//        if(this.getIsDeleted()) throw new ApiException(ErrorCode.QUIZ_NOT_FOUND);
+//    }
 
     //==== setter ====//
     private void setCollection(Collection collection) {
         if (collection == null) throw new ApiException(ErrorCode.NULL_EXCEPTION, "no collectionId");
+        if (this.collection == null) this.collection = new Collection();
         if (!collection.getId().equals(this.collection.getId())) {
             this.collection = collection;
         }
     }
 
     private void setQuestion(String question) {
-        if (question == null) throw new ApiException(ErrorCode.NULL_EXCEPTION, "no question");
-        if (!question.trim().isEmpty()) {
-            this.question = question;
-        }
+        if (question == null || question.trim().isEmpty()) throw new ApiException(ErrorCode.NULL_EXCEPTION, "질문 입력은 필수 입니다.");
+        this.question = question;
+
     }
 
     private void setAnswer(String answer) {
-        if (answer == null) throw new ApiException(ErrorCode.NULL_EXCEPTION, "no answer");
-        if (!answer.trim().isEmpty()) {
-            this.answer = answer;
-        }
+        if (answer == null || answer.trim().isEmpty()) throw new ApiException(ErrorCode.NULL_EXCEPTION, "답변 입력은 필수 입니다.");
+        this.answer = answer;
     }
 
     private void setCreator(User creator) {
-        if (creator == null) throw new ApiException(ErrorCode.NULL_EXCEPTION, "no creatorId");
+        if (creator == null) throw new ApiException(ErrorCode.NULL_EXCEPTION, "작성자 입력은 필수 입니다.");
         this.creator = creator;
     }
 
     private void setAccess(Access access) {
-        if (access == null) throw new ApiException(ErrorCode.NULL_EXCEPTION, "no access");
+        if (access == null) throw new ApiException(ErrorCode.NULL_EXCEPTION, "공개 범위 설정은 필수 입니다.");
         this.access = access;
     }
 }

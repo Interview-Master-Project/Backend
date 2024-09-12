@@ -24,6 +24,7 @@ public class WebConfig implements WebMvcConfigurer {
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
+        // TODO : 실제 환경에 배포할 때는 "/**" 빼기
         registry.addInterceptor(loginCheckInterceptor)
                 .excludePathPatterns("/api/auth/*", "/error", "/favicon.ico", "/**");
     }

@@ -1,35 +1,48 @@
 # Root Query type
 type Query {
-    collections: [Collection]
-    collectionById(id: ID!): Collection
-    members: [Member]
-    memberById(id: ID!): Member
-    quizzes: [Quiz]
-    quizById(id: ID!): Quiz
-    getMyQuiz: [QuizWithCollectionAndResults]
-    quizByCollectionId(id: ID!): [QuizWithCollectionAndResults]
-    quizResults: [QuizResult]
-    quizResultById(id: ID!): QuizResult
+    myPage(userId: ID!, offset: Int!, limit: Int!, startDate: String!, endDate: String!): MyPage
+    userAttemptedCollections(userId: ID!, offset: Int!, limit: Int!): CollectionPage
+}
+
+type MyPage {
+    user: User!
+    collectionPage: CollectionPage!
+    quizGardens: [QuizGarden!]!
+}
+
+type QuizGarden {
+    date: String!
+    quizzesSolved: Int!
+    dayIndex: Int!
+    weekIndex: Int!
+}
+
+type CollectionPage {
+    collections: [Collection!]
+    totalCount: Int!
+    hasNext: Boolean!
 }
 
 # Collection type
 type Collection {
     id: ID!
     name: String!
+    description: String!
+    imgUrl: String!
     access: Access!
-    creatorId: ID!
-    quizzes: [Quiz]
+    category: Category!
+    creator: User!
     isDeleted: Boolean!
     createdAt: String!
     updatedAt: String!
 }
 
 # Member type
-type Member {
+type User {
     id: ID!
-    email: String
-    nickname: String
-    oAuthProvider: OAuthProvider
+    email: String!
+    nickname: String!
+    oAuthProvider: OAuthProvider!
     isDeleted: Boolean!
     createdAt: String!
     updatedAt: String!
@@ -40,25 +53,27 @@ type Quiz {
     id: ID!
     question: String!
     answer: String!
-    collectionId: ID!
-    creatorId: ID!
+    collection: Collection!
+    creator: User!
     access: Access!
-    quizResults: [QuizResult]
     isDeleted: Boolean!
     createdAt: String!
     updatedAt: String!
 }
 
-# QuizResult type
-type QuizResult {
+type Category {
     id: ID!
-    quiz: Quiz!
-    userId: ID!
-    correctAttempts: Int!
-    wrongAttempts: Int!
-    isDeleted: Boolean!
-    createdAt: String!
-    updatedAt: String!
+    name: String!
+}
+
+type UserCollectionAttempt {
+    id: ID!
+    collection: Collection!
+    user: User!
+    startedAt: String!
+    completedAt: String!
+    totalQuizCount: Int!
+    correctQuizCount: Int!
 }
 
 # Enums
@@ -72,31 +87,12 @@ enum OAuthProvider {
     NAVER
 }
 
-type QuizWithCollectionAndResults {
-    quiz: Quiz!
-    collection: Collection!
-    quizResult: QuizResult  # 추후에 NOTNULL 처리하기
-}
-
-# Mutation (Read 제외 CUD 담당)
 type Mutation {
     createQuiz(createQuizInput: CreateQuizInput!): String!
-    editQuiz(id: ID!, editQuizInput: EditQuizInput!): String!
-    deleteQuiz(id: ID!): String!
 }
 
 input CreateQuizInput {
     question: String!
     answer: String!
-    collectionId: ID!
-    creatorId: ID!
-    access: Access!
+    collectionId: Int!
 }
-
-input EditQuizInput {
-    question: String
-    answer: String
-    collectionId: ID
-    access: Access
-}
-
