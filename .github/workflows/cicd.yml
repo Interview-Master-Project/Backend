@@ -31,7 +31,7 @@ jobs:
 
       # 빌드해서 생긴 JAR 파일을 깃허브 아티팩트로 업로드
       - name: Upload build artifact
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: interview
           path: build/libs/interview-0.0.1-SNAPSHOT.jar
@@ -54,7 +54,7 @@ jobs:
         run: sudo apt-get install -y sshpass
 
       - name: Download build artifact
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v3
         with:
           name: interview
           path: build/libs/
