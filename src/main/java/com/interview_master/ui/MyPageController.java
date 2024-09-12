@@ -3,10 +3,8 @@ package com.interview_master.ui;
 import com.interview_master.application.MyPageService;
 import com.interview_master.application.UserProfileService;
 import com.interview_master.application.UserQuizAttemptService;
-import com.interview_master.domain.user.User;
 import com.interview_master.dto.CollectionPage;
 import com.interview_master.dto.MyPage;
-import com.interview_master.dto.QuizGarden;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.graphql.data.method.annotation.Argument;
@@ -14,7 +12,6 @@ import org.springframework.graphql.data.method.annotation.QueryMapping;
 import org.springframework.stereotype.Controller;
 
 import java.time.LocalDate;
-import java.util.List;
 
 @Controller
 @RequiredArgsConstructor
@@ -30,14 +27,10 @@ public class MyPageController {
         log.info("========== my page\t userId: {}, offset: {}, limit: {}, startDate : {}, endDate : {}",
                 userId, offset, limit, startDate, endDate);
 
-        User profile = userProfileService.getProfile(userId);
-        CollectionPage collectionPage = collectionService.userCollections(userId, offset, limit);
-        List<QuizGarden> quizGardens = userQuizAttemptService.getQuizGardens(LocalDate.parse(startDate), LocalDate.parse(endDate), userId);
-
         return MyPage.builder()
-                .user(profile)
-                .collectionPage(collectionPage)
-                .quizGardens(quizGardens)
+                .user(userProfileService.getProfile(userId))
+                .collectionPage(collectionService.userCollections(userId, offset, limit))
+                .quizGardens(userQuizAttemptService.getQuizGardens(LocalDate.parse(startDate), LocalDate.parse(endDate), userId))
                 .build();
     }
 
