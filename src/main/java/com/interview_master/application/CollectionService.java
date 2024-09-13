@@ -9,6 +9,7 @@ import com.interview_master.infrastructure.CategoryRepository;
 import com.interview_master.infrastructure.CollectionRepository;
 import com.interview_master.infrastructure.UserRepository;
 import com.interview_master.ui.request.CreateCollectionReq;
+import com.interview_master.ui.request.EditCollectionReq;
 import com.interview_master.util.ExtractUserId;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -54,5 +55,28 @@ public class CollectionService {
 
         // 컬렉션 저장
         collectionRepository.save(newCollection);
+    }
+
+    @Transactional
+    public void editCollection(Long collectionId, EditCollectionReq editReq) {
+        Collection collection = collectionRepository.findByIdAndIsDeletedFalse(collectionId)
+                .orElseThrow(() -> new ApiException(ErrorCode.COLLECTION_NOT_FOUND));
+
+        // image 입력받았으면 기존 이미지 삭제하고 새로운 이미지 업로드
+        String newImgUrl = null;
+        if (editReq.getImage() != null) {
+            imageService.deleteImageFromS3(collection.getImgUrl());
+            newImgUrl = imageService.uploadImage(editReq.getImage());
+        }
+
+        Category newCategory = null;
+        if (editReq.getCategoryId() != null) {
+            newCategory = categoryRepository.findById(editReq.getCategoryId())
+                    .orElseThrow(() -> new ApiException(ErrorCode.CATEGORY_NOT_FOUND));
+        }
+
+        // TODO : access 변경 메시지 발행하기
+
+        collection.edit(editReq.getNewName(), editReq.getNewDescription(), newImgUrl, newCategory, editReq.getNewAccess());
     }
 }
