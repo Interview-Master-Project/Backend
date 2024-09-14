@@ -2,6 +2,20 @@
 type Query {
     myPage(userId: ID!, offset: Int!, limit: Int!, startDate: String!, endDate: String!): MyPage
     userAttemptedCollections(userId: ID!, offset: Int!, limit: Int!): CollectionPage
+
+    getCollectionWithQuizzes(collectionId: ID!): CollectionWithQuizzes
+}
+
+type CollectionWithQuizzes {
+    collection: Collection
+    quizzesWithAttempts: [QuizzesWithAttempts!]!
+}
+
+type QuizzesWithAttempts {
+    quiz: Quiz!
+    totalAttempts: Int!
+    correctAttempts: Int!
+    recentAnswerAt: String!
 }
 
 type MyPage {
@@ -35,6 +49,7 @@ type Collection {
     isDeleted: Boolean!
     createdAt: String!
     updatedAt: String!
+    quizzes: [Quiz!]
 }
 
 # Member type

@@ -27,5 +27,4 @@ public interface CollectionRepository extends Repository<Collection, Long> {
             "where uca.user.id = :userId " +
             "and c.isDeleted = false")
     Page<Collection> findAttemptedCollectionsByUserOrderByLatestAttempt(@Param("userId") Long userId, Pageable pageable);
-
 }

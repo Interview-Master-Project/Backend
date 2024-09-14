@@ -1,6 +1,6 @@
 package com.interview_master.ui;
 
-import com.interview_master.application.CollectionService;
+import com.interview_master.application.UpsertCollectionService;
 import com.interview_master.ui.request.CreateCollectionReq;
 import com.interview_master.ui.request.EditCollectionReq;
 import lombok.RequiredArgsConstructor;
@@ -15,11 +15,11 @@ import javax.validation.Valid;
 @Slf4j
 public class UpsertCollectionController {
 
-    private final CollectionService collectionService;
+    private final UpsertCollectionService upsertCollectionService;
 
     @PostMapping("/api/collections")
     public ResponseEntity<String> createCollection(@ModelAttribute @Valid CreateCollectionReq createCollectionReq) {
-        collectionService.saveCollection(createCollectionReq);
+        upsertCollectionService.saveCollection(createCollectionReq);
 
         return ResponseEntity.ok("success");
     }
@@ -27,7 +27,7 @@ public class UpsertCollectionController {
     @PatchMapping("/api/collections/{collectionId}")
     public ResponseEntity<String> editCollection(@PathVariable Long collectionId,
                                                  @ModelAttribute EditCollectionReq editCollectionReq) {
-        collectionService.editCollection(collectionId, editCollectionReq);
+        upsertCollectionService.editCollection(collectionId, editCollectionReq);
         return ResponseEntity.ok("success");
     }
 }

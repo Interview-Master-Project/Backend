@@ -1,6 +1,7 @@
 package com.interview_master.domain.userquizattempt;
 
 import com.interview_master.domain.quiz.Quiz;
+import com.interview_master.domain.user.User;
 import com.interview_master.domain.usercollectionattempt.UserCollectionAttempt;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -27,6 +28,9 @@ public class UserQuizAttempt {
 
     @ManyToOne(fetch = FetchType.LAZY)
     private Quiz quiz;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    private User user;
 
     private boolean isCorrect;
 

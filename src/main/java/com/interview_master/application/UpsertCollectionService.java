@@ -17,7 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
-public class CollectionService {
+public class UpsertCollectionService {
 
     private final CollectionRepository collectionRepository;
     private final UserRepository userRepository;

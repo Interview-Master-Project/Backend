@@ -5,12 +5,15 @@ import com.interview_master.common.exception.ErrorCode;
 import com.interview_master.domain.Access;
 import com.interview_master.domain.BaseEntity;
 import com.interview_master.domain.category.Category;
+import com.interview_master.domain.quiz.Quiz;
 import com.interview_master.domain.user.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import java.util.List;
 
 import static com.interview_master.common.exception.ErrorCode.FORBIDDEN_ACCESS;
 import static com.interview_master.domain.Access.PUBLIC;
@@ -42,6 +45,9 @@ public class Collection extends BaseEntity {
 
     @Enumerated(EnumType.STRING)
     private Access access;
+
+    @OneToMany(mappedBy = "collection", fetch = FetchType.LAZY)
+    private List<Quiz> quizzes;
 
     // domain logic
 
