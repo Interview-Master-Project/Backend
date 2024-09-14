@@ -59,8 +59,13 @@ public class CollectionService {
 
     @Transactional
     public void editCollection(Long collectionId, EditCollectionReq editReq) {
+        Long userId = ExtractUserId.extractUserIdFromContextHolder();
+
         Collection collection = collectionRepository.findByIdAndIsDeletedFalse(collectionId)
                 .orElseThrow(() -> new ApiException(ErrorCode.COLLECTION_NOT_FOUND));
+
+        // 수정 가능한지 검증
+        collection.isOwner(userId);
 
         // image 입력받았으면 기존 이미지 삭제하고 새로운 이미지 업로드
         String newImgUrl = null;
