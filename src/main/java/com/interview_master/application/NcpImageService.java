@@ -1,5 +1,11 @@
 package com.interview_master.application;
 
+import com.amazonaws.AmazonServiceException;
+import com.amazonaws.services.s3.AmazonS3Client;
+import com.amazonaws.services.s3.model.CannedAccessControlList;
+import com.amazonaws.services.s3.model.DeleteObjectRequest;
+import com.amazonaws.services.s3.model.ObjectMetadata;
+import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.interview_master.common.exception.ApiException;
 import com.interview_master.common.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
@@ -7,12 +13,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-import software.amazon.awssdk.services.s3.S3Client;
-import software.amazon.awssdk.services.s3.model.PutObjectRequest;
-import software.amazon.awssdk.core.sync.RequestBody;
-import software.amazon.awssdk.services.s3.model.DeleteObjectRequest;
 
-import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
@@ -20,6 +22,9 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
+
+import static com.interview_master.common.constant.Constant.DIRECTORY_SEPARATOR;
+import static com.interview_master.common.constant.Constant.IMAGE_DIRECTORY_NAME;
 
 @Service
 @Slf4j
@@ -29,7 +34,7 @@ public class NcpImageService {
     @Value("${cloud.ncp.bucketname}")
     private String bucketName;
 
-    private final S3Client s3Client;
+    private final AmazonS3Client objectStorageClient;
 
     public String uploadImage(MultipartFile image) {
         return upload(image);
@@ -43,23 +48,26 @@ public class NcpImageService {
 
         validateImageFileExtension(file.getOriginalFilename());
 
-        String fileName = "collection/" + UUID.randomUUID().toString().substring(0, 13) + "_" + file.getOriginalFilename();
+        String fileName = IMAGE_DIRECTORY_NAME + DIRECTORY_SEPARATOR + UUID.randomUUID().toString().substring(0, 13) + "_" + file.getOriginalFilename();
 
         try {
-            PutObjectRequest putObjectRequest = PutObjectRequest.builder()
-                    .bucket(bucketName)
-                    .key(fileName)
-                    .contentType(file.getContentType())
-                    .acl("public-read")
-                    .build();
+            ObjectMetadata metadata = new ObjectMetadata();
+            metadata.setContentType(file.getContentType());
+            metadata.setContentLength(file.getSize());
 
-            s3Client.putObject(putObjectRequest, RequestBody.fromInputStream(file.getInputStream(), file.getSize()));
-            log.info("Image {} has been uploaded.", fileName);
-
-            return s3Client.utilities().getUrl(builder -> builder.bucket(bucketName).key(fileName)).toString();
-        } catch (IOException e) {
+            try (InputStream inputStream = file.getInputStream()) {
+                PutObjectRequest request = new PutObjectRequest(bucketName, fileName, inputStream, metadata)
+                        .withCannedAcl(CannedAccessControlList.PublicRead);
+                objectStorageClient.putObject(request);
+                log.info("Image {} has been uploaded.", fileName);
+            }
+        } catch (AmazonServiceException e) {
             throw new RuntimeException("Error uploading file to NCloud Storage", e);
+        } catch (Exception e) {
+            log.error("Error uploading file to NCloud Storage", e);
         }
+
+        return objectStorageClient.getUrl(bucketName, fileName).toString();
     }
 
     /**
@@ -79,14 +87,14 @@ public class NcpImageService {
         }
     }
 
-    public void deleteImageFromS3(String imgUrl) {
-        String key = getKeyFromImageUrl(imgUrl);
+    public void deleteImageFromBucket(String imgUrl) {
+        log.info("imgUrl = {}", imgUrl);
+        String filename = getKeyFromImageUrl(imgUrl);
+        log.info("Deleting image {} from the bucket.", filename);
         try {
-            DeleteObjectRequest deleteObjectRequest = DeleteObjectRequest.builder()
-                    .bucket(bucketName)
-                    .key(key)
-                    .build();
-            s3Client.deleteObject(deleteObjectRequest);
+            DeleteObjectRequest request = new DeleteObjectRequest(bucketName, filename);
+            objectStorageClient.deleteObject(request);
+            log.info("Image {} has been deleted.", filename);
         } catch (Exception e) {
             throw new RuntimeException("Error deleting image from S3", e);
         }
@@ -100,5 +108,6 @@ public class NcpImageService {
         } catch (Exception e) {
             throw new RuntimeException("Error parsing image URL", e);
         }
+
     }
 }

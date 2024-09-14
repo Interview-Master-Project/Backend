@@ -65,17 +65,15 @@ public class CollectionService {
         // image 입력받았으면 기존 이미지 삭제하고 새로운 이미지 업로드
         String newImgUrl = null;
         if (editReq.getImage() != null) {
-            imageService.deleteImageFromS3(collection.getImgUrl());
+            imageService.deleteImageFromBucket(collection.getImgUrl()); // 이미지 삭제 -> 비동기 처리 ..?
             newImgUrl = imageService.uploadImage(editReq.getImage());
         }
 
-        Category newCategory = null;
+        Category newCategory = collection.getCategory();
         if (editReq.getCategoryId() != null) {
             newCategory = categoryRepository.findById(editReq.getCategoryId())
                     .orElseThrow(() -> new ApiException(ErrorCode.CATEGORY_NOT_FOUND));
         }
-
-        // TODO : access 변경 메시지 발행하기
 
         collection.edit(editReq.getNewName(), editReq.getNewDescription(), newImgUrl, newCategory, editReq.getNewAccess());
     }
