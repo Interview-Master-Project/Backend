@@ -94,7 +94,7 @@ public class Collection extends BaseEntity {
     public void isOwner(Long userId) {
         boolean isCreator = this.creator.getId().equals(userId);
         if (!isCreator) {
-            throw new ApiException(ErrorCode.UNAUTHORIZED_COLLECTION_MODIFICATION);
+            throw new ApiException(ErrorCode.FORBIDDEN_MODIFICATION);
         }
     }
 
