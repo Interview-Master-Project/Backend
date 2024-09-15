@@ -25,6 +25,8 @@ public interface CollectionRepository extends Repository<Collection, Long> {
     @Query("select c from Collection c " +
             "join UserCollectionAttempt uca on uca.collection.id = c.id " +
             "where uca.user.id = :userId " +
-            "and c.isDeleted = false")
+            "and c.isDeleted = false " +
+            "group by c.id " +
+            "order by max(uca.startedAt) desc")
     Page<Collection> findAttemptedCollectionsByUserOrderByLatestAttempt(@Param("userId") Long userId, Pageable pageable);
 }

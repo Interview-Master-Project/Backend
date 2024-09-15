@@ -44,7 +44,7 @@ public class MyPageService {
     public CollectionPage userAttemptedCollections(Long userId, Integer offset, Integer limit) {
         PaginationParams pageParams = calculatePaginationParams(offset, limit);
 
-        Pageable pageable = PageRequest.of(pageParams.pageNumber(), pageParams.pageSize(), Sort.by("uca.startedAt").descending());
+        Pageable pageable = PageRequest.of(pageParams.pageNumber(), pageParams.pageSize());
         Page<Collection> collectionPage = collectionRepository.findAttemptedCollectionsByUserOrderByLatestAttempt(userId, pageable);
 
         return CollectionPage.builder()
