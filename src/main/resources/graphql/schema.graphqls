@@ -107,10 +107,17 @@ enum OAuthProvider {
 
 type Mutation {
     createQuiz(createQuizInput: CreateQuizInput!): String!
+    editQuiz(quizId: ID!, editQuizInput: EditQuizInput!): String!
 }
 
 input CreateQuizInput {
     question: String!
     answer: String!
     collectionId: Int!
+}
+
+input EditQuizInput {
+    question: String
+    answer: String
+    collectionId: Int
 }

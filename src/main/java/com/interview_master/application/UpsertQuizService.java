@@ -9,6 +9,7 @@ import com.interview_master.infrastructure.CollectionRepository;
 import com.interview_master.infrastructure.QuizRepository;
 import com.interview_master.infrastructure.UserRepository;
 import com.interview_master.ui.request.CreateQuizInput;
+import com.interview_master.ui.request.EditQuizInput;
 import com.interview_master.util.ExtractUserId;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -22,6 +23,7 @@ public class UpsertQuizService {
     private final CollectionRepository collectionRepository;
     private final UserRepository userRepository;
 
+    @Transactional
     public void saveQuiz(CreateQuizInput createQuizInput) {
         Long userId = ExtractUserId.extractUserIdFromContextHolder();
 
@@ -45,6 +47,25 @@ public class UpsertQuizService {
 
         // 저장
         quizRepository.save(newQuiz);
+    }
+
+    @Transactional
+    public void editQuiz(Long quizId, EditQuizInput editQuizInput) {
+        Long userId = ExtractUserId.extractUserIdFromContextHolder();
+
+        Collection collection = null;
+        if (editQuizInput.getCollectionId() != null) {
+            collection = collectionRepository.findByIdAndIsDeletedFalse(editQuizInput.getCollectionId())
+                    .orElseThrow(() -> new ApiException(ErrorCode.COLLECTION_NOT_FOUND));
+            collection.isOwner(userId);
+        }
+
+        Quiz quiz = quizRepository.findByIdAndIsDeletedFalse(quizId)
+                .orElseThrow(() -> new ApiException(ErrorCode.QUIZ_NOT_FOUND));
+
+        quiz.isOwner(userId);
+
+        quiz.edit(editQuizInput.getQuestion(), editQuizInput.getAnswer(), collection);
     }
 
     @Transactional

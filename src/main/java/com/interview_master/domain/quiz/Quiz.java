@@ -47,18 +47,14 @@ public class Quiz extends BaseEntity {
         setCreator(creator);
         setAccess(access);
     }
-    //==== domain logic ====//
-//    public void edit(EditQuizInput editQuizInput) {
-//        // 수정할 때는 null이면 그냥 pass하면 된다 -> 예외 던지지 말고
-//        if (editQuizInput.question() != null) setQuestion(editQuizInput.question());
-//        if (editQuizInput.answer() != null) setAnswer(editQuizInput.answer());
-//        if (editQuizInput.collectionId() != null) setCollectionId(editQuizInput.collectionId());
-//        if (editQuizInput.access() != null ) setAccess(editQuizInput.access());
-//    }
 
-//    public void checkExistence() {
-//        if(this.getIsDeleted()) throw new ApiException(ErrorCode.QUIZ_NOT_FOUND);
-//    }
+    //==== domain logic ====//
+    public void edit(String question, String answer, Collection collection) {
+        // 수정할 때는 null이면 그냥 pass하면 된다 -> 예외 던지지 말고
+        if (question != null) setQuestion(question);
+        if (answer != null) setAnswer(answer);
+        if (collection != null) setCollection(collection);
+    }
 
     public void isOwner(Long userId) {
         if (!this.creator.getId().equals(userId)) {
@@ -77,7 +73,6 @@ public class Quiz extends BaseEntity {
     private void setQuestion(String question) {
         if (question == null || question.trim().isEmpty()) throw new ApiException(ErrorCode.NULL_EXCEPTION, "질문 입력은 필수 입니다.");
         this.question = question;
-
     }
 
     private void setAnswer(String answer) {

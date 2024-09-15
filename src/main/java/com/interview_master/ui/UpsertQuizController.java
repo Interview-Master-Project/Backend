@@ -2,6 +2,7 @@ package com.interview_master.ui;
 
 import com.interview_master.application.UpsertQuizService;
 import com.interview_master.ui.request.CreateQuizInput;
+import com.interview_master.ui.request.EditQuizInput;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.graphql.data.method.annotation.Argument;
@@ -21,6 +22,13 @@ public class UpsertQuizController {
     @MutationMapping
     public String createQuiz(@Argument @Valid CreateQuizInput createQuizInput) {
         upsertQuizService.saveQuiz(createQuizInput);
+
+        return "success";
+    }
+
+    @MutationMapping
+    public String editQuiz(@Argument Long quizId, @Argument EditQuizInput editQuizInput) {
+        upsertQuizService.editQuiz(quizId, editQuizInput);
 
         return "success";
     }
