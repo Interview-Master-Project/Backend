@@ -9,6 +9,7 @@ public enum ErrorCode {
 
     // COMMON
     NULL_EXCEPTION(HttpStatus.BAD_REQUEST, "해당 값이 null 입니다."),
+    FORBIDDEN_MODIFICATION(HttpStatus.FORBIDDEN, "수정 권한이 없습니다."),
 
     // USER
     UNAUTHORIZED_USER(HttpStatus.UNAUTHORIZED, "미인증 유저의 요청입니다."),
@@ -19,7 +20,6 @@ public enum ErrorCode {
 
     // COLLECTION
     COLLECTION_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 컬렉션은 존재하지 않습니다."),
-    UNAUTHORIZED_COLLECTION_MODIFICATION(HttpStatus.FORBIDDEN, "컬렉션 주인만이 퀴즈를 생성할 수 있습니다."),
 
     // TOKEN
     AUTHORIZATION_TOKEN_NOT_FOUND(HttpStatus.NOT_FOUND, "로그인이 필요합니다."),

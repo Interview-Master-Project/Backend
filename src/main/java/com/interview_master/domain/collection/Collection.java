@@ -5,12 +5,15 @@ import com.interview_master.common.exception.ErrorCode;
 import com.interview_master.domain.Access;
 import com.interview_master.domain.BaseEntity;
 import com.interview_master.domain.category.Category;
+import com.interview_master.domain.quiz.Quiz;
 import com.interview_master.domain.user.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import java.util.List;
 
 import static com.interview_master.common.exception.ErrorCode.FORBIDDEN_ACCESS;
 import static com.interview_master.domain.Access.PUBLIC;
@@ -43,27 +46,38 @@ public class Collection extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private Access access;
 
+    @OneToMany(mappedBy = "collection", fetch = FetchType.LAZY)
+    private List<Quiz> quizzes;
+
     // domain logic
 
-//    public void editCollection(EditCollectionInput editCollectionInput) {
-//        String newName = editCollectionInput.getNewName();
-//        Long newCategoryId = editCollectionInput.getCategoryId();
-//        Access newAccess = editCollectionInput.getNewAccess();
-//
-//        boolean nameChanged = newName != null && !newName.equals(this.name);
-//        boolean categoryChanged = newCategoryId != null && !newCategoryId.equals(this.category.getId());
-//        boolean accessChanged = newAccess != null && newAccess != this.access;
-//
-//        if (nameChanged) {
-//            setName(newName);
-//        }
-//        if (categoryChanged) {
-//            setCategory(newCategoryId);
-//        }
-//        if (accessChanged) {
-//            setAccess(newAccess);
-//        }
-//    }
+    /**
+     * 수정된 것만 반영
+     */
+    public void edit(String newName, String newDescription, String newImgUrl, Category newCategory, Access newAccess) {
+
+        boolean nameChanged = newName != null && !newName.equals(this.name);
+        boolean descriptionChanged = newDescription != null && !newDescription.equals(this.description);
+        boolean imgUrlChanged = newImgUrl != null && !newImgUrl.equals(this.imgUrl);
+        boolean categoryChanged = newCategory.getId() != null && !newCategory.getId().equals(this.category.getId());
+        boolean accessChanged = newAccess != null && newAccess != this.access;
+
+        if (nameChanged) {
+            setName(newName);
+        }
+        if (descriptionChanged) {
+            setDescription(newDescription);
+        }
+        if (imgUrlChanged) {
+            setImgUrl(newImgUrl);
+        }
+        if (categoryChanged) {
+            setCategory(newCategory);
+        }
+        if (accessChanged) {
+            setAccess(newAccess);
+        }
+    }
 
     public void canAccess(Long userId) {
         boolean isCreator = this.creator.getId().equals(userId);
@@ -80,7 +94,7 @@ public class Collection extends BaseEntity {
     public void isOwner(Long userId) {
         boolean isCreator = this.creator.getId().equals(userId);
         if (!isCreator) {
-            throw new ApiException(ErrorCode.UNAUTHORIZED_COLLECTION_MODIFICATION);
+            throw new ApiException(ErrorCode.FORBIDDEN_MODIFICATION);
         }
     }
 
