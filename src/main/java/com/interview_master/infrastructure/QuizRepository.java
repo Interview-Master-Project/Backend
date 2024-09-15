@@ -7,8 +7,11 @@ import org.springframework.data.repository.Repository;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface QuizRepository extends Repository<Quiz, Long> {
+
+    Optional<Quiz> findByIdAndIsDeletedFalse(Long quizId);
 
     void save(Quiz quiz);
 

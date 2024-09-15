@@ -5,6 +5,8 @@ type Query {
 
     getCollectionWithQuizzes(collectionId: ID!): CollectionWithQuizzes
     deleteCollection(collectionId: ID!): String
+
+    deleteQuiz(quizId: ID!): String
 }
 
 type CollectionWithQuizzes {

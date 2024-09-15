@@ -60,6 +60,11 @@ public class Quiz extends BaseEntity {
 //        if(this.getIsDeleted()) throw new ApiException(ErrorCode.QUIZ_NOT_FOUND);
 //    }
 
+    public void isOwner(Long userId) {
+        if (!this.creator.getId().equals(userId)) {
+            throw new ApiException(ErrorCode.FORBIDDEN_MODIFICATION);
+        }
+    }
     //==== setter ====//
     private void setCollection(Collection collection) {
         if (collection == null) throw new ApiException(ErrorCode.NULL_EXCEPTION, "no collectionId");

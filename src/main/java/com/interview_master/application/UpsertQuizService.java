@@ -12,6 +12,7 @@ import com.interview_master.ui.request.CreateQuizInput;
 import com.interview_master.util.ExtractUserId;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -44,5 +45,17 @@ public class UpsertQuizService {
 
         // 저장
         quizRepository.save(newQuiz);
+    }
+
+    @Transactional
+    public void deleteQuiz(Long quizId) {
+        Long userId = ExtractUserId.extractUserIdFromContextHolder();
+
+        Quiz quiz = quizRepository.findByIdAndIsDeletedFalse(quizId)
+                .orElseThrow(() -> new ApiException(ErrorCode.QUIZ_NOT_FOUND));
+
+        quiz.isOwner(userId);
+
+        quiz.markDeleted();
     }
 }
