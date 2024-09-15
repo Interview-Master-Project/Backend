@@ -4,6 +4,7 @@ type Query {
     userAttemptedCollections(userId: ID!, offset: Int!, limit: Int!): CollectionPage
 
     getCollectionWithQuizzes(collectionId: ID!): CollectionWithQuizzes
+    deleteCollection(collectionId: ID!): String
 }
 
 type CollectionWithQuizzes {

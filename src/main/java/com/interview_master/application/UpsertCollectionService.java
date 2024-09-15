@@ -82,4 +82,16 @@ public class UpsertCollectionService {
 
         collection.edit(editReq.getNewName(), editReq.getNewDescription(), newImgUrl, newCategory, editReq.getNewAccess());
     }
+
+    @Transactional
+    public void deleteCollection(Long collectionId) {
+        Long userId = ExtractUserId.extractUserIdFromContextHolder();
+
+        Collection collection = collectionRepository.findByIdAndIsDeletedFalse(collectionId)
+                .orElseThrow(() -> new ApiException(ErrorCode.COLLECTION_NOT_FOUND));
+
+        collection.isOwner(userId);
+
+        collection.markDeleted();
+    }
 }
