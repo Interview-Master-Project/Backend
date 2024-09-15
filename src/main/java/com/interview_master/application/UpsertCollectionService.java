@@ -9,6 +9,7 @@ import com.interview_master.infrastructure.CategoryRepository;
 import com.interview_master.infrastructure.CollectionRepository;
 import com.interview_master.infrastructure.UserRepository;
 import com.interview_master.ui.request.CreateCollectionReq;
+import com.interview_master.ui.request.EditCollectionReq;
 import com.interview_master.util.ExtractUserId;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -16,7 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
-public class CollectionService {
+public class UpsertCollectionService {
 
     private final CollectionRepository collectionRepository;
     private final UserRepository userRepository;
@@ -54,5 +55,43 @@ public class CollectionService {
 
         // 컬렉션 저장
         collectionRepository.save(newCollection);
+    }
+
+    @Transactional
+    public void editCollection(Long collectionId, EditCollectionReq editReq) {
+        Long userId = ExtractUserId.extractUserIdFromContextHolder();
+
+        Collection collection = collectionRepository.findByIdAndIsDeletedFalse(collectionId)
+                .orElseThrow(() -> new ApiException(ErrorCode.COLLECTION_NOT_FOUND));
+
+        // 수정 가능한지 검증
+        collection.isOwner(userId);
+
+        // image 입력받았으면 기존 이미지 삭제하고 새로운 이미지 업로드
+        String newImgUrl = null;
+        if (editReq.getImage() != null) {
+            imageService.deleteImageFromBucket(collection.getImgUrl()); // 이미지 삭제 -> 비동기 처리 ..?
+            newImgUrl = imageService.uploadImage(editReq.getImage());
+        }
+
+        Category newCategory = collection.getCategory();
+        if (editReq.getCategoryId() != null) {
+            newCategory = categoryRepository.findById(editReq.getCategoryId())
+                    .orElseThrow(() -> new ApiException(ErrorCode.CATEGORY_NOT_FOUND));
+        }
+
+        collection.edit(editReq.getNewName(), editReq.getNewDescription(), newImgUrl, newCategory, editReq.getNewAccess());
+    }
+
+    @Transactional
+    public void deleteCollection(Long collectionId) {
+        Long userId = ExtractUserId.extractUserIdFromContextHolder();
+
+        Collection collection = collectionRepository.findByIdAndIsDeletedFalse(collectionId)
+                .orElseThrow(() -> new ApiException(ErrorCode.COLLECTION_NOT_FOUND));
+
+        collection.isOwner(userId);
+
+        collection.markDeleted();
     }
 }
