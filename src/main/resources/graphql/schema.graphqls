@@ -15,7 +15,7 @@ type QuizzesWithAttempts {
     quiz: Quiz!
     totalAttempts: Int!
     correctAttempts: Int!
-    recentAnswerAt: String!
+    recentAnswerAt: String
 }
 
 type MyPage {

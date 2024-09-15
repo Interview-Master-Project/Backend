@@ -12,23 +12,14 @@ public interface QuizRepository extends Repository<Quiz, Long> {
 
     void save(Quiz quiz);
 
-//    @Query("select new com.interview_master.dto.QuizWithAttempts(q, count(uqa), " +
-//            "sum(case when uqa.isCorrect = true then 1 else 0 end), max(uqa.answeredAt))" +
-//            "from Quiz q" +
-//            "left join UserQuizAttempt uqa on q = uqa.quiz and qua.user.id = :userId " +
-//            "where q.collection.id = :collectionId " +
-//            "and q.isDelete = false " +
-//            "group by q.id " +
-//            "order by q.id desc")
-//    List<QuizWithAttempts> getQuizzesByCollectionIdWithAttempts(@Param("collectionId") Long collectionId, @Param("userId") Long userId);
-
-    @Query("SELECT NEW com.interview_master.dto.QuizWithAttempts(q, COUNT(uqa), " +
-            "SUM(CASE WHEN uqa.isCorrect = true THEN 1 ELSE 0 END) , MAX(uqa.answeredAt)) " +
+    @Query("SELECT NEW com.interview_master.dto.QuizWithAttempts(q, " +
+            "COALESCE(COUNT(uqa), 0), " +
+            "COALESCE(SUM(CASE WHEN uqa.isCorrect = true THEN 1 ELSE 0 END), 0), " +
+            "MAX(uqa.answeredAt)) " +
             "FROM Quiz q " +
-            "LEFT JOIN UserQuizAttempt uqa ON q = uqa.quiz AND uqa.user.id = :userId " +
-            "WHERE q.collection.id = :collectionId " +
-            "AND q.isDeleted = false " +
-            "GROUP BY q.id " +  // 필요한 필드들을 추가
+            "LEFT JOIN UserQuizAttempt uqa ON q.id = uqa.quiz.id AND uqa.user.id = :userId " +
+            "WHERE q.collection.id = :collectionId AND q.isDeleted = false " +
+            "GROUP BY q.id, q.question " +
             "ORDER BY q.id DESC")
     List<QuizWithAttempts> getQuizzesByCollectionIdWithAttempts(
             @Param("collectionId") Long collectionId,

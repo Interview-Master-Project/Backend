@@ -31,10 +31,9 @@ public class ReadCollectionService {
                     .orElseThrow(() -> new ApiException(ErrorCode.COLLECTION_NOT_FOUND));
 
         // public 이거나 주인이면 접근 가능
-        collection.canAccess(2L);
+        collection.canAccess(userId);
 
         List<QuizWithAttempts> quizzesWithAttempts = quizRepository.getQuizzesByCollectionIdWithAttempts(collectionId, userId);
-        log.info("quizzesWithAttempts: {}", quizzesWithAttempts);
         return CollectionWithQuizzes.builder()
                 .collection(collection)
                 .quizzesWithAttempts(quizzesWithAttempts)
