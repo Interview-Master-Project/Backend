@@ -32,7 +32,7 @@ public class AuthController {
             //.secure(true)
             .path("/")
             .maxAge(1800000)
-            .sameSite("Strict")
+            .sameSite("Lax")
             .build();
         response.addHeader("Set-Cookie", cookie.toString());
     }
