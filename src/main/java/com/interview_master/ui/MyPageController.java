@@ -5,6 +5,7 @@ import com.interview_master.application.UserProfileService;
 import com.interview_master.application.UserQuizAttemptService;
 import com.interview_master.dto.CollectionPage;
 import com.interview_master.dto.MyPage;
+import com.interview_master.util.ExtractUserId;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.graphql.data.method.annotation.Argument;
@@ -22,8 +23,10 @@ public class MyPageController {
     private final UserQuizAttemptService userQuizAttemptService;
 
     @QueryMapping
-    public MyPage myPage(@Argument Long userId, @Argument Integer offset, @Argument Integer limit,
+    public MyPage myPage(@Argument Integer offset, @Argument Integer limit,
                          @Argument String startDate, @Argument String endDate) {
+        Long userId = ExtractUserId.extractUserIdFromContextHolder();
+
         log.info("========== my page\t userId: {}, offset: {}, limit: {}, startDate : {}, endDate : {}",
                 userId, offset, limit, startDate, endDate);
 
