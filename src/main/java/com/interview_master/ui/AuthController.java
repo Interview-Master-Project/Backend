@@ -28,7 +28,7 @@ public class AuthController {
 
     private void setCookie(String accessToken, HttpServletResponse response) {
         ResponseCookie cookie = ResponseCookie.from("authorization-token", accessToken)
-            .httpOnly(true)
+//            .httpOnly(true)
             //.secure(true)
             .path("/")
             .maxAge(1800000)
