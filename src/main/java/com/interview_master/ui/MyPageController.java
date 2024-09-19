@@ -5,8 +5,6 @@ import com.interview_master.application.UserProfileService;
 import com.interview_master.application.UserQuizAttemptService;
 import com.interview_master.dto.CollectionPage;
 import com.interview_master.dto.MyPage;
-import com.interview_master.util.ExtractUserId;
-import graphql.schema.DataFetchingEnvironment;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.graphql.data.method.annotation.Argument;
