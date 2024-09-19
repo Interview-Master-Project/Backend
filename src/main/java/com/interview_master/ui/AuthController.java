@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import static com.interview_master.common.constant.Constant.ACCESS_TOKEN_KEY;
+
 @Slf4j
 @RestController
 @RequiredArgsConstructor
@@ -32,8 +34,7 @@ public class AuthController {
         AuthTokens tokens = authTokenGenerator.generate(user.getId());
 
         HttpHeaders headers = new HttpHeaders();
-        headers.add("Access-Token", tokens.getAccessToken());
-        headers.add("Refresh-Token", tokens.getRefreshToken());
+        headers.add(ACCESS_TOKEN_KEY, tokens.getAccessToken());
 
         return ResponseEntity.ok()
                 .headers(headers)
@@ -51,8 +52,7 @@ public class AuthController {
         AuthTokens tokens = authTokenGenerator.generate(user.getId());
 
         HttpHeaders headers = new HttpHeaders();
-        headers.add("Access-Token", tokens.getAccessToken());
-        headers.add("Refresh-Token", tokens.getRefreshToken());
+        headers.add(ACCESS_TOKEN_KEY, tokens.getAccessToken());
 
         return ResponseEntity.ok()
                 .headers(headers)
