@@ -1,15 +1,10 @@
 package com.interview_master.common.interceptor;
 
-import static com.interview_master.common.constant.Constant.TOKEN_KEY;
-import static com.interview_master.common.constant.Constant.USER_ID;
-
 import com.interview_master.common.exception.ApiException;
 import com.interview_master.common.exception.ErrorCode;
 import com.interview_master.common.token.AuthTokenGenerator;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpMethod;
@@ -17,6 +12,11 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.servlet.HandlerInterceptor;
+
+import java.util.Objects;
+
+import static com.interview_master.common.constant.Constant.ACCESS_TOKEN_KEY;
+import static com.interview_master.common.constant.Constant.USER_ID;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -36,21 +36,14 @@ public class LoginCheckInterceptor implements HandlerInterceptor {
             return true;
         }
 
-        String token = null;
+        String token = request.getHeader(ACCESS_TOKEN_KEY);
 
-        // 모든 쿠키를 가져와서 "authorization-token" 쿠키를 찾음
-        if (request.getCookies() != null) {
-            for (Cookie cookie : request.getCookies()) {
-                if (TOKEN_KEY.equals(cookie.getName())) {
-                    token = cookie.getValue();
-                    break;
-                }
-            }
-        }
-
-        if (token == null) {
+        if (token == null || !token.startsWith("Bearer ")) {
             throw new ApiException(ErrorCode.AUTHORIZATION_TOKEN_NOT_FOUND);
         }
+
+        // "Bearer " 제거
+        token = token.substring(7);
 
         Long userId = authTokenGenerator.extractUserId(token);
 
@@ -63,7 +56,7 @@ public class LoginCheckInterceptor implements HandlerInterceptor {
         }
 
         // userId 없는 경우
-        throw new ApiException(ErrorCode.BAD_REQUEST, "인증 실패");
+        throw new ApiException(ErrorCode.BAD_REQUEST, "유효하지 않은 토큰입니다.");
     }
 }
 
