@@ -1,6 +1,6 @@
 package com.interview_master.common.interceptor;
 
-import static com.interview_master.common.constant.Constant.TOKEN_KEY;
+import static com.interview_master.common.constant.Constant.ACCESS_TOKEN_KEY;
 import static com.interview_master.common.constant.Constant.USER_ID;
 
 import com.interview_master.common.exception.ApiException;
@@ -36,12 +36,12 @@ public class LoginCheckInterceptor implements HandlerInterceptor {
             return true;
         }
 
-        String token = null;
+        String token = request.getHeader(ACCESS_TOKEN_KEY);
 
         // 모든 쿠키를 가져와서 "authorization-token" 쿠키를 찾음
         if (request.getCookies() != null) {
             for (Cookie cookie : request.getCookies()) {
-                if (TOKEN_KEY.equals(cookie.getName())) {
+                if (ACCESS_TOKEN_KEY.equals(cookie.getName())) {
                     token = cookie.getValue();
                     break;
                 }
