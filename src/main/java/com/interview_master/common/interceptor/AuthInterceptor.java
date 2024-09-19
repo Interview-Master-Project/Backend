@@ -1,5 +1,7 @@
 package com.interview_master.common.interceptor;
 
+import com.interview_master.common.exception.ApiException;
+import com.interview_master.common.exception.ErrorCode;
 import com.interview_master.common.token.AuthTokenGenerator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -27,7 +29,7 @@ public class AuthInterceptor implements WebGraphQlInterceptor {
                 request.configureExecutionInput((executionInput, builder) ->
                         builder.graphQLContext(context -> context.put("userId", userId)).build());
             } catch (Exception e) {
-                return Mono.error(new RuntimeException("Invalid authentication token"));
+                return Mono.error(new ApiException(ErrorCode.AUTHORIZATION_TOKEN_NOT_FOUND));
             }
         }
 
