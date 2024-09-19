@@ -8,12 +8,14 @@ import com.interview_master.domain.user.User;
 import com.interview_master.infrastructure.CategoryRepository;
 import com.interview_master.infrastructure.CollectionRepository;
 import com.interview_master.infrastructure.UserRepository;
+import com.interview_master.ui.request.CreateCollectionInput;
 import com.interview_master.ui.request.CreateCollectionReq;
 import com.interview_master.ui.request.EditCollectionReq;
 import com.interview_master.util.ExtractUserId;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 @Service
 @RequiredArgsConstructor
@@ -48,6 +50,36 @@ public class UpsertCollectionService {
                 .name(createCollectionReq.getName())
                 .description(createCollectionReq.getDescription())
                 .access(createCollectionReq.getAccess())
+                .category(category)
+                .imgUrl(imgUrl)
+                .creator(user)
+                .build();
+
+        // 컬렉션 저장
+        collectionRepository.save(newCollection);
+    }
+
+    @Transactional
+    public void saveCollection(CreateCollectionInput input, MultipartFile image, Long userId) {
+        // 이미지 저장
+        String imgUrl = "";
+        if (image != null) {
+            imgUrl = imageService.uploadImage(image);
+        }
+
+        // 카테고리 존재 여부 검증
+        Category category = categoryRepository.findById(input.getCategoryId())
+                .orElseThrow(() -> new ApiException(ErrorCode.CATEGORY_NOT_FOUND));
+
+        // 유저 존재 여부 검증
+        User user = userRepository.findByIdAndIsDeletedFalse(userId)
+                .orElseThrow(() -> new ApiException(ErrorCode.USER_NOT_FOUND));
+
+        // 컬렉션 생성
+        Collection newCollection = Collection.builder()
+                .name(input.getName())
+                .description(input.getDescription())
+                .access(input.getAccess())
                 .category(category)
                 .imgUrl(imgUrl)
                 .creator(user)
