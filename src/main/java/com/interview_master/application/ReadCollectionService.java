@@ -7,7 +7,6 @@ import com.interview_master.dto.CollectionWithQuizzes;
 import com.interview_master.dto.QuizWithAttempts;
 import com.interview_master.infrastructure.CollectionRepository;
 import com.interview_master.infrastructure.QuizRepository;
-import com.interview_master.util.ExtractUserId;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -24,9 +23,7 @@ public class ReadCollectionService {
     private final QuizRepository quizRepository;
 
     @Transactional(readOnly = true)
-    public CollectionWithQuizzes getCollectionWithQuizzes(Long collectionId) {
-        Long userId = ExtractUserId.extractUserIdFromContextHolder();
-
+    public CollectionWithQuizzes getCollectionWithQuizzes(Long collectionId, Long userId) {
         Collection collection = collectionRepository.findByIdAndIsDeletedFalse(collectionId)
                     .orElseThrow(() -> new ApiException(ErrorCode.COLLECTION_NOT_FOUND));
 

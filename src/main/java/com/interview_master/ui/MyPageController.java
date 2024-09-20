@@ -3,8 +3,6 @@ package com.interview_master.ui;
 import com.interview_master.application.MyPageService;
 import com.interview_master.application.UserProfileService;
 import com.interview_master.application.UserQuizAttemptService;
-import com.interview_master.common.exception.ApiException;
-import com.interview_master.common.exception.ErrorCode;
 import com.interview_master.dto.CollectionPage;
 import com.interview_master.dto.MyPage;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +13,8 @@ import org.springframework.graphql.data.method.annotation.QueryMapping;
 import org.springframework.stereotype.Controller;
 
 import java.time.LocalDate;
+
+import static com.interview_master.util.GraphQLAuthUtils.validateUserAuthContext;
 
 @Controller
 @RequiredArgsConstructor
@@ -52,19 +52,5 @@ public class MyPageController {
         log.info("========== user attempted collections\t userId: {}, offset: {}, limit: {}", userId, offset, limit);
 
         return collectionService.userAttemptedCollections(userId, offset, limit);
-    }
-
-    private static void validateUserAuthContext(Long userId, String authError) {
-        if (authError != null) {
-            if ("NO_TOKEN".equals(authError)) {
-                throw new ApiException(ErrorCode.AUTHORIZATION_TOKEN_NOT_FOUND);
-            } else if ("INVALID_TOKEN".equals(authError)) {
-                throw new ApiException(ErrorCode.INVALID_TOKEN);
-            }
-        }
-
-        if (userId == null) {
-            throw new ApiException(ErrorCode.USER_NOT_FOUND);
-        }
     }
 }

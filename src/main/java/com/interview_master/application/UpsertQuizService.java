@@ -10,7 +10,6 @@ import com.interview_master.infrastructure.QuizRepository;
 import com.interview_master.infrastructure.UserRepository;
 import com.interview_master.ui.request.CreateQuizInput;
 import com.interview_master.ui.request.EditQuizInput;
-import com.interview_master.util.ExtractUserId;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,9 +23,7 @@ public class UpsertQuizService {
     private final UserRepository userRepository;
 
     @Transactional
-    public void saveQuiz(CreateQuizInput createQuizInput) {
-        Long userId = ExtractUserId.extractUserIdFromContextHolder();
-
+    public void saveQuiz(CreateQuizInput createQuizInput, Long userId) {
         // collection 검증
         Collection collection = collectionRepository.findByIdAndIsDeletedFalse(createQuizInput.getCollectionId())
                 .orElseThrow(() -> new ApiException(ErrorCode.COLLECTION_NOT_FOUND));
@@ -50,9 +47,7 @@ public class UpsertQuizService {
     }
 
     @Transactional
-    public void editQuiz(Long quizId, EditQuizInput editQuizInput) {
-        Long userId = ExtractUserId.extractUserIdFromContextHolder();
-
+    public void editQuiz(Long quizId, EditQuizInput editQuizInput, Long userId) {
         Collection collection = null;
         if (editQuizInput.getCollectionId() != null) {
             collection = collectionRepository.findByIdAndIsDeletedFalse(editQuizInput.getCollectionId())
@@ -69,9 +64,7 @@ public class UpsertQuizService {
     }
 
     @Transactional
-    public void deleteQuiz(Long quizId) {
-        Long userId = ExtractUserId.extractUserIdFromContextHolder();
-
+    public void deleteQuiz(Long quizId, Long userId) {
         Quiz quiz = quizRepository.findByIdAndIsDeletedFalse(quizId)
                 .orElseThrow(() -> new ApiException(ErrorCode.QUIZ_NOT_FOUND));
 

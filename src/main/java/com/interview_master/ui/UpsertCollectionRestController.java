@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequiredArgsConstructor
 @Slf4j
-public class UpsertCollectionController {
+public class UpsertCollectionRestController {
 
     private final UpsertCollectionService upsertCollectionService;
 
