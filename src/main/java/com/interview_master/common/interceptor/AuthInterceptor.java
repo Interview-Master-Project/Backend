@@ -1,7 +1,5 @@
 package com.interview_master.common.interceptor;
 
-import com.interview_master.common.exception.ApiException;
-import com.interview_master.common.exception.ErrorCode;
 import com.interview_master.common.token.AuthTokenGenerator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,17 +18,24 @@ public class AuthInterceptor implements WebGraphQlInterceptor {
 
     @Override
     public Mono<WebGraphQlResponse> intercept(WebGraphQlRequest request, Chain chain) {
-        String token = request.getHeaders().getFirst("Access-Token");
+        String token = request.getHeaders().getFirst("Authorization");
 
-        if (token != null && !token.isEmpty()) {
+        if (token != null && token.startsWith("Bearer ")) {
+            token = token.substring(7);  // Remove "Bearer " prefix
             try {
                 Long userId = tokenGenerator.extractUserId(token);
-                log.info("========== intercept... userId = {}", userId);
+                log.info("User authenticated: userId = {}", userId);
                 request.configureExecutionInput((executionInput, builder) ->
                         builder.graphQLContext(context -> context.put("userId", userId)).build());
             } catch (Exception e) {
-                return Mono.error(new ApiException(ErrorCode.AUTHORIZATION_TOKEN_NOT_FOUND));
+                log.error("Failed to authenticate token", e);
+                request.configureExecutionInput((executionInput, builder) ->
+                        builder.graphQLContext(context -> context.put("authError", "INVALID_TOKEN")).build());
             }
+        } else {
+            log.warn("No valid Authorization header found");
+            request.configureExecutionInput((executionInput, builder) ->
+                    builder.graphQLContext(context -> context.put("authError", "NO_TOKEN")).build());
         }
 
         return chain.next(request);

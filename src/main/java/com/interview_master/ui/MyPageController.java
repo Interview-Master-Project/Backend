@@ -14,6 +14,8 @@ import org.springframework.stereotype.Controller;
 
 import java.time.LocalDate;
 
+import static com.interview_master.util.GraphQLAuthUtils.validateUserAuthContext;
+
 @Controller
 @RequiredArgsConstructor
 @Slf4j
@@ -25,7 +27,10 @@ public class MyPageController {
     @QueryMapping
     public MyPage myPage(@Argument Integer offset, @Argument Integer limit,
                          @Argument String startDate, @Argument String endDate,
-                         @ContextValue Long userId) {
+                         @ContextValue(required = false) Long userId,
+                         @ContextValue(name = "authError", required = false) String authError) {
+
+        validateUserAuthContext(userId, authError);
 
         log.info("========== my page\t userId: {}, offset: {}, limit: {}, startDate : {}, endDate : {}",
                 userId, offset, limit, startDate, endDate);
@@ -39,7 +44,11 @@ public class MyPageController {
 
     @QueryMapping
     public CollectionPage userAttemptedCollections(
-            @Argument Integer offset, @Argument Integer limit, @ContextValue Long userId) {
+            @Argument Integer offset, @Argument Integer limit,
+            @ContextValue(required = false) Long userId, @ContextValue(name = "authError", required = false) String authError) {
+
+        validateUserAuthContext(userId, authError);
+
         log.info("========== user attempted collections\t userId: {}, offset: {}, limit: {}", userId, offset, limit);
 
         return collectionService.userAttemptedCollections(userId, offset, limit);

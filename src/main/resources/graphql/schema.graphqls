@@ -110,6 +110,13 @@ type Mutation {
     editQuiz(quizId: ID!, editQuizInput: EditQuizInput!): String!
 }
 
+input CreateCollectionInput {
+    name: String
+    description: String
+    access: Access
+    categoryId: ID
+}
+
 input CreateQuizInput {
     question: String!
     answer: String!

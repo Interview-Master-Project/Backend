@@ -12,12 +12,14 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequiredArgsConstructor
 @Slf4j
-public class UpsertCollectionController {
+public class UpsertCollectionRestController {
 
     private final UpsertCollectionService upsertCollectionService;
 
     @PostMapping("/api/collections")
     public ResponseEntity<String> createCollection(@ModelAttribute @Valid CreateCollectionReq createCollectionReq) {
+        log.info("Received createCollection request: {}", createCollectionReq);
+
         upsertCollectionService.saveCollection(createCollectionReq);
 
         return ResponseEntity.ok("success");

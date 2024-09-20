@@ -5,7 +5,7 @@ import lombok.NoArgsConstructor;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class Constant {
-    public static final String ACCESS_TOKEN_KEY = "Access-Token";
+    public static final String ACCESS_TOKEN_KEY = "Authorization";
 
     public static final String USER_ID = "userID";
 

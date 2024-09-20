@@ -84,9 +84,7 @@ public class UpsertCollectionService {
     }
 
     @Transactional
-    public void deleteCollection(Long collectionId) {
-        Long userId = ExtractUserId.extractUserIdFromContextHolder();
-
+    public void deleteCollection(Long collectionId, Long userId) {
         Collection collection = collectionRepository.findByIdAndIsDeletedFalse(collectionId)
                 .orElseThrow(() -> new ApiException(ErrorCode.COLLECTION_NOT_FOUND));
 
