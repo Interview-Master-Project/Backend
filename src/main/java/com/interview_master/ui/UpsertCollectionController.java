@@ -3,6 +3,7 @@ package com.interview_master.ui;
 import com.interview_master.application.UpsertCollectionService;
 import com.interview_master.ui.request.CreateCollectionReq;
 import com.interview_master.ui.request.EditCollectionReq;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -16,7 +17,7 @@ public class UpsertCollectionController {
     private final UpsertCollectionService upsertCollectionService;
 
     @PostMapping("/api/collections")
-    public ResponseEntity<String> createCollection(@ModelAttribute CreateCollectionReq createCollectionReq) {
+    public ResponseEntity<String> createCollection(@ModelAttribute @Valid CreateCollectionReq createCollectionReq) {
         log.info("Received createCollection request: {}", createCollectionReq);
 
         upsertCollectionService.saveCollection(createCollectionReq);
