@@ -5,14 +5,16 @@ import com.interview_master.application.UserProfileService;
 import com.interview_master.application.UserQuizAttemptService;
 import com.interview_master.dto.CollectionPage;
 import com.interview_master.dto.MyPage;
-import com.interview_master.util.ExtractUserId;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.graphql.data.method.annotation.Argument;
+import org.springframework.graphql.data.method.annotation.ContextValue;
 import org.springframework.graphql.data.method.annotation.QueryMapping;
 import org.springframework.stereotype.Controller;
 
 import java.time.LocalDate;
+
+import static com.interview_master.util.GraphQLAuthUtils.validateUserAuthContext;
 
 @Controller
 @RequiredArgsConstructor
@@ -24,8 +26,11 @@ public class MyPageController {
 
     @QueryMapping
     public MyPage myPage(@Argument Integer offset, @Argument Integer limit,
-                         @Argument String startDate, @Argument String endDate) {
-        Long userId = ExtractUserId.extractUserIdFromContextHolder();
+                         @Argument String startDate, @Argument String endDate,
+                         @ContextValue(required = false) Long userId,
+                         @ContextValue(name = "authError", required = false) String authError) {
+
+        validateUserAuthContext(userId, authError);
 
         log.info("========== my page\t userId: {}, offset: {}, limit: {}, startDate : {}, endDate : {}",
                 userId, offset, limit, startDate, endDate);
@@ -38,7 +43,12 @@ public class MyPageController {
     }
 
     @QueryMapping
-    public CollectionPage userAttemptedCollections(@Argument Long userId, @Argument Integer offset, @Argument Integer limit) {
+    public CollectionPage userAttemptedCollections(
+            @Argument Integer offset, @Argument Integer limit,
+            @ContextValue(required = false) Long userId, @ContextValue(name = "authError", required = false) String authError) {
+
+        validateUserAuthContext(userId, authError);
+
         log.info("========== user attempted collections\t userId: {}, offset: {}, limit: {}", userId, offset, limit);
 
         return collectionService.userAttemptedCollections(userId, offset, limit);

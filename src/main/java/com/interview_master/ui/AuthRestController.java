@@ -22,7 +22,7 @@ import static com.interview_master.common.constant.Constant.ACCESS_TOKEN_KEY;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/auth")
-public class AuthController {
+public class AuthRestController {
 
     private final OAuthLoginService oAuthLoginService;
     private final AuthTokenGenerator authTokenGenerator;
