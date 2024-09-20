@@ -106,8 +106,6 @@ enum OAuthProvider {
 }
 
 type Mutation {
-    createCollection(createCollectionInput: CreateCollectionInput, image: Upload!): String!
-
     createQuiz(createQuizInput: CreateQuizInput!): String!
     editQuiz(quizId: ID!, editQuizInput: EditQuizInput!): String!
 }
