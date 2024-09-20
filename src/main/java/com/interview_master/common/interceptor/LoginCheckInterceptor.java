@@ -46,7 +46,7 @@ public class LoginCheckInterceptor implements HandlerInterceptor {
         token = token.substring(7);
 
         Long userId = authTokenGenerator.extractUserId(token);
-
+        log.info("In LoginCheckInterceptor... userId : {}", userId);
         if (userId != null) {
             RequestAttributes requestContext = Objects.requireNonNull(
                 RequestContextHolder.getRequestAttributes());

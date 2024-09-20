@@ -23,6 +23,7 @@ public enum ErrorCode {
 
     // TOKEN
     AUTHORIZATION_TOKEN_NOT_FOUND(HttpStatus.NOT_FOUND, "로그인이 필요합니다."),
+    INVALID_TOKEN(HttpStatus.BAD_REQUEST, "유효하지 않은 로그인 입니다."),
     BAD_REQUEST(HttpStatus.BAD_REQUEST, "bad request"),
 
     // ACCESS
