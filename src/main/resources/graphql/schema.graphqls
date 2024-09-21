@@ -5,10 +5,19 @@ type Query {
 
     getCollectionWithQuizzes(collectionId: ID!): CollectionWithQuizzes
     deleteCollection(collectionId: ID!): String
+    searchCollections(categoryIds: [ID!], keywords: [String!], maxCorrectRate: Int): CollectionSearchResult
+
 
     deleteQuiz(quizId: ID!): String
 
     getAllCategories: [Category!]!
+}
+
+type CollectionSearchResult {
+    collection: Collection
+    category: Category
+    quizCount: Int
+    correctRate: Int
 }
 
 type CollectionWithQuizzes {
