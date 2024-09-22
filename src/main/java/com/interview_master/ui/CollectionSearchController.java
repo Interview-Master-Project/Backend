@@ -16,7 +16,7 @@ public class CollectionSearchController {
 
     @QueryMapping
     public CollectionSearchResult searchCollections(
-            @Argument List<Integer> categoryIds, @Argument List<String> keywords,
+            @Argument List<Long> categoryIds, @Argument List<String> keywords,
             @Argument Integer maxCorrectRate, @ContextValue(required = false) Long userId) {
 
         // 비회원 접근 -> PUBLIC인 컬렉션만 리턴

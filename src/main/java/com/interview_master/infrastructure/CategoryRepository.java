@@ -11,4 +11,6 @@ public interface CategoryRepository extends Repository<Category, Long> {
     Optional<Category> findById(Long id);
 
     List<Category> findAll();
+
+    Boolean existsByIds(List<Long> ids);
 }
