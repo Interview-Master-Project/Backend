@@ -1,6 +1,7 @@
 package com.interview_master.infrastructure;
 
 import com.interview_master.domain.category.Category;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.Repository;
 
 import java.util.List;
@@ -12,5 +13,6 @@ public interface CategoryRepository extends Repository<Category, Long> {
 
     List<Category> findAll();
 
-    Boolean existsByIds(List<Long> ids);
+    @Query("select count(c) from Category c where c.id in :ids")
+    Integer countByIdIn(List<Long> ids);
 }

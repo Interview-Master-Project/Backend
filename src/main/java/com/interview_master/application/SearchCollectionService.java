@@ -13,18 +13,20 @@ import java.util.List;
 public class SearchCollectionService {
 
     private final CollectionRepository collectionRepository;
+    private final CategoryService categoryService;
 
     // 로그인한 경우
-    public List<CollectionSearchResult> searchCollection(List<Long> categoryIds, List<String> keywords, Integer maxCorrectRate, Long userId) {
-        // 카테고리 id들 검증
-        if (categoryIds == null || categoryIds.isEmpty()) {}
-        // 검색
+    public List<CollectionSearchResult> searchCollectionForAuthenticatedUser(List<Long> categoryIds, List<String> keywords, Integer maxCorrectRate, Long userId) {
+        // categoryIds 있으면 검증
+        categoryService.areAllCategoriesExist(categoryIds);
+
+        // queryDSL로 동적 쿼리
 
         return new ArrayList<>();
     }
 
     // 비로그인인 경우
-    public List<CollectionSearchResult> searchCollection(List<Integer> categoryIds, List<String> keywords, Integer maxCorrectRate) {
+    public List<CollectionSearchResult> searchCollectionForAnonymousUser(List<Integer> categoryIds, List<String> keywords, Integer maxCorrectRate) {
         return new ArrayList<>();
     }
 }
