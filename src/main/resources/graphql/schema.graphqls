@@ -1,3 +1,5 @@
+scalar DateTime
+
 # Root Query type
 type Query {
     myPage(offset: Int!, limit: Int!, startDate: String!, endDate: String!): MyPage
@@ -29,7 +31,7 @@ type QuizzesWithAttempts {
     quiz: Quiz
     totalAttempts: Int
     correctAttempts: Int
-    recentAnswerAt: String
+    recentAnswerAt: DateTime
 }
 
 type MyPage {
@@ -39,7 +41,7 @@ type MyPage {
 }
 
 type QuizGarden {
-    date: String
+    date: DateTime
     quizzesSolved: Int
     dayIndex: Int
     weekIndex: Int
@@ -61,9 +63,12 @@ type Collection {
     category: Category
     creator: User
     isDeleted: Boolean
-    createdAt: String
-    updatedAt: String
+    createdAt: DateTime
+    updatedAt: DateTime
     quizzes: [Quiz]
+
+    quizCount: Int
+    correctRate: Int
 }
 
 # Member type
@@ -73,8 +78,8 @@ type User {
     nickname: String
     oAuthProvider: OAuthProvider
     isDeleted: Boolean
-    createdAt: String
-    updatedAt: String
+    createdAt: DateTime
+    updatedAt: DateTime
 }
 
 # Quiz type
@@ -86,8 +91,8 @@ type Quiz {
     creator: User
     access: Access
     isDeleted: Boolean
-    createdAt: String
-    updatedAt: String
+    createdAt: DateTime
+    updatedAt: DateTime
 }
 
 type Category {
@@ -99,8 +104,8 @@ type UserCollectionAttempt {
     id: ID
     collection: Collection
     user: User
-    startedAt: String
-    completedAt: String
+    startedAt: DateTime
+    completedAt: DateTime
     totalQuizCount: Int
     correctQuizCount: Int
 }
