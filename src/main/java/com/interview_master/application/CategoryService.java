@@ -12,17 +12,17 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CategoryService {
 
-    private final CategoryRepository categoryRepository;
+  private final CategoryRepository categoryRepository;
 
-    public void areAllCategoriesExist(List<Long> categoryIds) {
-        if (categoryIds == null || categoryIds.isEmpty()) {
-            return;
-        }
-
-        Integer exisitingCount = categoryRepository.countByIdIn(categoryIds);
-
-        if (exisitingCount != categoryIds.size()) {
-            throw new ApiException(ErrorCode.CATEGORY_NOT_FOUND, "존재하지 않는 카테고리가 있습니다.");
-        }
+  public void areAllCategoriesExist(List<Long> categoryIds) {
+    if (categoryIds == null || categoryIds.isEmpty()) {
+      return;
     }
+
+    Integer exisitingCount = categoryRepository.countByIdIn(categoryIds);
+
+    if (exisitingCount != categoryIds.size()) {
+      throw new ApiException(ErrorCode.CATEGORY_NOT_FOUND, "존재하지 않는 카테고리가 있습니다.");
+    }
+  }
 }
