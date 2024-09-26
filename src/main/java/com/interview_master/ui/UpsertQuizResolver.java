@@ -17,7 +17,7 @@ import static com.interview_master.util.GraphQLAuthUtils.validateUserAuthContext
 @Controller
 @RequiredArgsConstructor
 @Slf4j
-public class UpsertQuizController {
+public class UpsertQuizResolver {
 
     private final UpsertQuizService upsertQuizService;
 
