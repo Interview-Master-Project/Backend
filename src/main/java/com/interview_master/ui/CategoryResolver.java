@@ -10,7 +10,7 @@ import java.util.List;
 
 @Controller
 @RequiredArgsConstructor
-public class CategoryController {
+public class CategoryResolver {
 
     private final CategoryRepository categoryRepository;
 
