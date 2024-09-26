@@ -25,101 +25,104 @@ import static com.interview_master.domain.Access.PUBLIC;
 @AllArgsConstructor
 @Builder
 public class Collection extends BaseEntity {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
 
-    private String name;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long id;
 
-    private String description;
+  private String name;
 
-    private String imgUrl;
+  private String description;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "creator_id")
-    private User creator;
+  private String imgUrl;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "category_id")
-    private Category category;
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "creator_id")
+  private User creator;
 
-    @Enumerated(EnumType.STRING)
-    private Access access;
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "category_id")
+  private Category category;
 
-    @OneToMany(mappedBy = "collection", fetch = FetchType.LAZY)
-    private List<Quiz> quizzes;
+  @Enumerated(EnumType.STRING)
+  private Access access;
 
-    // domain logic
+  @OneToMany(mappedBy = "collection", fetch = FetchType.LAZY)
+  private List<Quiz> quizzes;
 
-    /**
-     * 수정된 것만 반영
-     */
-    public void edit(String newName, String newDescription, String newImgUrl, Category newCategory, Access newAccess) {
+  // domain logic
 
-        boolean nameChanged = newName != null && !newName.equals(this.name);
-        boolean descriptionChanged = newDescription != null && !newDescription.equals(this.description);
-        boolean imgUrlChanged = newImgUrl != null && !newImgUrl.equals(this.imgUrl);
-        boolean categoryChanged = newCategory.getId() != null && !newCategory.getId().equals(this.category.getId());
-        boolean accessChanged = newAccess != null && newAccess != this.access;
+  /**
+   * 수정된 것만 반영
+   */
+  public void edit(String newName, String newDescription, String newImgUrl, Category newCategory,
+      Access newAccess) {
 
-        if (nameChanged) {
-            setName(newName);
-        }
-        if (descriptionChanged) {
-            setDescription(newDescription);
-        }
-        if (imgUrlChanged) {
-            setImgUrl(newImgUrl);
-        }
-        if (categoryChanged) {
-            setCategory(newCategory);
-        }
-        if (accessChanged) {
-            setAccess(newAccess);
-        }
+    boolean nameChanged = newName != null && !newName.equals(this.name);
+    boolean descriptionChanged = newDescription != null && !newDescription.equals(this.description);
+    boolean imgUrlChanged = newImgUrl != null && !newImgUrl.equals(this.imgUrl);
+    boolean categoryChanged =
+        newCategory.getId() != null && !newCategory.getId().equals(this.category.getId());
+    boolean accessChanged = newAccess != null && newAccess != this.access;
+
+    if (nameChanged) {
+      setName(newName);
     }
-
-    public void canAccess(Long userId) {
-        boolean isCreator = this.creator.getId().equals(userId);
-        boolean isPublic = this.getAccess().equals(PUBLIC);
-
-        if (!isCreator && !isPublic) {
-            throw new ApiException(FORBIDDEN_ACCESS, "접근 불가능함");
-        }
+    if (descriptionChanged) {
+      setDescription(newDescription);
     }
-
-    /**
-     * collection 주인인지 검증하는 로직
-     */
-    public void isOwner(Long userId) {
-        boolean isCreator = this.creator.getId().equals(userId);
-        if (!isCreator) {
-            throw new ApiException(ErrorCode.FORBIDDEN_MODIFICATION);
-        }
+    if (imgUrlChanged) {
+      setImgUrl(newImgUrl);
     }
-
-    // setter
-    private void setName(String name) {
-        this.name = name;
+    if (categoryChanged) {
+      setCategory(newCategory);
     }
-
-    private void setAccess(Access access) {
-        this.access = access;
+    if (accessChanged) {
+      setAccess(newAccess);
     }
+  }
 
-    private void setCreator(User creator) {
-        this.creator = creator ;
-    }
+  public void canAccess(Long userId) {
+    boolean isCreator = this.creator.getId().equals(userId);
+    boolean isPublic = this.getAccess().equals(PUBLIC);
 
-    private void setCategory(Category category) {
-        this.category = category;
+    if (!isCreator && !isPublic) {
+      throw new ApiException(FORBIDDEN_ACCESS, "접근 불가능함");
     }
+  }
 
-    private void setDescription(String description) {
-        this.description = description;
+  /**
+   * collection 주인인지 검증하는 로직
+   */
+  public void isOwner(Long userId) {
+    boolean isCreator = this.creator.getId().equals(userId);
+    if (!isCreator) {
+      throw new ApiException(ErrorCode.FORBIDDEN_MODIFICATION);
     }
+  }
 
-    private void setImgUrl(String imgUrl) {
-        this.imgUrl = imgUrl;
-    }
+  // setter
+  private void setName(String name) {
+    this.name = name;
+  }
+
+  private void setAccess(Access access) {
+    this.access = access;
+  }
+
+  private void setCreator(User creator) {
+    this.creator = creator;
+  }
+
+  private void setCategory(Category category) {
+    this.category = category;
+  }
+
+  private void setDescription(String description) {
+    this.description = description;
+  }
+
+  private void setImgUrl(String imgUrl) {
+    this.imgUrl = imgUrl;
+  }
 }

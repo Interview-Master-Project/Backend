@@ -1,16 +1,18 @@
-package com.interview_master.ui.request;
+package com.interview_master.dto;
+
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.web.multipart.MultipartFile;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Image {
+public class PageInfo {
 
-    private MultipartFile image;
+  private boolean hasNextPage;
+  private int currentPage;
+  private int totalPages;
 }

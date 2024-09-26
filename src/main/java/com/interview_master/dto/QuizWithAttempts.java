@@ -13,8 +13,9 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Builder
 public class QuizWithAttempts {
-    private Quiz quiz;
-    private long totalAttempts;
-    private long correctAttempts;
-    private LocalDateTime recentAnswerAt;
+
+  private Quiz quiz;
+  private long totalAttempts;
+  private long correctAttempts;
+  private LocalDateTime recentAnswerAt;
 }

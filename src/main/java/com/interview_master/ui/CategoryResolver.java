@@ -10,12 +10,12 @@ import java.util.List;
 
 @Controller
 @RequiredArgsConstructor
-public class CategoryController {
+public class CategoryResolver {
 
-    private final CategoryRepository categoryRepository;
+  private final CategoryRepository categoryRepository;
 
-    @QueryMapping
-    public List<Category> getAllCategories() {
-        return categoryRepository.findAll();
-    }
+  @QueryMapping
+  public List<Category> getAllCategories() {
+    return categoryRepository.findAll();
+  }
 }

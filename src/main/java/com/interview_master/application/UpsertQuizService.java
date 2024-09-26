@@ -18,58 +18,61 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class UpsertQuizService {
 
-    private final QuizRepository quizRepository;
-    private final CollectionRepository collectionRepository;
-    private final UserRepository userRepository;
+  private final QuizRepository quizRepository;
+  private final CollectionRepository collectionRepository;
+  private final UserRepository userRepository;
 
-    @Transactional
-    public void saveQuiz(CreateQuizInput createQuizInput, Long userId) {
-        // collection 검증
-        Collection collection = collectionRepository.findByIdAndIsDeletedFalse(createQuizInput.getCollectionId())
-                .orElseThrow(() -> new ApiException(ErrorCode.COLLECTION_NOT_FOUND));
-        collection.isOwner(userId);
+  @Transactional
+  public Quiz saveQuiz(CreateQuizInput createQuizInput, Long userId) {
+    // collection 검증
+    Collection collection = collectionRepository.findByIdAndIsDeletedFalse(
+            createQuizInput.getCollectionId())
+        .orElseThrow(() -> new ApiException(ErrorCode.COLLECTION_NOT_FOUND));
+    collection.isOwner(userId);
 
-        // 유저 존재 여부 검증
-        User user = userRepository.findByIdAndIsDeletedFalse(userId)
-                .orElseThrow(() -> new ApiException(ErrorCode.USER_NOT_FOUND));
+    // 유저 존재 여부 검증
+    User user = userRepository.findByIdAndIsDeletedFalse(userId)
+        .orElseThrow(() -> new ApiException(ErrorCode.USER_NOT_FOUND));
 
-        // 새 퀴즈 생성
-        Quiz newQuiz = new Quiz(
-                createQuizInput.getQuestion(),
-                createQuizInput.getAnswer(),
-                collection,
-                user,
-                collection.getAccess()
-        );
+    // 새 퀴즈 생성
+    Quiz newQuiz = new Quiz(
+        createQuizInput.getQuestion(),
+        createQuizInput.getAnswer(),
+        collection,
+        user,
+        collection.getAccess()
+    );
 
-        // 저장
-        quizRepository.save(newQuiz);
+    // 저장
+    return quizRepository.save(newQuiz);
+  }
+
+  @Transactional
+  public Quiz editQuiz(Long quizId, EditQuizInput editQuizInput, Long userId) {
+    Collection collection = null;
+    if (editQuizInput.getCollectionId() != null) {
+      collection = collectionRepository.findByIdAndIsDeletedFalse(editQuizInput.getCollectionId())
+          .orElseThrow(() -> new ApiException(ErrorCode.COLLECTION_NOT_FOUND));
+      collection.isOwner(userId);
     }
 
-    @Transactional
-    public void editQuiz(Long quizId, EditQuizInput editQuizInput, Long userId) {
-        Collection collection = null;
-        if (editQuizInput.getCollectionId() != null) {
-            collection = collectionRepository.findByIdAndIsDeletedFalse(editQuizInput.getCollectionId())
-                    .orElseThrow(() -> new ApiException(ErrorCode.COLLECTION_NOT_FOUND));
-            collection.isOwner(userId);
-        }
+    Quiz quiz = quizRepository.findByIdAndIsDeletedFalse(quizId)
+        .orElseThrow(() -> new ApiException(ErrorCode.QUIZ_NOT_FOUND));
 
-        Quiz quiz = quizRepository.findByIdAndIsDeletedFalse(quizId)
-                .orElseThrow(() -> new ApiException(ErrorCode.QUIZ_NOT_FOUND));
+    quiz.isOwner(userId);
 
-        quiz.isOwner(userId);
+    quiz.edit(editQuizInput.getQuestion(), editQuizInput.getAnswer(), collection);
 
-        quiz.edit(editQuizInput.getQuestion(), editQuizInput.getAnswer(), collection);
-    }
+    return quiz;
+  }
 
-    @Transactional
-    public void deleteQuiz(Long quizId, Long userId) {
-        Quiz quiz = quizRepository.findByIdAndIsDeletedFalse(quizId)
-                .orElseThrow(() -> new ApiException(ErrorCode.QUIZ_NOT_FOUND));
+  @Transactional
+  public void deleteQuiz(Long quizId, Long userId) {
+    Quiz quiz = quizRepository.findByIdAndIsDeletedFalse(quizId)
+        .orElseThrow(() -> new ApiException(ErrorCode.QUIZ_NOT_FOUND));
 
-        quiz.isOwner(userId);
+    quiz.isOwner(userId);
 
-        quiz.markDeleted();
-    }
+    quiz.markDeleted();
+  }
 }

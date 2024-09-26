@@ -13,7 +13,8 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 public class CollectionPage {
-    private List<Collection> collections;
-    private long totalCount;
-    private boolean hasNext;
+
+  private List<Collection> collections;
+  private PageInfo pageInfo;
+  private long totalCount;
 }

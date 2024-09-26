@@ -13,6 +13,6 @@ public interface CategoryRepository extends Repository<Category, Long> {
 
     List<Category> findAll();
 
-    @Query("select count(c) from Category c where c.id in :ids")
-    Integer countByIdIn(List<Long> ids);
+  @Query("select count(c) from Category c where c.id in :ids")
+  Integer countByIdIn(List<Long> ids);
 }

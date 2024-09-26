@@ -1,0 +1,73 @@
+# Root Query type
+type Query {
+    """
+    퀴즈 잔디밭 정보 (first = 데이터 개수(default = 10), start = 첫 번째 레코드가 시작되는 인덱스(default = 0))
+    """
+    getQuizGarden(
+        startDate: String!,
+        endDate: String!
+    ): [QuizGarden]!
+
+    """유저의 컬렉션 목록"""
+    userCollection(
+        paging: DataPage
+    ): CollectionPage
+
+    """히스토리"""
+    userCollectionHistory(
+        paging: DataPage
+    ): CollectionPage
+
+    """컬렉션에 속한 퀴즈들과 유저의 퀴즈 시도 정보"""
+    getQuizzesWithAttemptByCollectionId(
+        collectionId: ID!
+    ): [QuizzesWithAttempts!]!
+
+    """컬렉션 조회"""
+    getCollection(
+        collectionId: ID!
+    ): Collection
+
+    """모든 카테고리 목록(로그인 필요 없음)"""
+    getAllCategories: [Category!]!
+
+    """로그인한 유저의 정보"""
+    me: User
+
+}
+
+input DataPage {
+    first : Int = 10
+    start : Int = 0
+}
+
+type PageInfo {
+    hasNextPage : Boolean!
+    currentPage : Int!
+    totalPages : Int!
+}
+
+type CollectionWithQuizzes {
+    collection: Collection
+    quizzesWithAttempts: [QuizzesWithAttempts]
+}
+
+type QuizzesWithAttempts {
+    quiz: Quiz
+    totalAttempts: Int
+    correctAttempts: Int
+    recentAnswerAt: String
+}
+
+type QuizGarden {
+    date: String
+    quizzesSolved: Int
+    dayIndex: Int
+    weekIndex: Int
+}
+
+type CollectionPage {
+    collections: [Collection!]!
+    pageInfo: PageInfo!
+    totalCount : Int!
+}

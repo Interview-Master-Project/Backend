@@ -31,83 +31,85 @@ import static com.interview_master.common.constant.Constant.IMAGE_DIRECTORY_NAME
 @RequiredArgsConstructor
 public class NcpImageService {
 
-    @Value("${cloud.ncp.bucketname}")
-    private String bucketName;
+  @Value("${cloud.ncp.bucketname}")
+  private String bucketName;
 
-    private final AmazonS3Client objectStorageClient;
+  private final AmazonS3Client objectStorageClient;
 
-    public String uploadImage(MultipartFile image) {
-        return upload(image);
+  public String uploadImage(MultipartFile image) {
+    return upload(image);
+  }
+
+
+  public String upload(MultipartFile file) {
+    if (file.isEmpty() || Objects.isNull(file.getOriginalFilename())) {
+      throw new ApiException(ErrorCode.EMPTY_FILE_EXCEPTION);
     }
 
+    validateImageFileExtension(file.getOriginalFilename());
 
-    public String upload(MultipartFile file) {
-        if (file.isEmpty() || Objects.isNull(file.getOriginalFilename())) {
-            throw new ApiException(ErrorCode.EMPTY_FILE_EXCEPTION);
-        }
+    String fileName =
+        IMAGE_DIRECTORY_NAME + DIRECTORY_SEPARATOR + UUID.randomUUID().toString().substring(0, 13)
+            + "_" + file.getOriginalFilename();
 
-        validateImageFileExtension(file.getOriginalFilename());
+    try {
+      ObjectMetadata metadata = new ObjectMetadata();
+      metadata.setContentType(file.getContentType());
+      metadata.setContentLength(file.getSize());
 
-        String fileName = IMAGE_DIRECTORY_NAME + DIRECTORY_SEPARATOR + UUID.randomUUID().toString().substring(0, 13) + "_" + file.getOriginalFilename();
-
-        try {
-            ObjectMetadata metadata = new ObjectMetadata();
-            metadata.setContentType(file.getContentType());
-            metadata.setContentLength(file.getSize());
-
-            try (InputStream inputStream = file.getInputStream()) {
-                PutObjectRequest request = new PutObjectRequest(bucketName, fileName, inputStream, metadata)
-                        .withCannedAcl(CannedAccessControlList.PublicRead);
-                objectStorageClient.putObject(request);
-                log.info("Image {} has been uploaded.", fileName);
-            }
-        } catch (AmazonServiceException e) {
-            throw new RuntimeException("Error uploading file to NCloud Storage", e);
-        } catch (Exception e) {
-            log.error("Error uploading file to NCloud Storage", e);
-        }
-
-        return objectStorageClient.getUrl(bucketName, fileName).toString();
+      try (InputStream inputStream = file.getInputStream()) {
+        PutObjectRequest request = new PutObjectRequest(bucketName, fileName, inputStream, metadata)
+            .withCannedAcl(CannedAccessControlList.PublicRead);
+        objectStorageClient.putObject(request);
+        log.info("Image {} has been uploaded.", fileName);
+      }
+    } catch (AmazonServiceException e) {
+      throw new RuntimeException("Error uploading file to NCloud Storage", e);
+    } catch (Exception e) {
+      log.error("Error uploading file to NCloud Storage", e);
     }
 
-    /**
-     * 파일 확장자 검증
-     */
-    private void validateImageFileExtension(String filename) {
-        int lastDotIndex = filename.lastIndexOf(".");
-        if (lastDotIndex == -1) {
-            throw new ApiException(ErrorCode.NO_FILE_EXTENTION);
-        }
+    return objectStorageClient.getUrl(bucketName, fileName).toString();
+  }
 
-        String extension = filename.substring(lastDotIndex + 1).toLowerCase();
-        List<String> allowedExtensionList = Arrays.asList("jpg", "jpeg", "png", "gif");
-
-        if (!allowedExtensionList.contains(extension)) {
-            throw new ApiException(ErrorCode.INVALID_FILE_EXTENTION);
-        }
+  /**
+   * 파일 확장자 검증
+   */
+  private void validateImageFileExtension(String filename) {
+    int lastDotIndex = filename.lastIndexOf(".");
+    if (lastDotIndex == -1) {
+      throw new ApiException(ErrorCode.NO_FILE_EXTENTION);
     }
 
-    public void deleteImageFromBucket(String imgUrl) {
-        log.info("imgUrl = {}", imgUrl);
-        String filename = getKeyFromImageUrl(imgUrl);
-        log.info("Deleting image {} from the bucket.", filename);
-        try {
-            DeleteObjectRequest request = new DeleteObjectRequest(bucketName, filename);
-            objectStorageClient.deleteObject(request);
-            log.info("Image {} has been deleted.", filename);
-        } catch (Exception e) {
-            throw new RuntimeException("Error deleting image from S3", e);
-        }
+    String extension = filename.substring(lastDotIndex + 1).toLowerCase();
+    List<String> allowedExtensionList = Arrays.asList("jpg", "jpeg", "png", "gif");
+
+    if (!allowedExtensionList.contains(extension)) {
+      throw new ApiException(ErrorCode.INVALID_FILE_EXTENTION);
+    }
+  }
+
+  public void deleteImageFromBucket(String imgUrl) {
+    log.info("imgUrl = {}", imgUrl);
+    String filename = getKeyFromImageUrl(imgUrl);
+    log.info("Deleting image {} from the bucket.", filename);
+    try {
+      DeleteObjectRequest request = new DeleteObjectRequest(bucketName, filename);
+      objectStorageClient.deleteObject(request);
+      log.info("Image {} has been deleted.", filename);
+    } catch (Exception e) {
+      throw new RuntimeException("Error deleting image from S3", e);
+    }
+  }
+
+  private String getKeyFromImageUrl(String imageAddress) {
+    try {
+      URL url = new URL(imageAddress);
+      String decodingKey = URLDecoder.decode(url.getPath(), StandardCharsets.UTF_8);
+      return decodingKey.substring(1); // 맨 앞의 '/' 제거
+    } catch (Exception e) {
+      throw new RuntimeException("Error parsing image URL", e);
     }
 
-    private String getKeyFromImageUrl(String imageAddress) {
-        try {
-            URL url = new URL(imageAddress);
-            String decodingKey = URLDecoder.decode(url.getPath(), StandardCharsets.UTF_8);
-            return decodingKey.substring(1); // 맨 앞의 '/' 제거
-        } catch (Exception e) {
-            throw new RuntimeException("Error parsing image URL", e);
-        }
-
-    }
+  }
 }

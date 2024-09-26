@@ -10,9 +10,9 @@ import org.springframework.web.multipart.MultipartFile;
 @Builder
 public class EditCollectionReq {
 
-    private String newName;
-    private String newDescription;
-    private MultipartFile image;
-    private Long categoryId;
-    private Access newAccess;
+  private String newName;
+  private String newDescription;
+  private MultipartFile image;
+  private Long categoryId;
+  private Access newAccess;
 }
