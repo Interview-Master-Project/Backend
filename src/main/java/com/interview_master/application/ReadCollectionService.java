@@ -3,11 +3,11 @@ package com.interview_master.application;
 import com.interview_master.common.exception.ApiException;
 import com.interview_master.common.exception.ErrorCode;
 import com.interview_master.domain.collection.Collection;
-import com.interview_master.dto.CollectionPage;
 import com.interview_master.dto.CollectionWithQuizzes;
 import com.interview_master.dto.QuizWithAttempts;
 import com.interview_master.infrastructure.CollectionRepository;
 import com.interview_master.infrastructure.QuizRepository;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -16,8 +16,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor

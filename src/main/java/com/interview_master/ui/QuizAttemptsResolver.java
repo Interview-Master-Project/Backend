@@ -3,10 +3,8 @@ package com.interview_master.ui;
 import static com.interview_master.util.GraphQLAuthUtils.validateUserAuthContext;
 
 import com.interview_master.application.UserQuizAttemptService;
-import com.interview_master.dto.DataPage;
 import com.interview_master.dto.QuizGarden;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.graphql.data.method.annotation.Argument;
