@@ -11,9 +11,9 @@ import lombok.NoArgsConstructor;
 @Builder
 public class EditQuizInput {
 
-    private String question;
+  private String question;
 
-    private String answer;
+  private String answer;
 
-    private Long collectionId;
+  private Long collectionId;
 }

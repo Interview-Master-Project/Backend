@@ -24,41 +24,41 @@ import static com.interview_master.common.constant.Constant.ACCESS_TOKEN_KEY;
 @RequestMapping("/api/auth")
 public class AuthRestController {
 
-    private final OAuthLoginService oAuthLoginService;
-    private final AuthTokenGenerator authTokenGenerator;
+  private final OAuthLoginService oAuthLoginService;
+  private final AuthTokenGenerator authTokenGenerator;
 
-    @PostMapping("/kakao")
-    public ResponseEntity<LoginRes> loginKakao(@RequestBody KakaoLoginParams params) {
-        log.info("{} login params {}", "Kakao", params.getAuthorizationCode());
-        User user = oAuthLoginService.login(params);
-        AuthTokens tokens = authTokenGenerator.generate(user.getId());
+  @PostMapping("/kakao")
+  public ResponseEntity<LoginRes> loginKakao(@RequestBody KakaoLoginParams params) {
+    log.info("{} login params {}", "Kakao", params.getAuthorizationCode());
+    User user = oAuthLoginService.login(params);
+    AuthTokens tokens = authTokenGenerator.generate(user.getId());
 
-        HttpHeaders headers = new HttpHeaders();
-        headers.add(ACCESS_TOKEN_KEY, tokens.getAccessToken());
+    HttpHeaders headers = new HttpHeaders();
+    headers.add(ACCESS_TOKEN_KEY, tokens.getAccessToken());
 
-        return ResponseEntity.ok()
-                .headers(headers)
-                .body(LoginRes.builder()
-                        .userId(user.getId())
-                        .nickname(user.getNickname())
-                        .build());
-    }
+    return ResponseEntity.ok()
+        .headers(headers)
+        .body(LoginRes.builder()
+            .userId(user.getId())
+            .nickname(user.getNickname())
+            .build());
+  }
 
-    @PostMapping("/naver")
-    public ResponseEntity<LoginRes> loginNaver(@RequestBody NaverLoginParams params) {
-        log.info("{} login params {}, {}", "Naver", params.getAuthorizationCode(),
-            params.getState());
-        User user = oAuthLoginService.login(params);
-        AuthTokens tokens = authTokenGenerator.generate(user.getId());
+  @PostMapping("/naver")
+  public ResponseEntity<LoginRes> loginNaver(@RequestBody NaverLoginParams params) {
+    log.info("{} login params {}, {}", "Naver", params.getAuthorizationCode(),
+        params.getState());
+    User user = oAuthLoginService.login(params);
+    AuthTokens tokens = authTokenGenerator.generate(user.getId());
 
-        HttpHeaders headers = new HttpHeaders();
-        headers.add(ACCESS_TOKEN_KEY, tokens.getAccessToken());
+    HttpHeaders headers = new HttpHeaders();
+    headers.add(ACCESS_TOKEN_KEY, tokens.getAccessToken());
 
-        return ResponseEntity.ok()
-                .headers(headers)
-                .body(LoginRes.builder()
-                        .userId(user.getId())
-                        .nickname(user.getNickname())
-                        .build());
-    }
+    return ResponseEntity.ok()
+        .headers(headers)
+        .body(LoginRes.builder()
+            .userId(user.getId())
+            .nickname(user.getNickname())
+            .build());
+  }
 }

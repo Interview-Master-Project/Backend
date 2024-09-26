@@ -15,10 +15,12 @@ import org.springframework.stereotype.Controller;
 @Controller
 @RequiredArgsConstructor
 public class QuizAttemptsResolver {
+
   private final UserQuizAttemptService userQuizAttemptService;
 
   @QueryMapping
-  public List<QuizGarden> getQuizGarden(@Argument LocalDate startDate, @Argument LocalDate endDate, @ContextValue(required = false) Long userId,
+  public List<QuizGarden> getQuizGarden(@Argument LocalDate startDate, @Argument LocalDate endDate,
+      @ContextValue(required = false) Long userId,
       @ContextValue(name = "authError", required = false) String authError) {
 
     validateUserAuthContext(userId, authError);

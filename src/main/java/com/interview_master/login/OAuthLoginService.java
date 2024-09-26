@@ -10,26 +10,26 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class OAuthLoginService {
 
-    private final UserRepository userRepository;
-    private final RequestOAuthInfoService requestOAuthInfoService;
-    private final AuthTokenGenerator authTokenGenerator;
+  private final UserRepository userRepository;
+  private final RequestOAuthInfoService requestOAuthInfoService;
+  private final AuthTokenGenerator authTokenGenerator;
 
-    public User login(OAuthLoginParams params) {
-        OAuthInfoResponse oAuthInfoResponse = requestOAuthInfoService.request(params);
-        return findOrCreateUser(oAuthInfoResponse);
-    }
+  public User login(OAuthLoginParams params) {
+    OAuthInfoResponse oAuthInfoResponse = requestOAuthInfoService.request(params);
+    return findOrCreateUser(oAuthInfoResponse);
+  }
 
-    private User findOrCreateUser(OAuthInfoResponse oAuthInfoResponse) {
-        return userRepository.findByEmail(oAuthInfoResponse.getEmail())
-            .orElseGet(() -> newUser(oAuthInfoResponse));
-    }
+  private User findOrCreateUser(OAuthInfoResponse oAuthInfoResponse) {
+    return userRepository.findByEmail(oAuthInfoResponse.getEmail())
+        .orElseGet(() -> newUser(oAuthInfoResponse));
+  }
 
-    private User newUser(OAuthInfoResponse oAuthInfoResponse) {
-        User newUser = User.builder()
-                .email(oAuthInfoResponse.getEmail())
-                .nickname(oAuthInfoResponse.getNickname())
-                .oAuthProvider(oAuthInfoResponse.getOAuthProvider())
-                .build();
-        return userRepository.save(newUser);
-    }
+  private User newUser(OAuthInfoResponse oAuthInfoResponse) {
+    User newUser = User.builder()
+        .email(oAuthInfoResponse.getEmail())
+        .nickname(oAuthInfoResponse.getNickname())
+        .oAuthProvider(oAuthInfoResponse.getOAuthProvider())
+        .build();
+    return userRepository.save(newUser);
+  }
 }

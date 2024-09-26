@@ -7,21 +7,22 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 public class KakaoTokens {
-    @JsonProperty("access_token")
-    private String accessToken;
 
-    @JsonProperty("token_type")
-    private String tokenType;
+  @JsonProperty("access_token")
+  private String accessToken;
 
-    @JsonProperty("refresh_token")
-    private String refreshToken;
+  @JsonProperty("token_type")
+  private String tokenType;
 
-    @JsonProperty("expires_in")
-    private String expiresIn;
+  @JsonProperty("refresh_token")
+  private String refreshToken;
 
-    @JsonProperty("refresh_token_expires_in")
-    private String refreshTokenExpiresIn;
+  @JsonProperty("expires_in")
+  private String expiresIn;
 
-    @JsonProperty("scope")
-    private String scope;
+  @JsonProperty("refresh_token_expires_in")
+  private String refreshTokenExpiresIn;
+
+  @JsonProperty("scope")
+  private String scope;
 }

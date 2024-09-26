@@ -14,29 +14,29 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @RequiredArgsConstructor
 public class WebConfig implements WebMvcConfigurer {
 
-    private final LoginCheckInterceptor loginCheckInterceptor;
+  private final LoginCheckInterceptor loginCheckInterceptor;
 
-    private final AuthInterceptor authInterceptor;
+  private final AuthInterceptor authInterceptor;
 
-    @Override
-    public void addCorsMappings(CorsRegistry registry) {
-        registry.addMapping("/**")
-            .allowedOrigins("http://localhost:3000")
-            .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH")
-            .allowedHeaders("*")
-            .allowCredentials(true);
-    }
+  @Override
+  public void addCorsMappings(CorsRegistry registry) {
+    registry.addMapping("/**")
+        .allowedOrigins("http://localhost:3000")
+        .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH")
+        .allowedHeaders("*")
+        .allowCredentials(true);
+  }
 
-    @Override
-    public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(loginCheckInterceptor)
-                .addPathPatterns("/api/collections/**")
-                .excludePathPatterns("/api/auth/*", "/error", "/favicon.ico");
-    }
+  @Override
+  public void addInterceptors(InterceptorRegistry registry) {
+    registry.addInterceptor(loginCheckInterceptor)
+        .addPathPatterns("/api/collections/**")
+        .excludePathPatterns("/api/auth/*", "/error", "/favicon.ico");
+  }
 
-    @Bean
-    public WebGraphQlInterceptor graphQlInterceptor() {
-        return authInterceptor;
-    }
+  @Bean
+  public WebGraphQlInterceptor graphQlInterceptor() {
+    return authInterceptor;
+  }
 
 }

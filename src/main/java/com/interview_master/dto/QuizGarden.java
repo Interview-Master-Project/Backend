@@ -13,8 +13,8 @@ import java.time.LocalDate;
 @Builder
 public class QuizGarden {
 
-    private LocalDate date;
-    private Integer quizzesSolved;
-    private Integer dayIndex;
-    private Integer weekIndex;
+  private LocalDate date;
+  private Integer quizzesSolved;
+  private Integer dayIndex;
+  private Integer weekIndex;
 }

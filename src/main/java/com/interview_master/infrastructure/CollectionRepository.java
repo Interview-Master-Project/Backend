@@ -11,22 +11,24 @@ import java.util.Optional;
 
 public interface CollectionRepository extends Repository<Collection, Long> {
 
-    void save(Collection collection);
+  void save(Collection collection);
 
-    Optional<Collection> findByIdAndIsDeletedFalse(Long id);
-    /**
-     * user의 컬렉션 리스트
-     */
-    Page<Collection> findByCreatorIdAndIsDeletedFalse(Long creatorId, Pageable pageable);
+  Optional<Collection> findByIdAndIsDeletedFalse(Long id);
 
-    /**
-     * user가 최근에 시도한 컬렉션 리스트
-     */
-    @Query("select c from Collection c " +
-            "join UserCollectionAttempt uca on uca.collection.id = c.id " +
-            "where uca.user.id = :userId " +
-            "and c.isDeleted = false " +
-            "group by c.id " +
-            "order by max(uca.startedAt) desc")
-    Page<Collection> findAttemptedCollectionsByUserOrderByLatestAttempt(@Param("userId") Long userId, Pageable pageable);
+  /**
+   * user의 컬렉션 리스트
+   */
+  Page<Collection> findByCreatorIdAndIsDeletedFalse(Long creatorId, Pageable pageable);
+
+  /**
+   * user가 최근에 시도한 컬렉션 리스트
+   */
+  @Query("select c from Collection c " +
+      "join UserCollectionAttempt uca on uca.collection.id = c.id " +
+      "where uca.user.id = :userId " +
+      "and c.isDeleted = false " +
+      "group by c.id " +
+      "order by max(uca.startedAt) desc")
+  Page<Collection> findAttemptedCollectionsByUserOrderByLatestAttempt(@Param("userId") Long userId,
+      Pageable pageable);
 }

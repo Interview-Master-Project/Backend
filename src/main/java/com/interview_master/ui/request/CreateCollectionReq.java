@@ -15,17 +15,17 @@ import org.springframework.web.multipart.MultipartFile;
 @Builder
 public class CreateCollectionReq {
 
-    private MultipartFile image;
+  private MultipartFile image;
 
-    @NotEmpty(message = "컬렉션 이름은 필수 값입니다.")
-    private String name;
+  @NotEmpty(message = "컬렉션 이름은 필수 값입니다.")
+  private String name;
 
-    @NotEmpty(message = "컬렉션 설명은 필수 값입니다.")
-    private String description;
+  @NotEmpty(message = "컬렉션 설명은 필수 값입니다.")
+  private String description;
 
-    @NotNull(message = "공개 범위 설정은 필수입니다.")
-    private Access access;
+  @NotNull(message = "공개 범위 설정은 필수입니다.")
+  private Access access;
 
-    @NotNull(message = "카테고리 선택은 필수입니다.")
-    private Long categoryId;
+  @NotNull(message = "카테고리 선택은 필수입니다.")
+  private Long categoryId;
 }

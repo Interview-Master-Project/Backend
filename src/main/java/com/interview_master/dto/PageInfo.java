@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 public class PageInfo {
+
   private boolean hasNextPage;
   private int currentPage;
   private int totalPages;

@@ -20,57 +20,60 @@ import org.springframework.stereotype.Controller;
 @RequiredArgsConstructor
 public class ReadCollectionResolver {
 
-    private final ReadCollectionService readCollectionService;
+  private final ReadCollectionService readCollectionService;
 
-    /**
-     * 컬렉션 조회
-     */
-    @QueryMapping
-    public Collection getCollection(@Argument Long collectionId, @ContextValue(required = false) Long userId) {
-        if (userId == null) {
-            throw new ApiException(ErrorCode.AUTHORIZATION_TOKEN_NOT_FOUND);
-        }
-
-        return readCollectionService.getCollectionById(collectionId);
+  /**
+   * 컬렉션 조회
+   */
+  @QueryMapping
+  public Collection getCollection(@Argument Long collectionId,
+      @ContextValue(required = false) Long userId) {
+    if (userId == null) {
+      throw new ApiException(ErrorCode.AUTHORIZATION_TOKEN_NOT_FOUND);
     }
 
-    /**
-     * user의 컬렉션 목록(with paging)
-     */
-    @QueryMapping
-    public CollectionPage userCollection(@Argument DataPage paging, @ContextValue(required = false) Long userId,
-        @ContextValue(name = "authError", required = false) String authError) {
-        validateUserAuthContext(userId, authError);
+    return readCollectionService.getCollectionById(collectionId);
+  }
 
-        Page<Collection> collections = readCollectionService.userCollections(userId,
-            paging.getStart(), paging.getFirst());
+  /**
+   * user의 컬렉션 목록(with paging)
+   */
+  @QueryMapping
+  public CollectionPage userCollection(@Argument DataPage paging,
+      @ContextValue(required = false) Long userId,
+      @ContextValue(name = "authError", required = false) String authError) {
+    validateUserAuthContext(userId, authError);
 
-        return createCollectionPage(collections);
-    }
+    Page<Collection> collections = readCollectionService.userCollections(userId,
+        paging.getStart(), paging.getFirst());
 
-    /**
-     * user가 시도한 컬렉션 목록(with paging)
-     */
-    @QueryMapping
-    public CollectionPage userCollectionHistory(@Argument DataPage paging, @ContextValue(required = false) Long userId,
-        @ContextValue(name = "authError", required = false) String authError) {
-        validateUserAuthContext(userId, authError);
+    return createCollectionPage(collections);
+  }
 
-        Page<Collection> collections = readCollectionService.userAttemptedCollections(userId,
-            paging.getStart(), paging.getFirst());
+  /**
+   * user가 시도한 컬렉션 목록(with paging)
+   */
+  @QueryMapping
+  public CollectionPage userCollectionHistory(@Argument DataPage paging,
+      @ContextValue(required = false) Long userId,
+      @ContextValue(name = "authError", required = false) String authError) {
+    validateUserAuthContext(userId, authError);
 
-        return createCollectionPage(collections);
-    }
+    Page<Collection> collections = readCollectionService.userAttemptedCollections(userId,
+        paging.getStart(), paging.getFirst());
 
-    private static CollectionPage createCollectionPage(Page<Collection> collections) {
-        return CollectionPage.builder()
-            .collections(collections.getContent())
-            .pageInfo(PageInfo.builder()
-                .hasNextPage(collections.hasNext())
-                .currentPage(collections.getNumber() + 1)
-                .totalPages(collections.getTotalPages())
-                .build())
-            .totalCount(collections.getTotalElements())
-            .build();
-    }
+    return createCollectionPage(collections);
+  }
+
+  private static CollectionPage createCollectionPage(Page<Collection> collections) {
+    return CollectionPage.builder()
+        .collections(collections.getContent())
+        .pageInfo(PageInfo.builder()
+            .hasNextPage(collections.hasNext())
+            .currentPage(collections.getNumber() + 1)
+            .totalPages(collections.getTotalPages())
+            .build())
+        .totalCount(collections.getTotalElements())
+        .build();
+  }
 }

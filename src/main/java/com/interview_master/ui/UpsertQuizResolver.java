@@ -43,7 +43,7 @@ public class UpsertQuizResolver {
         return "success";
     }
 
-    @QueryMapping
+    @MutationMapping
     public String deleteQuiz(@Argument Long quizId,
                              @ContextValue(required = false) Long userId,
                              @ContextValue(name = "authError", required = false) String authError) {

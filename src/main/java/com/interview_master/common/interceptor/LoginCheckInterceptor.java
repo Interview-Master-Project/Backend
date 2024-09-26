@@ -23,40 +23,40 @@ import static com.interview_master.common.constant.Constant.USER_ID;
 @Component
 public class LoginCheckInterceptor implements HandlerInterceptor {
 
-    private final AuthTokenGenerator authTokenGenerator;
+  private final AuthTokenGenerator authTokenGenerator;
 
-    @Override
-    public boolean preHandle(HttpServletRequest request, HttpServletResponse
-        response, Object handler) {
-        String requestURI = request.getRequestURI();
-        log.info("인증 체크 인터셉터 실행 {}", requestURI);
+  @Override
+  public boolean preHandle(HttpServletRequest request, HttpServletResponse
+      response, Object handler) {
+    String requestURI = request.getRequestURI();
+    log.info("인증 체크 인터셉터 실행 {}", requestURI);
 
-        // CORS 방지 : OPTIONS 메서드로 사전 요청 오면 다 pass
-        if (HttpMethod.OPTIONS.matches(request.getMethod())) {
-            return true;
-        }
-
-        String token = request.getHeader(ACCESS_TOKEN_KEY);
-
-        if (token == null || !token.startsWith("Bearer ")) {
-            throw new ApiException(ErrorCode.AUTHORIZATION_TOKEN_NOT_FOUND);
-        }
-
-        // "Bearer " 제거
-        token = token.substring(7);
-
-        Long userId = authTokenGenerator.extractUserId(token);
-        log.info("In LoginCheckInterceptor... userId : {}", userId);
-        if (userId != null) {
-            RequestAttributes requestContext = Objects.requireNonNull(
-                RequestContextHolder.getRequestAttributes());
-            requestContext.setAttribute(USER_ID, userId,
-                RequestAttributes.SCOPE_REQUEST);
-            return true;
-        }
-
-        // userId 없는 경우
-        throw new ApiException(ErrorCode.BAD_REQUEST, "유효하지 않은 토큰입니다.");
+    // CORS 방지 : OPTIONS 메서드로 사전 요청 오면 다 pass
+    if (HttpMethod.OPTIONS.matches(request.getMethod())) {
+      return true;
     }
+
+    String token = request.getHeader(ACCESS_TOKEN_KEY);
+
+    if (token == null || !token.startsWith("Bearer ")) {
+      throw new ApiException(ErrorCode.AUTHORIZATION_TOKEN_NOT_FOUND);
+    }
+
+    // "Bearer " 제거
+    token = token.substring(7);
+
+    Long userId = authTokenGenerator.extractUserId(token);
+    log.info("In LoginCheckInterceptor... userId : {}", userId);
+    if (userId != null) {
+      RequestAttributes requestContext = Objects.requireNonNull(
+          RequestContextHolder.getRequestAttributes());
+      requestContext.setAttribute(USER_ID, userId,
+          RequestAttributes.SCOPE_REQUEST);
+      return true;
+    }
+
+    // userId 없는 경우
+    throw new ApiException(ErrorCode.BAD_REQUEST, "유효하지 않은 토큰입니다.");
+  }
 }
 

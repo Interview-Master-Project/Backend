@@ -14,21 +14,22 @@ import org.springframework.web.bind.annotation.*;
 @Slf4j
 public class UpsertCollectionRestController {
 
-    private final UpsertCollectionService upsertCollectionService;
+  private final UpsertCollectionService upsertCollectionService;
 
-    @PostMapping("/api/collections")
-    public ResponseEntity<String> createCollection(@ModelAttribute @Valid CreateCollectionReq createCollectionReq) {
-        log.info("Received createCollection request: {}", createCollectionReq);
+  @PostMapping("/api/collections")
+  public ResponseEntity<String> createCollection(
+      @ModelAttribute @Valid CreateCollectionReq createCollectionReq) {
+    log.info("Received createCollection request: {}", createCollectionReq);
 
-        upsertCollectionService.saveCollection(createCollectionReq);
+    upsertCollectionService.saveCollection(createCollectionReq);
 
-        return ResponseEntity.ok("success");
-    }
+    return ResponseEntity.ok("success");
+  }
 
-    @PatchMapping("/api/collections/{collectionId}")
-    public ResponseEntity<String> editCollection(@PathVariable Long collectionId,
-                                                 @ModelAttribute EditCollectionReq editCollectionReq) {
-        upsertCollectionService.editCollection(collectionId, editCollectionReq);
-        return ResponseEntity.ok("success");
-    }
+  @PatchMapping("/api/collections/{collectionId}")
+  public ResponseEntity<String> editCollection(@PathVariable Long collectionId,
+      @ModelAttribute EditCollectionReq editCollectionReq) {
+    upsertCollectionService.editCollection(collectionId, editCollectionReq);
+    return ResponseEntity.ok("success");
+  }
 }
