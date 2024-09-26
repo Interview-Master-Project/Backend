@@ -13,7 +13,7 @@ public interface QuizRepository extends Repository<Quiz, Long> {
 
   Optional<Quiz> findByIdAndIsDeletedFalse(Long quizId);
 
-  void save(Quiz quiz);
+  Quiz save(Quiz quiz);
 
   @Query("SELECT NEW com.interview_master.dto.QuizWithAttempts(q, " +
       "COALESCE(COUNT(uqa), 0), " +

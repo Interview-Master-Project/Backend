@@ -17,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class UpsertCollectionService {
 
   private final CollectionRepository collectionRepository;
@@ -24,8 +25,7 @@ public class UpsertCollectionService {
   private final NcpImageService imageService;
   private final CategoryRepository categoryRepository;
 
-  @Transactional
-  public void saveCollection(CreateCollectionReq createCollectionReq) {
+  public Collection saveCollection(CreateCollectionReq createCollectionReq) {
     // token의 userId 가져오기
     Long userId = ExtractUserId.extractUserIdFromContextHolder();
 
@@ -54,11 +54,10 @@ public class UpsertCollectionService {
         .build();
 
     // 컬렉션 저장
-    collectionRepository.save(newCollection);
+    return collectionRepository.save(newCollection);
   }
 
-  @Transactional
-  public void editCollection(Long collectionId, EditCollectionReq editReq) {
+  public Collection editCollection(Long collectionId, EditCollectionReq editReq) {
     Long userId = ExtractUserId.extractUserIdFromContextHolder();
 
     Collection collection = collectionRepository.findByIdAndIsDeletedFalse(collectionId)
@@ -82,9 +81,10 @@ public class UpsertCollectionService {
 
     collection.edit(editReq.getNewName(), editReq.getNewDescription(), newImgUrl, newCategory,
         editReq.getNewAccess());
+
+    return collection;
   }
 
-  @Transactional
   public void deleteCollection(Long collectionId, Long userId) {
     Collection collection = collectionRepository.findByIdAndIsDeletedFalse(collectionId)
         .orElseThrow(() -> new ApiException(ErrorCode.COLLECTION_NOT_FOUND));

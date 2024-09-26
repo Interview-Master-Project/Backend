@@ -1,8 +1,7 @@
 # Root Query type
 type Query {
     """
-    퀴즈 잔디밭 정보
-    (first = 데이터 개수(default = 10), start = 첫 번째 레코드가 시작되는 인덱스(default = 0))
+    퀴즈 잔디밭 정보 (first = 데이터 개수(default = 10), start = 첫 번째 레코드가 시작되는 인덱스(default = 0))
     """
     getQuizGarden(
         startDate: String!,
@@ -19,7 +18,7 @@ type Query {
         paging: DataPage
     ): CollectionPage
 
-    """컬렉션에 속한 퀴즈들과 퀴즈 시도 정보"""
+    """컬렉션에 속한 퀴즈들과 유저의 퀴즈 시도 정보"""
     getQuizzesWithAttemptByCollectionId(
         collectionId: ID!
     ): [QuizzesWithAttempts!]!

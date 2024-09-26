@@ -1,18 +1,20 @@
 type Mutation {
-    createQuiz(createQuizInput: CreateQuizInput!): String!
-    editQuiz(quizId: ID!, editQuizInput: EditQuizInput!): String!
-    deleteQuiz(quizId: ID!): String
+    createQuiz(
+        createQuizInput: CreateQuizInput!
+    ): Quiz!
+
+    editQuiz(
+        quizId: ID!,
+        editQuizInput: EditQuizInput!
+    ): Quiz!
+
+    deleteQuiz(
+        quizId: ID!
+    ): String
 
     deleteCollection(
         collectionId: ID!
     ): String
-}
-
-input CreateCollectionInput {
-    name: String
-    description: String
-    access: Access
-    categoryId: ID
 }
 
 input CreateQuizInput {

@@ -23,7 +23,7 @@ public class UpsertQuizService {
   private final UserRepository userRepository;
 
   @Transactional
-  public void saveQuiz(CreateQuizInput createQuizInput, Long userId) {
+  public Quiz saveQuiz(CreateQuizInput createQuizInput, Long userId) {
     // collection 검증
     Collection collection = collectionRepository.findByIdAndIsDeletedFalse(
             createQuizInput.getCollectionId())
@@ -44,11 +44,11 @@ public class UpsertQuizService {
     );
 
     // 저장
-    quizRepository.save(newQuiz);
+    return quizRepository.save(newQuiz);
   }
 
   @Transactional
-  public void editQuiz(Long quizId, EditQuizInput editQuizInput, Long userId) {
+  public Quiz editQuiz(Long quizId, EditQuizInput editQuizInput, Long userId) {
     Collection collection = null;
     if (editQuizInput.getCollectionId() != null) {
       collection = collectionRepository.findByIdAndIsDeletedFalse(editQuizInput.getCollectionId())
@@ -62,6 +62,8 @@ public class UpsertQuizService {
     quiz.isOwner(userId);
 
     quiz.edit(editQuizInput.getQuestion(), editQuizInput.getAnswer(), collection);
+
+    return quiz;
   }
 
   @Transactional

@@ -1,6 +1,7 @@
 package com.interview_master.ui;
 
 import com.interview_master.application.UpsertCollectionService;
+import com.interview_master.domain.collection.Collection;
 import com.interview_master.ui.request.CreateCollectionReq;
 import com.interview_master.ui.request.EditCollectionReq;
 import jakarta.validation.Valid;
@@ -17,19 +18,17 @@ public class UpsertCollectionRestController {
   private final UpsertCollectionService upsertCollectionService;
 
   @PostMapping("/api/collections")
-  public ResponseEntity<String> createCollection(
+  public ResponseEntity<Collection> createCollection(
       @ModelAttribute @Valid CreateCollectionReq createCollectionReq) {
     log.info("Received createCollection request: {}", createCollectionReq);
 
-    upsertCollectionService.saveCollection(createCollectionReq);
-
-    return ResponseEntity.ok("success");
+    return ResponseEntity.ok(upsertCollectionService.saveCollection(createCollectionReq));
   }
 
   @PatchMapping("/api/collections/{collectionId}")
-  public ResponseEntity<String> editCollection(@PathVariable Long collectionId,
+  public ResponseEntity<Collection> editCollection(@PathVariable Long collectionId,
       @ModelAttribute EditCollectionReq editCollectionReq) {
-    upsertCollectionService.editCollection(collectionId, editCollectionReq);
-    return ResponseEntity.ok("success");
+
+    return ResponseEntity.ok(upsertCollectionService.editCollection(collectionId, editCollectionReq));
   }
 }

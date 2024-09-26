@@ -11,7 +11,7 @@ import java.util.Optional;
 
 public interface CollectionRepository extends Repository<Collection, Long> {
 
-  void save(Collection collection);
+  Collection save(Collection collection);
 
   Optional<Collection> findByIdAndIsDeletedFalse(Long id);
 
