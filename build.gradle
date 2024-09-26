@@ -36,6 +36,7 @@ dependencies {
 
 //    implementation "com.netflix.graphql.dgs:graphql-dgs-spring-boot-starter:latest.release"
 //    implementation "name.nkonev.multipart-spring-graphql:multipart-spring-graphql:1.+"
+    implementation 'com.graphql-java:graphql-java-extended-scalars:22.0'
 
     compileOnly 'org.projectlombok:lombok'
     runtimeOnly 'org.postgresql:postgresql'
