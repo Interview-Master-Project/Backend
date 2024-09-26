@@ -31,20 +31,6 @@ public class ReadCollectionService {
             .orElseThrow(() -> new ApiException(ErrorCode.COLLECTION_NOT_FOUND));
     }
 
-    public CollectionWithQuizzes getCollectionWithQuizzes(Long collectionId, Long userId) {
-        Collection collection = collectionRepository.findByIdAndIsDeletedFalse(collectionId)
-                    .orElseThrow(() -> new ApiException(ErrorCode.COLLECTION_NOT_FOUND));
-
-        // public 이거나 주인이면 접근 가능
-        collection.canAccess(userId);
-
-        List<QuizWithAttempts> quizzesWithAttempts = quizRepository.getQuizzesByCollectionIdWithAttempts(collectionId, userId);
-        return CollectionWithQuizzes.builder()
-                .collection(collection)
-                .quizzesWithAttempts(quizzesWithAttempts)
-                .build();
-    }
-
     /**
      * user의 컬렉션을 offset 기반으로 페이징 + 최신 수정 순으로
      */

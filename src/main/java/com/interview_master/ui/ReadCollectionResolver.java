@@ -1,11 +1,12 @@
 package com.interview_master.ui;
 
+import static com.interview_master.util.GraphQLAuthUtils.validateUserAuthContext;
+
 import com.interview_master.application.ReadCollectionService;
 import com.interview_master.common.exception.ApiException;
 import com.interview_master.common.exception.ErrorCode;
 import com.interview_master.domain.collection.Collection;
 import com.interview_master.dto.CollectionPage;
-import com.interview_master.dto.CollectionWithQuizzes;
 import com.interview_master.dto.DataPage;
 import com.interview_master.dto.PageInfo;
 import lombok.RequiredArgsConstructor;
@@ -14,8 +15,6 @@ import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.ContextValue;
 import org.springframework.graphql.data.method.annotation.QueryMapping;
 import org.springframework.stereotype.Controller;
-
-import static com.interview_master.util.GraphQLAuthUtils.validateUserAuthContext;
 
 @Controller
 @RequiredArgsConstructor
