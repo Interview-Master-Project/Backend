@@ -1,6 +1,8 @@
 package com.interview_master.ui;
 
 import com.interview_master.application.ReadCollectionService;
+import com.interview_master.common.exception.ApiException;
+import com.interview_master.common.exception.ErrorCode;
 import com.interview_master.domain.collection.Collection;
 import com.interview_master.dto.CollectionPage;
 import com.interview_master.dto.CollectionWithQuizzes;
@@ -21,14 +23,16 @@ public class ReadCollectionResolver {
 
     private final ReadCollectionService readCollectionService;
 
+    /**
+     * 컬렉션 조회
+     */
     @QueryMapping
-    public CollectionWithQuizzes getCollectionWithQuizzes(
-            @Argument Long collectionId,
-            @ContextValue(required = false) Long userId,
-            @ContextValue(name = "authError", required = false) String authError) {
+    public Collection getCollection(@Argument Long collectionId, @ContextValue(required = false) Long userId) {
+        if (userId == null) {
+            throw new ApiException(ErrorCode.AUTHORIZATION_TOKEN_NOT_FOUND);
+        }
 
-        validateUserAuthContext(userId, authError);
-        return readCollectionService.getCollectionWithQuizzes(collectionId, userId);
+        return readCollectionService.getCollectionById(collectionId);
     }
 
     /**

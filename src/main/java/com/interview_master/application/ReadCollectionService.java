@@ -20,12 +20,17 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @RequiredArgsConstructor
 @Slf4j
+@Transactional(readOnly = true)
 public class ReadCollectionService {
 
     private final CollectionRepository collectionRepository;
     private final QuizRepository quizRepository;
 
-    @Transactional(readOnly = true)
+    public Collection getCollectionById(Long collectionId) {
+        return collectionRepository.findByIdAndIsDeletedFalse(collectionId)
+            .orElseThrow(() -> new ApiException(ErrorCode.COLLECTION_NOT_FOUND));
+    }
+
     public CollectionWithQuizzes getCollectionWithQuizzes(Long collectionId, Long userId) {
         Collection collection = collectionRepository.findByIdAndIsDeletedFalse(collectionId)
                     .orElseThrow(() -> new ApiException(ErrorCode.COLLECTION_NOT_FOUND));
@@ -43,7 +48,6 @@ public class ReadCollectionService {
     /**
      * user의 컬렉션을 offset 기반으로 페이징 + 최신 수정 순으로
      */
-    @Transactional(readOnly = true)
     public Page<Collection> userCollections(Long userId, Integer start, Integer first) {
         Pageable pageable = PageRequest.of(start / first, first, Sort.by("updatedAt").descending());
         return collectionRepository.findByCreatorIdAndIsDeletedFalse(userId,
@@ -53,7 +57,6 @@ public class ReadCollectionService {
     /**
      * user의 히스토리 반환
      */
-    @Transactional(readOnly = true)
     public Page<Collection> userAttemptedCollections(Long userId, Integer start, Integer first) {
         Pageable pageable = PageRequest.of(start / first, first);
         return collectionRepository.findAttemptedCollectionsByUserOrderByLatestAttempt(

@@ -20,16 +20,16 @@ type Query {
     ): CollectionPage
 
     """컬렉션에 속한 퀴즈들과 퀴즈 시도 정보"""
-    getCollectionWithQuizzes(
+    getQuizzesWithAttemptByCollectionId(
         collectionId: ID!
-    ): CollectionWithQuizzes
+    ): [QuizzesWithAttempts!]!
 
-    """컬렉션 조회(비로그인 : PUBLIC인 컬렉션에만 접근 가능/ 로그인 : PUBLIC + 자기꺼"""
+    """컬렉션 조회"""
     getCollection(
         collectionId: ID!
     ): Collection
 
-    """모든 카테고리 목록"""
+    """모든 카테고리 목록(로그인 필요 없음)"""
     getAllCategories: [Category!]!
 
     """로그인한 유저의 정보"""
