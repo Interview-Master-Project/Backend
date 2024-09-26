@@ -72,8 +72,3 @@ type CollectionPage {
     pageInfo: PageInfo!
     totalCount : Int!
 }
-
-
-
-
-
