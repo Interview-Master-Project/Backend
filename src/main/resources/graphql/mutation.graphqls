@@ -1,0 +1,25 @@
+type Mutation {
+    createQuiz(createQuizInput: CreateQuizInput!): String!
+    editQuiz(quizId: ID!, editQuizInput: EditQuizInput!): String!
+    deleteQuiz(quizId: ID!): String
+
+}
+
+input CreateCollectionInput {
+    name: String
+    description: String
+    access: Access
+    categoryId: ID
+}
+
+input CreateQuizInput {
+    question: String!
+    answer: String!
+    collectionId: Int!
+}
+
+input EditQuizInput {
+    question: String
+    answer: String
+    collectionId: Int
+}

@@ -7,8 +7,6 @@ type Query {
     getCollectionWithQuizzes(collectionId: ID!): CollectionWithQuizzes
     deleteCollection(collectionId: ID!): String
 
-    deleteQuiz(quizId: ID!): String
-
     getAllCategories: [Category!]!
 }
 
@@ -108,26 +106,3 @@ enum OAuthProvider {
     NAVER
 }
 
-type Mutation {
-    createQuiz(createQuizInput: CreateQuizInput!): String!
-    editQuiz(quizId: ID!, editQuizInput: EditQuizInput!): String!
-}
-
-input CreateCollectionInput {
-    name: String
-    description: String
-    access: Access
-    categoryId: ID
-}
-
-input CreateQuizInput {
-    question: String!
-    answer: String!
-    collectionId: Int!
-}
-
-input EditQuizInput {
-    question: String
-    answer: String
-    collectionId: Int
-}
