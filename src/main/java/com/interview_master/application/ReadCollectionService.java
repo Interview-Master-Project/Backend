@@ -4,7 +4,6 @@ import com.interview_master.common.exception.ApiException;
 import com.interview_master.common.exception.ErrorCode;
 import com.interview_master.domain.collection.Collection;
 import com.interview_master.infrastructure.CollectionRepository;
-import com.interview_master.infrastructure.QuizRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -21,7 +20,6 @@ import org.springframework.transaction.annotation.Transactional;
 public class ReadCollectionService {
 
     private final CollectionRepository collectionRepository;
-    private final QuizRepository quizRepository;
 
     public Collection getCollectionById(Long collectionId) {
         return collectionRepository.findByIdAndIsDeletedFalse(collectionId)
