@@ -1,13 +1,32 @@
 # Root Query type
 type Query {
-    """first = 데이터 개수, start = 첫 번째 레코드가 시작되는 인덱스"""
-    myPage(first: Int!, start: Int!, startDate: String!, endDate: String!): MyPage
-    userAttemptedCollections(start: Int!, first: Int!): CollectionPage
+    """first = 데이터 개수(default=10), start = 첫 번째 레코드가 시작되는 인덱스"""
+    getQuizGarden(
+        startDate: String!,
+        endDate: String!
+    ): [QuizGarden]!
+
+    userCollection(paging: DataPage): CollectionPage
+    userCollectionHistory(paging: DataPage): CollectionPage
 
     getCollectionWithQuizzes(collectionId: ID!): CollectionWithQuizzes
     deleteCollection(collectionId: ID!): String
 
     getAllCategories: [Category!]!
+
+    me: User
+
+}
+
+input DataPage {
+    first : Int = 10
+    start : Int = 0
+}
+
+type PageInfo {
+    hasNextPage : Boolean!
+    currentPage : Int!
+    totalPages : Int!
 }
 
 type CollectionWithQuizzes {
@@ -22,12 +41,6 @@ type QuizzesWithAttempts {
     recentAnswerAt: String
 }
 
-type MyPage {
-    user: User
-    collectionPage: CollectionPage
-    quizGardens: [QuizGarden]
-}
-
 type QuizGarden {
     date: String
     quizzesSolved: Int
@@ -36,9 +49,9 @@ type QuizGarden {
 }
 
 type CollectionPage {
-    collections: [Collection]
-    totalCount: Int
-    hasNext: Boolean
+    collections: [Collection!]!
+    pageInfo: PageInfo!
+    totalCount : Int!
 }
 
 # Collection type

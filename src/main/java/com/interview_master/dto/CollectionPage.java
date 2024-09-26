@@ -14,6 +14,6 @@ import java.util.List;
 @Builder
 public class CollectionPage {
     private List<Collection> collections;
+    private PageInfo pageInfo;
     private long totalCount;
-    private boolean hasNext;
 }
