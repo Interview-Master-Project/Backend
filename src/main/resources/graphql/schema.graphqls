@@ -1,19 +1,38 @@
 # Root Query type
 type Query {
-    """first = 데이터 개수(default=10), start = 첫 번째 레코드가 시작되는 인덱스"""
+    """
+    퀴즈 잔디밭 정보
+    (first = 데이터 개수(default = 10), start = 첫 번째 레코드가 시작되는 인덱스(default = 0))
+    """
     getQuizGarden(
         startDate: String!,
         endDate: String!
     ): [QuizGarden]!
 
-    userCollection(paging: DataPage): CollectionPage
-    userCollectionHistory(paging: DataPage): CollectionPage
+    """유저의 컬렉션 목록"""
+    userCollection(
+        paging: DataPage
+    ): CollectionPage
 
-    getCollectionWithQuizzes(collectionId: ID!): CollectionWithQuizzes
-    deleteCollection(collectionId: ID!): String
+    """히스토리"""
+    userCollectionHistory(
+        paging: DataPage
+    ): CollectionPage
 
+    """컬렉션에 속한 퀴즈들과 퀴즈 시도 정보"""
+    getCollectionWithQuizzes(
+        collectionId: ID!
+    ): CollectionWithQuizzes
+
+    """컬렉션 조회(비로그인 : PUBLIC인 컬렉션에만 접근 가능/ 로그인 : PUBLIC + 자기꺼"""
+    getCollection(
+        collectionId: ID!
+    ): Collection
+
+    """모든 카테고리 목록"""
     getAllCategories: [Category!]!
 
+    """로그인한 유저의 정보"""
     me: User
 
 }
@@ -54,68 +73,7 @@ type CollectionPage {
     totalCount : Int!
 }
 
-# Collection type
-type Collection {
-    id: ID
-    name: String
-    description: String
-    imgUrl: String
-    access: Access
-    category: Category
-    creator: User
-    isDeleted: Boolean
-    createdAt: String
-    updatedAt: String
-    quizzes: [Quiz]
-}
 
-# Member type
-type User {
-    id: ID
-    email: String
-    nickname: String
-    oAuthProvider: OAuthProvider
-    isDeleted: Boolean
-    createdAt: String
-    updatedAt: String
-}
 
-# Quiz type
-type Quiz {
-    id: ID
-    question: String
-    answer: String
-    collection: Collection
-    creator: User
-    access: Access
-    isDeleted: Boolean
-    createdAt: String
-    updatedAt: String
-}
 
-type Category {
-    id: ID
-    name: String
-}
-
-type UserCollectionAttempt {
-    id: ID
-    collection: Collection
-    user: User
-    startedAt: String
-    completedAt: String
-    totalQuizCount: Int
-    correctQuizCount: Int
-}
-
-# Enums
-enum Access {
-    PUBLIC
-    PRIVATE
-}
-
-enum OAuthProvider {
-    KAKAO
-    NAVER
-}
 

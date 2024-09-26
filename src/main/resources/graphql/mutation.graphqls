@@ -3,6 +3,9 @@ type Mutation {
     editQuiz(quizId: ID!, editQuizInput: EditQuizInput!): String!
     deleteQuiz(quizId: ID!): String
 
+    deleteCollection(
+        collectionId: ID!
+    ): String
 }
 
 input CreateCollectionInput {
