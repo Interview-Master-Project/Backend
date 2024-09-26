@@ -25,32 +25,32 @@ public class MyPageController {
     private final UserQuizAttemptService userQuizAttemptService;
 
     @QueryMapping
-    public MyPage myPage(@Argument Integer offset, @Argument Integer limit,
+    public MyPage myPage(@Argument Integer start, @Argument Integer first,
                          @Argument String startDate, @Argument String endDate,
                          @ContextValue(required = false) Long userId,
                          @ContextValue(name = "authError", required = false) String authError) {
 
         validateUserAuthContext(userId, authError);
 
-        log.info("========== my page\t userId: {}, offset: {}, limit: {}, startDate : {}, endDate : {}",
-                userId, offset, limit, startDate, endDate);
+        log.info("========== my page\t userId: {}, start: {}, first: {}, startDate : {}, endDate : {}",
+                userId, start, first, startDate, endDate);
 
         return MyPage.builder()
                 .user(userProfileService.getProfile(userId))
-                .collectionPage(collectionService.userCollections(userId, offset, limit))
+                .collectionPage(collectionService.userCollections(userId, start, first))
                 .quizGardens(userQuizAttemptService.getQuizGardens(LocalDate.parse(startDate), LocalDate.parse(endDate), userId))
                 .build();
     }
 
     @QueryMapping
     public CollectionPage userAttemptedCollections(
-            @Argument Integer offset, @Argument Integer limit,
+            @Argument Integer start, @Argument Integer first,
             @ContextValue(required = false) Long userId, @ContextValue(name = "authError", required = false) String authError) {
 
         validateUserAuthContext(userId, authError);
 
-        log.info("========== user attempted collections\t userId: {}, offset: {}, limit: {}", userId, offset, limit);
+        log.info("========== user attempted collections\t userId: {}, start: {}, first: {}", userId, start, first);
 
-        return collectionService.userAttemptedCollections(userId, offset, limit);
+        return collectionService.userAttemptedCollections(userId, start, first);
     }
 }

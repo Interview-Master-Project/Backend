@@ -1,7 +1,8 @@
 # Root Query type
 type Query {
-    myPage(offset: Int!, limit: Int!, startDate: String!, endDate: String!): MyPage
-    userAttemptedCollections(offset: Int!, limit: Int!): CollectionPage
+    """first = 데이터 개수, start = 첫 번째 레코드가 시작되는 인덱스"""
+    myPage(first: Int!, start: Int!, startDate: String!, endDate: String!): MyPage
+    userAttemptedCollections(start: Int!, first: Int!): CollectionPage
 
     getCollectionWithQuizzes(collectionId: ID!): CollectionWithQuizzes
     deleteCollection(collectionId: ID!): String
