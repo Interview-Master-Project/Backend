@@ -31,6 +31,9 @@ public class ReadCollectionResolver {
         return readCollectionService.getCollectionWithQuizzes(collectionId, userId);
     }
 
+    /**
+     * user의 컬렉션 목록(with paging)
+     */
     @QueryMapping
     public CollectionPage userCollection(@Argument DataPage paging, @ContextValue(required = false) Long userId,
         @ContextValue(name = "authError", required = false) String authError) {
@@ -42,6 +45,9 @@ public class ReadCollectionResolver {
         return createCollectionPage(collections);
     }
 
+    /**
+     * user가 시도한 컬렉션 목록(with paging)
+     */
     @QueryMapping
     public CollectionPage userCollectionHistory(@Argument DataPage paging, @ContextValue(required = false) Long userId,
         @ContextValue(name = "authError", required = false) String authError) {
