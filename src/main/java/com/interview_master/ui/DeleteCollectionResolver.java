@@ -2,7 +2,7 @@ package com.interview_master.ui;
 
 import static com.interview_master.util.GraphQLAuthUtils.validateUserAuthContext;
 
-import com.interview_master.application.UpsertCollectionService;
+import com.interview_master.service.UpsertCollectionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.ContextValue;

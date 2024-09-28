@@ -2,7 +2,7 @@ package com.interview_master.ui;
 
 import static com.interview_master.util.GraphQLAuthUtils.validateUserAuthContext;
 
-import com.interview_master.application.ReadCollectionService;
+import com.interview_master.service.ReadCollectionService;
 import com.interview_master.common.exception.ApiException;
 import com.interview_master.common.exception.ErrorCode;
 import com.interview_master.domain.collection.Collection;

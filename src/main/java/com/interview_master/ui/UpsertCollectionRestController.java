@@ -1,6 +1,6 @@
 package com.interview_master.ui;
 
-import com.interview_master.application.UpsertCollectionService;
+import com.interview_master.service.UpsertCollectionService;
 import com.interview_master.domain.collection.Collection;
 import com.interview_master.ui.request.CreateCollectionReq;
 import com.interview_master.ui.request.EditCollectionReq;

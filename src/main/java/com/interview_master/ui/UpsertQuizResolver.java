@@ -2,7 +2,7 @@ package com.interview_master.ui;
 
 import static com.interview_master.util.GraphQLAuthUtils.validateUserAuthContext;
 
-import com.interview_master.application.UpsertQuizService;
+import com.interview_master.service.UpsertQuizService;
 import com.interview_master.domain.quiz.Quiz;
 import com.interview_master.ui.request.CreateQuizInput;
 import com.interview_master.ui.request.EditQuizInput;

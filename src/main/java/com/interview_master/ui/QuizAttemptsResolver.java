@@ -2,7 +2,7 @@ package com.interview_master.ui;
 
 import static com.interview_master.util.GraphQLAuthUtils.validateUserAuthContext;
 
-import com.interview_master.application.UserQuizAttemptService;
+import com.interview_master.service.UserQuizAttemptService;
 import com.interview_master.dto.QuizGarden;
 import java.time.LocalDate;
 import java.util.List;
