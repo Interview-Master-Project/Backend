@@ -1,4 +1,4 @@
-package com.interview_master.application;
+package com.interview_master.service;
 
 import com.interview_master.common.exception.ApiException;
 import com.interview_master.common.exception.ErrorCode;
