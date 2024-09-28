@@ -1,4 +1,4 @@
-package com.interview_master.application;
+package com.interview_master.service;
 
 import com.interview_master.dto.QuizGarden;
 import com.interview_master.dto.QuizLog;

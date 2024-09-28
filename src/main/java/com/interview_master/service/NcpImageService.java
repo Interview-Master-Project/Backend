@@ -1,4 +1,4 @@
-package com.interview_master.application;
+package com.interview_master.service;
 
 import com.amazonaws.AmazonServiceException;
 import com.amazonaws.services.s3.AmazonS3Client;
