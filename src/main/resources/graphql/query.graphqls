@@ -34,6 +34,13 @@ type Query {
     """로그인한 유저의 정보"""
     me: User
 
+    """컬렉션 검색"""
+    searchCollections(
+        paging: DataPage,
+        categoryIds: [Int],
+        keywords: [String],
+        maxCorrectRate: Int
+    ) : CollectionWithAttemptsPaging
 }
 
 input DataPage {
@@ -47,9 +54,16 @@ type PageInfo {
     totalPages : Int!
 }
 
-type CollectionWithQuizzes {
+type CollectionWithAttemptsPaging {
+    collectionWithAttempts: [CollectionWithAttempts!]!
+    pageInfo: PageInfo!
+}
+
+type CollectionWithAttempts {
     collection: Collection
-    quizzesWithAttempts: [QuizzesWithAttempts]
+    quizCount: Int
+    totalAttempts: Int
+    correctAttempts: Int
 }
 
 type QuizzesWithAttempts {
