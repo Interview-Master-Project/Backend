@@ -2,16 +2,13 @@ package com.interview_master.infrastructure;
 
 import com.interview_master.domain.collection.Collection;
 import com.interview_master.dto.CollectionWithAttempts;
-import com.interview_master.dto.DataPage;
-import com.interview_master.dto.SortOrder;
 import java.util.List;
+import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.Repository;
 import org.springframework.data.repository.query.Param;
-
-import java.util.Optional;
 
 public interface CollectionRepository extends Repository<Collection, Long>, CollectionRepositoryCustom {
 
