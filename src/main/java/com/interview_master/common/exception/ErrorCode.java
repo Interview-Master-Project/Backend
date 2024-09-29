@@ -43,6 +43,8 @@ public enum ErrorCode {
   // CATEGORY
   CATEGORY_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 카테고리는 존재하지 않습니다."),
 
+  // SORT
+  UNSUPPORTED_SORT_ORDER(HttpStatus.BAD_REQUEST, "지원하지 않는 정렬 조건입니다."),
   ;
 
   private final HttpStatus httpStatusCode;

@@ -3,6 +3,7 @@ package com.interview_master.service;
 import com.interview_master.common.exception.ApiException;
 import com.interview_master.common.exception.ErrorCode;
 import com.interview_master.domain.collection.Collection;
+import com.interview_master.dto.DataPage;
 import com.interview_master.infrastructure.CollectionRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -29,8 +30,9 @@ public class ReadCollectionService {
   /**
    * user의 컬렉션을 offset 기반으로 페이징 + 최신 수정 순으로
    */
-  public Page<Collection> userCollections(Long userId, Integer start, Integer first) {
-    Pageable pageable = PageRequest.of(start / first, first, Sort.by("updatedAt").descending());
+  public Page<Collection> userCollections(Long userId, DataPage paging) {
+    Pageable pageable = PageRequest.of(paging.getOffset() / paging.getPageSize(),
+        paging.getPageSize(), Sort.by("updatedAt").descending());
     return collectionRepository.findByCreatorIdAndIsDeletedFalse(userId,
         pageable);
   }
@@ -38,8 +40,9 @@ public class ReadCollectionService {
   /**
    * user의 히스토리 반환
    */
-  public Page<Collection> userAttemptedCollections(Long userId, Integer start, Integer first) {
-    Pageable pageable = PageRequest.of(start / first, first);
+  public Page<Collection> userAttemptedCollections(Long userId, DataPage paging) {
+    Pageable pageable = PageRequest.of(paging.getOffset() / paging.getPageSize(),
+        paging.getPageSize());
     return collectionRepository.findAttemptedCollectionsByUserOrderByLatestAttempt(
         userId, pageable);
   }

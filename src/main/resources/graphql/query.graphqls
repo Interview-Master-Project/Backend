@@ -1,18 +1,20 @@
 # Root Query type
 type Query {
     """
-    퀴즈 잔디밭 정보 (first = 데이터 개수(default = 10), start = 첫 번째 레코드가 시작되는 인덱스(default = 0))
+    퀴즈 잔디밭 정보
     """
     getQuizGarden(
         startDate: String!,
         endDate: String!
     ): [QuizGarden]!
 
+    # TODO : 정렬 조건 추가(최신순, 정답률 낮은 순)
     """유저의 컬렉션 목록"""
     userCollection(
         paging: DataPage
     ): CollectionPage
 
+    # TODO : 정렬 조건 & 필터 추가(정렬 = 최신 순, 필터 = PUBLIC만, PRIVATE만)
     """히스토리"""
     userCollectionHistory(
         paging: DataPage
@@ -37,15 +39,24 @@ type Query {
     """컬렉션 검색"""
     searchCollections(
         paging: DataPage,
+        sort: SortOrder = LATEST,
         categoryIds: [Int],
         keywords: [String],
         maxCorrectRate: Int
     ) : CollectionWithAttemptsPaging
 }
 
+"""정렬 조건"""
+enum SortOrder {
+    "최신 순"
+    LATEST
+    "정답률 낮은 순"
+    LOWEST_ACCURACY
+}
+
 input DataPage {
-    first : Int = 10
-    start : Int = 0
+    pageSize : Int = 10
+    offset : Int = 0
 }
 
 type PageInfo {

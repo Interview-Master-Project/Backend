@@ -11,6 +11,6 @@ import lombok.NoArgsConstructor;
 @Builder
 public class DataPage {
 
-  private int first;
-  private int start;
+  private int offset;
+  private int pageSize;
 }

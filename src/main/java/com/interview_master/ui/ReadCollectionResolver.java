@@ -44,8 +44,7 @@ public class ReadCollectionResolver {
       @ContextValue(name = "authError", required = false) String authError) {
     validateUserAuthContext(userId, authError);
 
-    Page<Collection> collections = readCollectionService.userCollections(userId,
-        paging.getStart(), paging.getFirst());
+    Page<Collection> collections = readCollectionService.userCollections(userId, paging);
 
     return createCollectionPage(collections);
   }
@@ -59,8 +58,7 @@ public class ReadCollectionResolver {
       @ContextValue(name = "authError", required = false) String authError) {
     validateUserAuthContext(userId, authError);
 
-    Page<Collection> collections = readCollectionService.userAttemptedCollections(userId,
-        paging.getStart(), paging.getFirst());
+    Page<Collection> collections = readCollectionService.userAttemptedCollections(userId, paging);
 
     return createCollectionPage(collections);
   }

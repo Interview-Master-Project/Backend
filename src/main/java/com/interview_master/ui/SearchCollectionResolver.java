@@ -1,9 +1,13 @@
 package com.interview_master.ui;
 
+import com.interview_master.dto.CollectionWithAttempts;
 import com.interview_master.dto.DataPage;
+import com.interview_master.dto.PageInfo;
+import com.interview_master.dto.SortOrder;
 import com.interview_master.service.SearchCollectionService;
 import com.interview_master.ui.response.CollectionWithAttemptsPaging;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.ContextValue;
 import org.springframework.graphql.data.method.annotation.QueryMapping;
@@ -21,15 +25,18 @@ public class SearchCollectionResolver {
   public CollectionWithAttemptsPaging searchCollections(
       @Argument List<Long> categoryIds, @Argument List<String> keywords,
       @Argument Integer maxCorrectRate, @Argument DataPage paging,
-      @ContextValue(required = false) Long userId) {
+      @Argument SortOrder sort, @ContextValue(required = false) Long userId) {
 
-    // 비회원 접근 -> PUBLIC인 컬렉션만 리턴
-    if (userId == null) {
+    Page<CollectionWithAttempts> result = searchCollectionService.searchCollections(
+        categoryIds, keywords, maxCorrectRate, paging, sort, userId);
 
-    } else {    // 회원 접근 -> 다른 유저 PUBLIC + 내 컬렉션 리턴
-
-    }
-
-    return new CollectionWithAttemptsPaging();
+    return CollectionWithAttemptsPaging.builder()
+        .collectionWithAttempts(result.getContent())
+        .pageInfo(PageInfo.builder()
+            .currentPage(result.getNumber() + 1)
+            .hasNextPage(result.hasNext())
+            .totalPages(result.getTotalPages())
+            .build())
+        .build();
   }
 }

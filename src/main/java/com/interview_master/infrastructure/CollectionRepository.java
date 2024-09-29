@@ -1,6 +1,10 @@
 package com.interview_master.infrastructure;
 
 import com.interview_master.domain.collection.Collection;
+import com.interview_master.dto.CollectionWithAttempts;
+import com.interview_master.dto.DataPage;
+import com.interview_master.dto.SortOrder;
+import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
@@ -9,7 +13,7 @@ import org.springframework.data.repository.query.Param;
 
 import java.util.Optional;
 
-public interface CollectionRepository extends Repository<Collection, Long> {
+public interface CollectionRepository extends Repository<Collection, Long>, CollectionRepositoryCustom {
 
   Collection save(Collection collection);
 
@@ -31,4 +35,8 @@ public interface CollectionRepository extends Repository<Collection, Long> {
       "order by max(uca.startedAt) desc")
   Page<Collection> findAttemptedCollectionsByUserOrderByLatestAttempt(@Param("userId") Long userId,
       Pageable pageable);
+
+  @Override
+  Page<CollectionWithAttempts> searchCollections(List<Long> categoryIds, List<String> keywords,
+      Integer maxCorrectRate, Pageable pageable, Long userId);
 }
