@@ -11,21 +11,21 @@ import java.util.Optional;
 
 public interface QuizRepository extends Repository<Quiz, Long> {
 
-    Optional<Quiz> findByIdAndIsDeletedFalse(Long quizId);
+  Optional<Quiz> findByIdAndIsDeletedFalse(Long quizId);
 
-    void save(Quiz quiz);
+  Quiz save(Quiz quiz);
 
-    @Query("SELECT NEW com.interview_master.dto.QuizWithAttempts(q, " +
-            "COALESCE(COUNT(uqa), 0), " +
-            "COALESCE(SUM(CASE WHEN uqa.isCorrect = true THEN 1 ELSE 0 END), 0), " +
-            "MAX(uqa.answeredAt)) " +
-            "FROM Quiz q " +
-            "LEFT JOIN UserQuizAttempt uqa ON q.id = uqa.quiz.id AND uqa.user.id = :userId " +
-            "WHERE q.collection.id = :collectionId AND q.isDeleted = false " +
-            "GROUP BY q.id, q.question " +
-            "ORDER BY q.id DESC")
-    List<QuizWithAttempts> getQuizzesByCollectionIdWithAttempts(
-            @Param("collectionId") Long collectionId,
-            @Param("userId") Long userId
-    );
+  @Query("SELECT NEW com.interview_master.dto.QuizWithAttempts(q, " +
+      "COALESCE(COUNT(uqa), 0), " +
+      "COALESCE(SUM(CASE WHEN uqa.isCorrect = true THEN 1 ELSE 0 END), 0), " +
+      "MAX(uqa.answeredAt)) " +
+      "FROM Quiz q " +
+      "LEFT JOIN UserQuizAttempt uqa ON q.id = uqa.quiz.id AND uqa.user.id = :userId " +
+      "WHERE q.collection.id = :collectionId AND q.isDeleted = false " +
+      "GROUP BY q.id, q.question " +
+      "ORDER BY q.id DESC")
+  List<QuizWithAttempts> getQuizzesByCollectionIdWithAttempts(
+      @Param("collectionId") Long collectionId,
+      @Param("userId") Long userId
+  );
 }

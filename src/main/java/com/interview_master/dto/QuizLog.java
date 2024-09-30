@@ -4,6 +4,7 @@ import java.time.LocalDate;
 
 public interface QuizLog {
 
-    LocalDate getDate();
-    Integer getQuizzesSolved();
+  LocalDate getDate();
+
+  Integer getQuizzesSolved();
 }

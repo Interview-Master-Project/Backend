@@ -18,23 +18,23 @@ import java.time.LocalDateTime;
 @Builder
 public class UserCollectionAttempt {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
-    private User user;
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "user_id")
+  private User user;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "collection_id")
-    private Collection collection;
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "collection_id")
+  private Collection collection;
 
-    private LocalDateTime startedAt;
+  private LocalDateTime startedAt;
 
-    private LocalDateTime completedAt;
+  private LocalDateTime completedAt;
 
-    private int totalQuizCount;
+  private int totalQuizCount;
 
-    private int correctQuizCount;
+  private int correctQuizCount;
 }

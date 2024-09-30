@@ -6,14 +6,15 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
-
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class CollectionWithQuizzes {
+public class CollectionWithAttempts {
 
-    private Collection collection;
-    private List<QuizWithAttempts> quizzesWithAttempts;
+  private Collection collection;
+  private int quizCount;
+  private int totalAttempts;
+  private int correctAttempts;
+
 }
