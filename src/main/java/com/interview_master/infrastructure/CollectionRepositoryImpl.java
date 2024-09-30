@@ -80,8 +80,8 @@ public class CollectionRepositoryImpl implements CollectionRepositoryCustom {
           .divide(userCollectionAttempt.totalQuizCount.coalesce(1));
 
       if (maxCorrectRate != null) {
-        whereClause.and(userCollectionAttempt.totalQuizCount.coalesce(0).eq(0)
-            .or(accuracyExpression.loe(maxCorrectRate)));
+        whereClause.and(userCollectionAttempt.totalQuizCount.gt(0)
+            .and(accuracyExpression.loe(maxCorrectRate)));
       }
     } else {
       // 비로그인 사용자를 위한 쿼리

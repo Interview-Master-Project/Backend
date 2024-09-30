@@ -158,7 +158,7 @@ class SearchCollectionServiceTest {
     Long userId = 1L;
     List<Long> categoryIds = Arrays.asList(1L, 2L);
     List<String> keywords = null;
-    Integer maxCorrectRate = 100;
+    Integer maxCorrectRate = 80;
     DataPage dataPage = new DataPage(0, 10);
     SortOrder sortOrder = SortOrder.LOWEST_ACCURACY;
 
@@ -171,8 +171,9 @@ class SearchCollectionServiceTest {
     // Verify sorting
     double previousAccuracy = -1;
     for (CollectionWithAttempts c : result.getContent()) {
-      if (c.getTotalAttempts() == 0) continue;
       double currentAccuracy = (double) c.getCorrectAttempts() / c.getTotalAttempts() * 100;
+//      System.out.println("id : " + c.getCollection().getId() + "\taccuracy : " + currentAccuracy);
+
       assertTrue(currentAccuracy >= previousAccuracy,
           "Results should be sorted by lowest accuracy");
       previousAccuracy = currentAccuracy;
