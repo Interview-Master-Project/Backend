@@ -15,27 +15,28 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 public class User extends BaseEntity {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
 
-    private String nickname;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long id;
 
-    private String email;
+  private String nickname;
 
-    @Enumerated(EnumType.STRING)
-    private OAuthProvider oAuthProvider;
+  private String email;
 
-    private void setNickname(String nickname) {
-        this.nickname = nickname;
-    }
+  @Enumerated(EnumType.STRING)
+  private OAuthProvider oAuthProvider;
 
-    private void setEmail(String email) {
-        this.email = email;
-    }
+  private void setNickname(String nickname) {
+    this.nickname = nickname;
+  }
 
-    private void setOAuthProvider(OAuthProvider oAuthProvider) {
-        this.oAuthProvider = oAuthProvider;
-    }
+  private void setEmail(String email) {
+    this.email = email;
+  }
+
+  private void setOAuthProvider(OAuthProvider oAuthProvider) {
+    this.oAuthProvider = oAuthProvider;
+  }
 }
 

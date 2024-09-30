@@ -1,0 +1,98 @@
+# Root Query type
+type Query {
+    """
+    퀴즈 잔디밭 정보
+    """
+    getQuizGarden(
+        startDate: String!,
+        endDate: String!
+    ): [QuizGarden]!
+
+    # TODO : 정렬 조건 추가(최신순, 정답률 낮은 순)
+    """유저의 컬렉션 목록"""
+    userCollection(
+        paging: DataPage
+    ): CollectionPage
+
+    # TODO : 정렬 조건 & 필터 추가(정렬 = 최신 순, 필터 = PUBLIC만, PRIVATE만)
+    """히스토리"""
+    userCollectionHistory(
+        paging: DataPage
+    ): CollectionPage
+
+    """컬렉션에 속한 퀴즈들과 유저의 퀴즈 시도 정보"""
+    getQuizzesWithAttemptByCollectionId(
+        collectionId: ID!
+    ): [QuizzesWithAttempts!]!
+
+    """컬렉션 조회"""
+    getCollection(
+        collectionId: ID!
+    ): Collection
+
+    """모든 카테고리 목록(로그인 필요 없음)"""
+    getAllCategories: [Category!]!
+
+    """로그인한 유저의 정보"""
+    me: User
+
+    """컬렉션 검색"""
+    searchCollections(
+        paging: DataPage,
+        sort: SortOrder = LATEST,
+        categoryIds: [Int],
+        keywords: [String],
+        maxCorrectRate: Int
+    ) : CollectionWithAttemptsPaging
+}
+
+"""정렬 조건"""
+enum SortOrder {
+    "최신 순"
+    LATEST
+    "정답률 낮은 순"
+    LOWEST_ACCURACY
+}
+
+input DataPage {
+    pageSize : Int = 10
+    offset : Int = 0
+}
+
+type PageInfo {
+    hasNextPage : Boolean!
+    currentPage : Int!
+    totalPages : Int!
+}
+
+type CollectionWithAttemptsPaging {
+    collectionWithAttempts: [CollectionWithAttempts!]!
+    pageInfo: PageInfo!
+}
+
+type CollectionWithAttempts {
+    collection: Collection
+    quizCount: Int
+    totalAttempts: Int
+    correctAttempts: Int
+}
+
+type QuizzesWithAttempts {
+    quiz: Quiz
+    totalAttempts: Int
+    correctAttempts: Int
+    recentAnswerAt: String
+}
+
+type QuizGarden {
+    date: String
+    quizzesSolved: Int
+    dayIndex: Int
+    weekIndex: Int
+}
+
+type CollectionPage {
+    collections: [Collection!]!
+    pageInfo: PageInfo!
+    totalCount : Int!
+}

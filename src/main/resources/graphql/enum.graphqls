@@ -1,0 +1,10 @@
+# Enums
+enum Access {
+    PUBLIC
+    PRIVATE
+}
+
+enum OAuthProvider {
+    KAKAO
+    NAVER
+}

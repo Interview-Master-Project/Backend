@@ -1,0 +1,9 @@
+type UserCollectionAttempt {
+    id: ID
+    collection: Collection
+    user: User
+    startedAt: String
+    completedAt: String
+    totalQuizCount: Int
+    correctQuizCount: Int
+}

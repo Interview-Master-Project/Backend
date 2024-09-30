@@ -9,8 +9,8 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @SpringBootApplication(exclude = {SecurityAutoConfiguration.class})
 public class InterviewMasterApplication {
 
-    public static void main(String[] args) {
-        SpringApplication.run(InterviewMasterApplication.class, args);
-    }
+  public static void main(String[] args) {
+    SpringApplication.run(InterviewMasterApplication.class, args);
+  }
 
 }

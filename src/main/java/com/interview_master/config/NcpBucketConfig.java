@@ -12,24 +12,25 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class NcpBucketConfig {
 
-    @Value("${cloud.ncp.credentials.access-key}")
-    private String accessKey;
+  @Value("${cloud.ncp.credentials.access-key}")
+  private String accessKey;
 
-    @Value("${cloud.ncp.credentials.secret-key}")
-    private String secretKey;
+  @Value("${cloud.ncp.credentials.secret-key}")
+  private String secretKey;
 
-    @Value("${cloud.ncp.credentials.end-point}")
-    private String endPoint;
+  @Value("${cloud.ncp.credentials.end-point}")
+  private String endPoint;
 
-    @Value("${cloud.ncp.region.static}")
-    private String region;
+  @Value("${cloud.ncp.region.static}")
+  private String region;
 
-    @Bean
-    public AmazonS3Client objectStorageClient() {
+  @Bean
+  public AmazonS3Client objectStorageClient() {
 
-        return (AmazonS3Client) AmazonS3ClientBuilder.standard()
-                .withEndpointConfiguration(new AwsClientBuilder.EndpointConfiguration(endPoint, region))
-                .withCredentials(new AWSStaticCredentialsProvider(new BasicAWSCredentials(accessKey, secretKey)))
-                .build();
-    }
+    return (AmazonS3Client) AmazonS3ClientBuilder.standard()
+        .withEndpointConfiguration(new AwsClientBuilder.EndpointConfiguration(endPoint, region))
+        .withCredentials(
+            new AWSStaticCredentialsProvider(new BasicAWSCredentials(accessKey, secretKey)))
+        .build();
+  }
 }

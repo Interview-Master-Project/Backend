@@ -8,9 +8,8 @@ import org.springframework.web.context.request.RequestContextHolder;
 
 public class ExtractUserId {
 
-    public static Long extractUserIdFromContextHolder() {
-        return (Long) Objects.requireNonNull(RequestContextHolder.getRequestAttributes())
-            .getAttribute(USER_ID, RequestAttributes.SCOPE_REQUEST);
-    }
-
+  public static Long extractUserIdFromContextHolder() {
+    return (Long) Objects.requireNonNull(RequestContextHolder.getRequestAttributes())
+        .getAttribute(USER_ID, RequestAttributes.SCOPE_REQUEST);
+  }
 }

@@ -18,21 +18,22 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Builder
 public class UserQuizAttempt {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "collection_attempt_id")
-    private UserCollectionAttempt collectionAttempt;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    private Quiz quiz;
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "collection_attempt_id")
+  private UserCollectionAttempt collectionAttempt;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    private User user;
+  @ManyToOne(fetch = FetchType.LAZY)
+  private Quiz quiz;
 
-    private boolean isCorrect;
+  @ManyToOne(fetch = FetchType.LAZY)
+  private User user;
 
-    private LocalDateTime answeredAt;
+  private boolean isCorrect;
+
+  private LocalDateTime answeredAt;
 }

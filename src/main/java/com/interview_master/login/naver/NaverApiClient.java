@@ -18,59 +18,59 @@ import org.springframework.web.client.RestTemplate;
 @RequiredArgsConstructor
 public class NaverApiClient implements OAuthApiClient {
 
-    private static final String GRANT_TYPE = "authorization_code";
+  private static final String GRANT_TYPE = "authorization_code";
 
-    @Value("${naver.url.auth}")
-    private String authUrl;
+  @Value("${naver.url.auth}")
+  private String authUrl;
 
-    @Value("${naver.url.api}")
-    private String apiUrl;
+  @Value("${naver.url.api}")
+  private String apiUrl;
 
-    @Value("${naver.client_id}")
-    private String clientId;
+  @Value("${naver.client_id}")
+  private String clientId;
 
-    @Value("${naver.client_secret}")
-    private String clientSecret;
+  @Value("${naver.client_secret}")
+  private String clientSecret;
 
-    private final RestTemplate restTemplate;
+  private final RestTemplate restTemplate;
 
-    @Override
-    public OAuthProvider oAuthProvider() {
-        return OAuthProvider.NAVER;
-    }
+  @Override
+  public OAuthProvider oAuthProvider() {
+    return OAuthProvider.NAVER;
+  }
 
-    @Override
-    public String requestAccessToken(OAuthLoginParams params) {
-        String url = authUrl + "/oauth2.0/token";
+  @Override
+  public String requestAccessToken(OAuthLoginParams params) {
+    String url = authUrl + "/oauth2.0/token";
 
-        HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+    HttpHeaders httpHeaders = new HttpHeaders();
+    httpHeaders.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
 
-        MultiValueMap<String, String> body = params.makeBody();
-        body.add("grant_type", GRANT_TYPE);
-        body.add("client_id", clientId);
-        body.add("client_secret", clientSecret);
+    MultiValueMap<String, String> body = params.makeBody();
+    body.add("grant_type", GRANT_TYPE);
+    body.add("client_id", clientId);
+    body.add("client_secret", clientSecret);
 
-        HttpEntity<?> request = new HttpEntity<>(body, httpHeaders);
+    HttpEntity<?> request = new HttpEntity<>(body, httpHeaders);
 
-        NaverTokens response = restTemplate.postForObject(url, request, NaverTokens.class);
+    NaverTokens response = restTemplate.postForObject(url, request, NaverTokens.class);
 
-        assert response != null;
-        return response.getAccessToken();
-    }
+    assert response != null;
+    return response.getAccessToken();
+  }
 
-    @Override
-    public OAuthInfoResponse requestOauthInfo(String accessToken) {
-        String url = apiUrl + "/v1/nid/me";
+  @Override
+  public OAuthInfoResponse requestOauthInfo(String accessToken) {
+    String url = apiUrl + "/v1/nid/me";
 
-        HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
-        httpHeaders.set("Authorization", "Bearer " + accessToken);
+    HttpHeaders httpHeaders = new HttpHeaders();
+    httpHeaders.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+    httpHeaders.set("Authorization", "Bearer " + accessToken);
 
-        MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
+    MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
 
-        HttpEntity<?> request = new HttpEntity<>(body, httpHeaders);
+    HttpEntity<?> request = new HttpEntity<>(body, httpHeaders);
 
-        return restTemplate.postForObject(url, request, NaverInfoResponse.class);
-    }
+    return restTemplate.postForObject(url, request, NaverInfoResponse.class);
+  }
 }

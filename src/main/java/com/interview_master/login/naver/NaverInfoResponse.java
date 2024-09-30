@@ -10,28 +10,29 @@ import lombok.Getter;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class NaverInfoResponse implements OAuthInfoResponse {
 
-    @JsonProperty("response")
-    private Response response;
+  @JsonProperty("response")
+  private Response response;
 
-    @Getter
-    @JsonIgnoreProperties(ignoreUnknown = true)
-    static class Response {
-        private String email;
-        private String nickname;
-    }
+  @Getter
+  @JsonIgnoreProperties(ignoreUnknown = true)
+  static class Response {
 
-    @Override
-    public String getEmail() {
-        return response.email;
-    }
+    private String email;
+    private String nickname;
+  }
 
-    @Override
-    public String getNickname() {
-        return response.nickname;
-    }
+  @Override
+  public String getEmail() {
+    return response.email;
+  }
 
-    @Override
-    public OAuthProvider getOAuthProvider() {
-        return OAuthProvider.NAVER;
-    }
+  @Override
+  public String getNickname() {
+    return response.nickname;
+  }
+
+  @Override
+  public OAuthProvider getOAuthProvider() {
+    return OAuthProvider.NAVER;
+  }
 }

@@ -1,4 +1,4 @@
-package com.interview_master.application;
+package com.interview_master.service;
 
 import com.interview_master.common.exception.ApiException;
 import com.interview_master.common.exception.ErrorCode;
@@ -11,10 +11,10 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class UserProfileService {
 
-    private final UserRepository userRepository;
+  private final UserRepository userRepository;
 
-    public User getProfile(Long userId) {
-        return userRepository.findByIdAndIsDeletedFalse(userId)
-                .orElseThrow(() -> new ApiException(ErrorCode.USER_NOT_FOUND));
-    }
+  public User getProfile(Long userId) {
+    return userRepository.findByIdAndIsDeletedFalse(userId)
+        .orElseThrow(() -> new ApiException(ErrorCode.USER_NOT_FOUND));
+  }
 }
