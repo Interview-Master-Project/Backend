@@ -8,6 +8,8 @@ import com.interview_master.dto.CollectionWithAttempts;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.Expressions;
+import com.querydsl.core.types.dsl.NumberExpression;
+import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.JPQLQuery;
 import com.querydsl.jpa.JPQLQueryFactory;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -56,13 +58,31 @@ public class CollectionRepositoryImpl implements CollectionRepositoryCustom {
           .select(Projections.constructor(CollectionWithAttempts.class,
               collection,
               collection.quizzes.size(),
-              userCollectionAttempt.totalQuizCount.sum().coalesce(0).as("totalAttempts"),
-              userCollectionAttempt.correctQuizCount.sum().coalesce(0).as("correctAttempts")))
+              userCollectionAttempt.totalQuizCount,
+              userCollectionAttempt.correctQuizCount))
           .from(collection)
           .leftJoin(userCollectionAttempt)
           .on(userCollectionAttempt.collection.eq(collection)
-              .and(userCollectionAttempt.user.id.eq(userId)))
+              .and(userCollectionAttempt.user.id.eq(userId))
+              .and(userCollectionAttempt.completedAt.isNotNull())
+              .and(userCollectionAttempt.completedAt.eq(
+                  JPAExpressions.select(userCollectionAttempt.completedAt.max())
+                      .from(userCollectionAttempt)
+                      .where(userCollectionAttempt.collection.eq(collection)
+                          .and(userCollectionAttempt.user.id.eq(userId))
+                          .and(userCollectionAttempt.completedAt.isNotNull()))
+              )))
           .where(collection.access.eq(Access.PUBLIC).or(collection.creator.id.eq(userId)));
+
+      // Max correct rate (로그인 사용자에게만 적용)
+      NumberExpression<Integer> accuracyExpression = userCollectionAttempt.correctQuizCount
+          .multiply(100.0)
+          .divide(userCollectionAttempt.totalQuizCount.coalesce(1));
+
+      if (maxCorrectRate != null) {
+        whereClause.and(userCollectionAttempt.totalQuizCount.coalesce(0).eq(0)
+            .or(accuracyExpression.loe(maxCorrectRate)));
+      }
     } else {
       // 비로그인 사용자를 위한 쿼리
       query = queryFactory
@@ -77,25 +97,17 @@ public class CollectionRepositoryImpl implements CollectionRepositoryCustom {
 
     query.where(whereClause);
 
-    if (userId != null) {
-      query.groupBy(collection);
-
-      // Max correct rate (로그인 사용자에게만 적용)
-      if (maxCorrectRate != null) {
-        query.having(userCollectionAttempt.totalQuizCount.sum().coalesce(0).eq(0)
-            .or(userCollectionAttempt.correctQuizCount.sum().multiply(100.0)
-                .divide(userCollectionAttempt.totalQuizCount.sum())
-                .loe(maxCorrectRate)));
-      }
-    }
-
-    // Apply sorting
     if (pageable.getSort().getOrderFor("accuracy") != null && userId != null) {
       // LOWEST_ACCURACY sorting (로그인 사용자에게만 적용)
-      query.orderBy(userCollectionAttempt.correctQuizCount.sum().multiply(100.0)
-          .divide(userCollectionAttempt.totalQuizCount.sum().coalesce(1))
-          .as("accuracy")
-          .asc());
+      NumberExpression<Integer> accuracyExpression =
+          userCollectionAttempt.correctQuizCount.multiply(100)
+              .divide(userCollectionAttempt.totalQuizCount.coalesce(1));
+
+      if (pageable.getSort().getOrderFor("accuracy").isAscending()) {
+        query.orderBy(accuracyExpression.asc());
+      } else {
+        query.orderBy(accuracyExpression.desc());
+      }
     } else {
       // LATEST sorting
       query.orderBy(collection.createdAt.desc());
