@@ -2,6 +2,8 @@ package com.interview_master.ui;
 
 import static com.interview_master.util.GraphQLAuthUtils.validateUserAuthContext;
 
+import com.interview_master.domain.Access;
+import com.interview_master.dto.SortOrder;
 import com.interview_master.service.ReadCollectionService;
 import com.interview_master.common.exception.ApiException;
 import com.interview_master.common.exception.ErrorCode;
@@ -39,12 +41,12 @@ public class ReadCollectionResolver {
    * user의 컬렉션 목록(with paging)
    */
   @QueryMapping
-  public CollectionPage userCollection(@Argument DataPage paging,
+  public CollectionPage myCollections(@Argument DataPage paging, @Argument SortOrder sort,
       @ContextValue(required = false) Long userId,
       @ContextValue(name = "authError", required = false) String authError) {
     validateUserAuthContext(userId, authError);
 
-    Page<Collection> collections = readCollectionService.userCollections(userId, paging);
+    Page<Collection> collections = readCollectionService.userCollections(userId, paging, sort);
 
     return createCollectionPage(collections);
   }
@@ -53,12 +55,13 @@ public class ReadCollectionResolver {
    * user가 시도한 컬렉션 목록(with paging)
    */
   @QueryMapping
-  public CollectionPage userCollectionHistory(@Argument DataPage paging,
+  public CollectionPage myHistory(@Argument DataPage paging, @Argument Access filter,
       @ContextValue(required = false) Long userId,
       @ContextValue(name = "authError", required = false) String authError) {
     validateUserAuthContext(userId, authError);
 
-    Page<Collection> collections = readCollectionService.userAttemptedCollections(userId, paging);
+    Page<Collection> collections = readCollectionService.getMyCollectionHistory(userId, paging,
+        filter);
 
     return createCollectionPage(collections);
   }

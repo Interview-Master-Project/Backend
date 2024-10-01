@@ -1,5 +1,6 @@
 package com.interview_master.infrastructure;
 
+import com.interview_master.domain.Access;
 import com.interview_master.domain.collection.Collection;
 import com.interview_master.dto.CollectionWithAttempts;
 import java.util.List;
@@ -27,11 +28,12 @@ public interface CollectionRepository extends Repository<Collection, Long>, Coll
   @Query("select c from Collection c " +
       "join UserCollectionAttempt uca on uca.collection.id = c.id " +
       "where uca.user.id = :userId " +
+      "and (:access is null or c.access = :access) " +
       "and c.isDeleted = false " +
       "group by c.id " +
       "order by max(uca.startedAt) desc")
-  Page<Collection> findAttemptedCollectionsByUserOrderByLatestAttempt(@Param("userId") Long userId,
-      Pageable pageable);
+  Page<Collection> findUserCollectionHistory(@Param("userId") Long userId,
+      @Param("access") Access access, Pageable pageable);
 
   @Override
   Page<CollectionWithAttempts> searchCollections(List<Long> categoryIds, List<String> keywords,

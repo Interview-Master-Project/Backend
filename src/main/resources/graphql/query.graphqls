@@ -1,8 +1,6 @@
 # Root Query type
 type Query {
-    """
-    퀴즈 잔디밭 정보
-    """
+    """퀴즈 잔디밭 정보"""
     getQuizGarden(
         startDate: String!,
         endDate: String!
@@ -10,14 +8,15 @@ type Query {
 
     # TODO : 정렬 조건 추가(최신순, 정답률 낮은 순)
     """유저의 컬렉션 목록"""
-    userCollection(
-        paging: DataPage
+    myCollections(
+        paging: DataPage,
+        sort: SortOrder = LATEST
     ): CollectionPage
 
-    # TODO : 정렬 조건 & 필터 추가(정렬 = 최신 순, 필터 = PUBLIC만, PRIVATE만)
-    """히스토리"""
-    userCollectionHistory(
-        paging: DataPage
+    """히스토리 : filter 조건 없으면 PUBLIC, PRIVATE 둘 다"""
+    myHistory(
+        paging: DataPage,
+        filter : Access,
     ): CollectionPage
 
     """컬렉션에 속한 퀴즈들과 유저의 퀴즈 시도 정보"""
