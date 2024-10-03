@@ -25,7 +25,7 @@ public class UpsertQuizService {
   @Transactional
   public Quiz saveQuiz(CreateQuizInput createQuizInput, Long userId) {
     // collection 검증
-    Collection collection = collectionRepository.findByIdAndIsDeletedFalse(
+    Collection collection = collectionRepository.findByIdWithQuizzes(
             createQuizInput.getCollectionId())
         .orElseThrow(() -> new ApiException(ErrorCode.COLLECTION_NOT_FOUND));
     collection.isOwner(userId);
@@ -51,7 +51,7 @@ public class UpsertQuizService {
   public Quiz editQuiz(Long quizId, EditQuizInput editQuizInput, Long userId) {
     Collection collection = null;
     if (editQuizInput.getCollectionId() != null) {
-      collection = collectionRepository.findByIdAndIsDeletedFalse(editQuizInput.getCollectionId())
+      collection = collectionRepository.findByIdWithQuizzes(editQuizInput.getCollectionId())
           .orElseThrow(() -> new ApiException(ErrorCode.COLLECTION_NOT_FOUND));
       collection.isOwner(userId);
     }

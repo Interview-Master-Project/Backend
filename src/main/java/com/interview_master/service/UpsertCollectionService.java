@@ -60,7 +60,7 @@ public class UpsertCollectionService {
   public Collection editCollection(Long collectionId, EditCollectionReq editReq) {
     Long userId = ExtractUserId.extractUserIdFromContextHolder();
 
-    Collection collection = collectionRepository.findByIdAndIsDeletedFalse(collectionId)
+    Collection collection = collectionRepository.findByIdWithQuizzes(collectionId)
         .orElseThrow(() -> new ApiException(ErrorCode.COLLECTION_NOT_FOUND));
 
     // 수정 가능한지 검증
@@ -86,7 +86,7 @@ public class UpsertCollectionService {
   }
 
   public void deleteCollection(Long collectionId, Long userId) {
-    Collection collection = collectionRepository.findByIdAndIsDeletedFalse(collectionId)
+    Collection collection = collectionRepository.findByIdWithQuizzes(collectionId)
         .orElseThrow(() -> new ApiException(ErrorCode.COLLECTION_NOT_FOUND));
 
     collection.isOwner(userId);
