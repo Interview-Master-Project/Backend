@@ -15,7 +15,13 @@ public interface CollectionRepository extends Repository<Collection, Long>, Coll
 
   Collection save(Collection collection);
 
-  Optional<Collection> findByIdAndIsDeletedFalse(Long id);
+  @Query("select c from Collection c "
+      + "left join fetch c.quizzes q "
+      + "where c.id = :id "
+      + "and c.isDeleted = false "
+      + "and q.isDeleted = false "
+      + "order by q.updatedAt desc ")
+  Optional<Collection> findByIdWithQuizzes(@Param("id") Long id);
 
   /**
    * user의 컬렉션 리스트

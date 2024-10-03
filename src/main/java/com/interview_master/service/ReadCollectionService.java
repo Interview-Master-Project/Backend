@@ -27,7 +27,7 @@ public class ReadCollectionService {
   private final CollectionRepository collectionRepository;
 
   public Collection getCollectionById(Long collectionId) {
-    return collectionRepository.findByIdAndIsDeletedFalse(collectionId)
+    return collectionRepository.findByIdWithQuizzes(collectionId)
         .orElseThrow(() -> new ApiException(ErrorCode.COLLECTION_NOT_FOUND));
   }
 
