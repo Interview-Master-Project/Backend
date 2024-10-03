@@ -1,5 +1,8 @@
 package com.interview_master.service;
 
+import static com.interview_master.util.PageSortUtils.createPageable;
+import static com.interview_master.util.PageSortUtils.createSort;
+
 import com.interview_master.dto.CollectionWithAttempts;
 import com.interview_master.dto.DataPage;
 import com.interview_master.dto.SortOrder;
@@ -7,7 +10,6 @@ import com.interview_master.infrastructure.CollectionRepository;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -19,7 +21,6 @@ public class SearchCollectionService {
   private final CollectionRepository collectionRepository;
   private final CategoryService categoryService;
 
-  // 로그인한 경우
   public Page<CollectionWithAttempts> searchCollections(
       List<Long> categoryIds, List<String> keywords, Integer maxCorrectRate, DataPage paging,
       SortOrder sortOrder, Long userId) {
@@ -33,17 +34,5 @@ public class SearchCollectionService {
 
     return collectionRepository.searchCollections(
         categoryIds, keywords, maxCorrectRate, pageable, userId);
-  }
-
-  private Sort createSort(SortOrder sortOrder) {
-    return switch (sortOrder) {
-      case LATEST -> Sort.by(Sort.Direction.DESC, "createdAt");
-      case LOWEST_ACCURACY -> Sort.by(Sort.Direction.ASC, "accuracy");
-    };
-  }
-
-  private Pageable createPageable(DataPage dataPage, Sort sort) {
-    int pageNumber = dataPage.getOffset() / dataPage.getPageSize();
-    return PageRequest.of(pageNumber, dataPage.getPageSize(), sort);
   }
 }
