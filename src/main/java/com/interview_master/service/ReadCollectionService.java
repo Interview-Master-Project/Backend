@@ -45,14 +45,37 @@ public class ReadCollectionService {
   /**
    * user의 컬렉션을 offset 기반으로 페이징 + 정렬 (최신 생성 순 or 낮은 최근 정답률 순)
    */
-  public CollectionWithAttemptsPaging userCollections(Long userId, DataPage paging, SortOrder sortOrder) {
+  public CollectionWithAttemptsPaging userCollections(Long userId, DataPage paging,
+      SortOrder sortOrder) {
     Sort sort = createSort(sortOrder);
     Pageable pageable = createPageable(paging, sort);
 
     Page<Collection> collections = collectionRepository.findByCreatorIdAndIsDeletedFalse(userId,
         pageable);
 
-    List<UserCollectionAttempt> collectionAttempts = userCollectionAttemptRepository.findByCollectionIn(collections.getContent());
+    return getCollectionWithAttemptsPaging(collections);
+  }
+
+  /**
+   * user의 히스토리 반환
+   */
+  public CollectionWithAttemptsPaging getMyCollectionHistory(Long userId, DataPage paging,
+      Access filter) {
+    Pageable pageable = createPageable(paging);
+
+    Page<Collection> collections = collectionRepository.findUserCollectionHistory(userId,
+        filter, pageable);
+
+    return getCollectionWithAttemptsPaging(collections);
+  }
+
+  /**
+   * 각 collection에 해당하는 유저의 최근 시도 정보와 누적 시도 정보를 페이징 정보와 함께 반환하는 메서드
+   */
+  private CollectionWithAttemptsPaging getCollectionWithAttemptsPaging(
+      Page<Collection> collections) {
+    List<UserCollectionAttempt> collectionAttempts = userCollectionAttemptRepository.findByCollectionIn(
+        collections.getContent());
 
     // 컬렉션별 시도 매핑
     Map<Long, List<UserCollectionAttempt>> attemptsByCollectionId = collectionAttempts.stream()
@@ -61,9 +84,12 @@ public class ReadCollectionService {
     // CollectionWithAttempt 객체 생성
     List<CollectionWithAttempt> collectionsWithAttempt = collections.getContent().stream()
         .map(collection -> {
-          List<UserCollectionAttempt> attempts = attemptsByCollectionId.getOrDefault(collection.getId(), Collections.emptyList());
-          int totalAttempts = attempts.stream().mapToInt(UserCollectionAttempt::getTotalQuizCount).sum();
-          int totalCorrectAttempts = attempts.stream().mapToInt(UserCollectionAttempt::getCorrectQuizCount).sum();
+          List<UserCollectionAttempt> attempts = attemptsByCollectionId.getOrDefault(
+              collection.getId(), Collections.emptyList());
+          int totalAttempts = attempts.stream().mapToInt(UserCollectionAttempt::getTotalQuizCount)
+              .sum();
+          int totalCorrectAttempts = attempts.stream()
+              .mapToInt(UserCollectionAttempt::getCorrectQuizCount).sum();
 
           UserCollectionAttempt recentAttempt = attempts.stream()
               .max(Comparator.comparing(UserCollectionAttempt::getCompletedAt))
@@ -74,14 +100,15 @@ public class ReadCollectionService {
               .totalAttempts(totalAttempts)
               .totalCorrectAttempts(totalCorrectAttempts)
               .recentAttempts(recentAttempt != null ? recentAttempt.getTotalQuizCount() : 0)
-              .recentCorrectAttempts(recentAttempt != null ? recentAttempt.getCorrectQuizCount() : 0)
+              .recentCorrectAttempts(
+                  recentAttempt != null ? recentAttempt.getCorrectQuizCount() : 0)
               .build();
         })
         .toList();
 
     PageInfo pageInfo = new PageInfo(
         collections.hasNext(),
-        collections.getNumber(),
+        collections.getNumber() + 1,
         collections.getTotalPages()
     );
 
@@ -89,11 +116,4 @@ public class ReadCollectionService {
     return new CollectionWithAttemptsPaging(collectionsWithAttempt, pageInfo);
   }
 
-  /**
-   * user의 히스토리 반환
-   */
-  public Page<Collection> getMyCollectionHistory(Long userId, DataPage paging, Access filter) {
-    Pageable pageable = createPageable(paging);
-    return collectionRepository.findUserCollectionHistory(userId, filter, pageable);
-  }
 }

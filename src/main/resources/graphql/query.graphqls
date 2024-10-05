@@ -6,7 +6,6 @@ type Query {
         endDate: String!
     ): [QuizGarden]!
 
-    # TODO : 정렬 조건 추가(최신순, 정답률 낮은 순)
     """유저의 컬렉션 목록"""
     myCollections(
         paging: DataPage,
@@ -17,7 +16,7 @@ type Query {
     myHistory(
         paging: DataPage,
         filter : Access,
-    ): CollectionPage
+    ): CollectionWithAttemptsPaging
 
     """컬렉션에 속한 퀴즈들과 유저의 퀴즈 시도 정보"""
     getQuizzesWithAttemptByCollectionId(
