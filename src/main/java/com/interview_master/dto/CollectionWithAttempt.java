@@ -16,8 +16,8 @@ public class CollectionWithAttempt {
   private int quizCount;
   private int totalAttempts;
   private int totalCorrectAttempts;
-  private Integer recentAttempts;
-  private Integer recentCorrectAttempts;
+  private int recentAttempts;
+  private int recentCorrectAttempts;
 
   // CollectionRepositoryImpl에서 필요한 생성자
   public CollectionWithAttempt(Collection collection, int quizCount, int totalAttempts, int totalCorrectAttempts) {

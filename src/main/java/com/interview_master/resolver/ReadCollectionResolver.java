@@ -3,6 +3,7 @@ package com.interview_master.resolver;
 import static com.interview_master.util.GraphQLAuthUtils.validateUserAuthContext;
 
 import com.interview_master.domain.Access;
+import com.interview_master.dto.CollectionWithAttemptsPaging;
 import com.interview_master.dto.SortOrder;
 import com.interview_master.service.ReadCollectionService;
 import com.interview_master.common.exception.ApiException;
@@ -41,14 +42,12 @@ public class ReadCollectionResolver {
    * user의 컬렉션 목록(with paging)
    */
   @QueryMapping
-  public CollectionPage myCollections(@Argument DataPage paging, @Argument SortOrder sort,
+  public CollectionWithAttemptsPaging myCollections(@Argument DataPage paging, @Argument SortOrder sort,
       @ContextValue(required = false) Long userId,
       @ContextValue(name = "authError", required = false) String authError) {
     validateUserAuthContext(userId, authError);
 
-    Page<Collection> collections = readCollectionService.userCollections(userId, paging, sort);
-
-    return createCollectionPage(collections);
+    return readCollectionService.userCollections(userId, paging, sort);
   }
 
   /**

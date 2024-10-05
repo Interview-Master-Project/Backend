@@ -5,7 +5,7 @@ import com.interview_master.dto.DataPage;
 import com.interview_master.dto.PageInfo;
 import com.interview_master.dto.SortOrder;
 import com.interview_master.service.SearchCollectionService;
-import com.interview_master.resolver.response.CollectionWithAttemptsPaging;
+import com.interview_master.dto.CollectionWithAttemptsPaging;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.graphql.data.method.annotation.Argument;

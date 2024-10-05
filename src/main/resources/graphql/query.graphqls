@@ -11,7 +11,7 @@ type Query {
     myCollections(
         paging: DataPage,
         sort: SortOrder = LATEST
-    ): CollectionPage
+    ): CollectionWithAttemptsPaging
 
     """히스토리 : filter 조건 없으면 PUBLIC, PRIVATE 둘 다"""
     myHistory(

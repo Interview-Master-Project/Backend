@@ -1,8 +1,6 @@
-package com.interview_master.resolver.response;
+package com.interview_master.dto;
 
 
-import com.interview_master.dto.CollectionWithAttempt;
-import com.interview_master.dto.PageInfo;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
