@@ -2,7 +2,7 @@ package com.interview_master.ui;
 
 import static com.interview_master.util.GraphQLAuthUtils.validateUserAuthContext;
 
-import com.interview_master.dto.QuizWithAttempts;
+import com.interview_master.dto.QuizWithAttempt;
 import com.interview_master.infrastructure.QuizRepository;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -21,7 +21,7 @@ public class QuizWithAttemptsResolver {
    * collection에 속한 퀴즈 목록과 각 퀴즈에 대한 현재 유저가 시도한 정보들
    */
   @QueryMapping
-  public List<QuizWithAttempts> getQuizzesWithAttemptByCollectionId(@Argument Long collectionId,
+  public List<QuizWithAttempt> getQuizzesWithAttemptByCollectionId(@Argument Long collectionId,
       @ContextValue(required = false) Long userId,
       @ContextValue(name = "authError", required = false) String authError) {
     validateUserAuthContext(userId, authError);

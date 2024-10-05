@@ -9,7 +9,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.interview_master.common.exception.ApiException;
 import com.interview_master.domain.Access;
-import com.interview_master.dto.CollectionWithAttempts;
+import com.interview_master.dto.CollectionWithAttempt;
 import com.interview_master.dto.DataPage;
 import com.interview_master.dto.SortOrder;
 import java.util.Arrays;
@@ -37,32 +37,32 @@ class SearchCollectionServiceTest {
     DataPage dataPage = new DataPage(0, 10);
     SortOrder sortOrder = SortOrder.LATEST;
 
-    Page<CollectionWithAttempts> result = searchCollectionService.searchCollections(categoryIds,
+    Page<CollectionWithAttempt> result = searchCollectionService.searchCollections(categoryIds,
         keywords, maxCorrectRate, dataPage, sortOrder, userId);
 
     assertNotNull(result);
     assertEquals(3, result.getContent().size());
 
-    List<CollectionWithAttempts> content = result.getContent();
+    List<CollectionWithAttempt> content = result.getContent();
 
     // 첫 번째 항목 검증 (가장 최근에 생성된 항목)
     assertEquals("20-24 네이버 면접 기출 모음집 (java backend)",
         content.get(0).getCollection().getDescription());
     assertEquals(0, content.get(0).getTotalAttempts());
-    assertEquals(0, content.get(0).getCorrectAttempts());
+    assertEquals(0, content.get(0).getTotalCorrectAttempts());
     assertEquals(3, content.get(0).getQuizCount());
 
     // 두 번째 항목 검증
     assertEquals("Core Java concepts and advanced topics",
         content.get(1).getCollection().getDescription());
     assertEquals(53, content.get(1).getTotalAttempts());
-    assertEquals(39, content.get(1).getCorrectAttempts());
+    assertEquals(39, content.get(1).getTotalCorrectAttempts());
     assertEquals(53, content.get(1).getQuizCount());
 
     // 세 번째 항목 검증
     assertEquals("자바스크립트", content.get(2).getCollection().getDescription());
     assertEquals(0, content.get(2).getTotalAttempts());
-    assertEquals(0, content.get(2).getCorrectAttempts());
+    assertEquals(0, content.get(2).getTotalCorrectAttempts());
     assertEquals(0, content.get(2).getQuizCount());
 
     // 정렬 순서 검증 (최신순)
@@ -72,9 +72,9 @@ class SearchCollectionServiceTest {
         .isAfter(content.get(2).getCollection().getCreatedAt()));
 
     // 모든 항목의 정확도가 80% 이하인지 검증
-    for (CollectionWithAttempts c : content) {
+    for (CollectionWithAttempt c : content) {
       double accuracyRate = c.getTotalAttempts() == 0 ? 0 :
-          (double) c.getCorrectAttempts() / c.getTotalAttempts() * 100;
+          (double) c.getTotalCorrectAttempts() / c.getTotalAttempts() * 100;
       assertTrue(accuracyRate <= 80, "Accuracy rate should be <= 80%");
     }
   }
@@ -89,16 +89,16 @@ class SearchCollectionServiceTest {
     DataPage dataPage = new DataPage(0, 10);
     SortOrder sortOrder = SortOrder.LATEST;
 
-    Page<CollectionWithAttempts> result = searchCollectionService.searchCollections(categoryIds,
+    Page<CollectionWithAttempt> result = searchCollectionService.searchCollections(categoryIds,
         keywords, maxCorrectRate, dataPage, sortOrder, userId);
 
     assertNotNull(result);
     assertEquals(10, result.getContent().size());
 
-    for (CollectionWithAttempts c : result.getContent()) {
+    for (CollectionWithAttempt c : result.getContent()) {
       assertNotEquals(Access.PRIVATE, c.getCollection().getAccess());
       assertEquals(0, c.getTotalAttempts());
-      assertEquals(0, c.getCorrectAttempts());
+      assertEquals(0, c.getTotalCorrectAttempts());
     }
   }
 
@@ -143,12 +143,12 @@ class SearchCollectionServiceTest {
     DataPage dataPage = new DataPage(0, 10);
     SortOrder sortOrder = SortOrder.LATEST;
 
-    Page<CollectionWithAttempts> result = searchCollectionService.searchCollections(categoryIds,
+    Page<CollectionWithAttempt> result = searchCollectionService.searchCollections(categoryIds,
         keywords, maxCorrectRate, dataPage, sortOrder, userId);
 
-    for (CollectionWithAttempts c : result.getContent()) {
+    for (CollectionWithAttempt c : result.getContent()) {
       assertEquals(0, c.getTotalAttempts());
-      assertEquals(0, c.getCorrectAttempts());
+      assertEquals(0, c.getTotalCorrectAttempts());
     }
   }
 
@@ -162,7 +162,7 @@ class SearchCollectionServiceTest {
     DataPage dataPage = new DataPage(0, 10);
     SortOrder sortOrder = SortOrder.LOWEST_ACCURACY;
 
-    Page<CollectionWithAttempts> result = searchCollectionService.searchCollections(categoryIds,
+    Page<CollectionWithAttempt> result = searchCollectionService.searchCollections(categoryIds,
         keywords, maxCorrectRate, dataPage, sortOrder, userId);
 
     assertNotNull(result);
@@ -170,8 +170,8 @@ class SearchCollectionServiceTest {
 
     // Verify sorting
     double previousAccuracy = -1;
-    for (CollectionWithAttempts c : result.getContent()) {
-      double currentAccuracy = (double) c.getCorrectAttempts() / c.getTotalAttempts() * 100;
+    for (CollectionWithAttempt c : result.getContent()) {
+      double currentAccuracy = (double) c.getTotalCorrectAttempts() / c.getTotalAttempts() * 100;
 //      System.out.println("id : " + c.getCollection().getId() + "\taccuracy : " + currentAccuracy);
 
       assertTrue(currentAccuracy >= previousAccuracy,

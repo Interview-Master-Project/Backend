@@ -4,7 +4,7 @@ import static com.interview_master.domain.collection.QCollection.collection;
 import static com.interview_master.domain.usercollectionattempt.QUserCollectionAttempt.userCollectionAttempt;
 
 import com.interview_master.domain.Access;
-import com.interview_master.dto.CollectionWithAttempts;
+import com.interview_master.dto.CollectionWithAttempt;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.Expressions;
@@ -29,7 +29,7 @@ public class CollectionRepositoryImpl implements CollectionRepositoryCustom {
   }
 
   @Override
-  public Page<CollectionWithAttempts> searchCollections(List<Long> categoryIds,
+  public Page<CollectionWithAttempt> searchCollections(List<Long> categoryIds,
       List<String> keywords, Integer maxCorrectRate, Pageable pageable, Long userId) {
     BooleanBuilder whereClause = new BooleanBuilder();
 
@@ -50,12 +50,12 @@ public class CollectionRepositoryImpl implements CollectionRepositoryCustom {
       whereClause.and(keywordCondition);
     }
 
-    JPQLQuery<CollectionWithAttempts> query;
+    JPQLQuery<CollectionWithAttempt> query;
 
     if (userId != null) {
       // 로그인한 사용자를 위한 쿼리
       query = queryFactory
-          .select(Projections.constructor(CollectionWithAttempts.class,
+          .select(Projections.constructor(CollectionWithAttempt.class,
               collection,
               collection.quizzes.size(),
               userCollectionAttempt.totalQuizCount,
@@ -86,7 +86,7 @@ public class CollectionRepositoryImpl implements CollectionRepositoryCustom {
     } else {
       // 비로그인 사용자를 위한 쿼리
       query = queryFactory
-          .select(Projections.constructor(CollectionWithAttempts.class,
+          .select(Projections.constructor(CollectionWithAttempt.class,
               collection,
               collection.quizzes.size(),
               Expressions.constant(0),
@@ -117,7 +117,7 @@ public class CollectionRepositoryImpl implements CollectionRepositoryCustom {
 
     // Apply pagination
     query.offset(pageable.getOffset()).limit(pageable.getPageSize());
-    List<CollectionWithAttempts> content = query.fetch();
+    List<CollectionWithAttempt> content = query.fetch();
 
     int pageNumber = (int) (pageable.getOffset() / pageable.getPageSize());
     return new PageImpl<>(content, PageRequest.of(pageNumber, pageable.getPageSize()), total);

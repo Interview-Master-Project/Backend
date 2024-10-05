@@ -2,7 +2,7 @@ package com.interview_master.infrastructure;
 
 import com.interview_master.domain.Access;
 import com.interview_master.domain.collection.Collection;
-import com.interview_master.dto.CollectionWithAttempts;
+import com.interview_master.dto.CollectionWithAttempt;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.data.domain.Page;
@@ -42,6 +42,6 @@ public interface CollectionRepository extends Repository<Collection, Long>, Coll
       @Param("access") Access access, Pageable pageable);
 
   @Override
-  Page<CollectionWithAttempts> searchCollections(List<Long> categoryIds, List<String> keywords,
+  Page<CollectionWithAttempt> searchCollections(List<Long> categoryIds, List<String> keywords,
       Integer maxCorrectRate, Pageable pageable, Long userId);
 }
