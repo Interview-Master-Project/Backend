@@ -1,10 +1,9 @@
-package com.interview_master.ui;
+package com.interview_master.resolver;
 
 import static com.interview_master.util.GraphQLAuthUtils.validateUserAuthContext;
 
-import com.interview_master.service.UserQuizAttemptService;
-import com.interview_master.dto.QuizGarden;
-import java.time.LocalDate;
+import com.interview_master.dto.QuizWithAttempt;
+import com.interview_master.infrastructure.QuizRepository;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.graphql.data.method.annotation.Argument;
@@ -14,17 +13,20 @@ import org.springframework.stereotype.Controller;
 
 @Controller
 @RequiredArgsConstructor
-public class QuizAttemptsResolver {
+public class QuizWithAttemptsResolver {
 
-  private final UserQuizAttemptService userQuizAttemptService;
+  private final QuizRepository quizRepository;
 
+  /**
+   * collection에 속한 퀴즈 목록과 각 퀴즈에 대한 현재 유저가 시도한 정보들
+   */
   @QueryMapping
-  public List<QuizGarden> getQuizGarden(@Argument LocalDate startDate, @Argument LocalDate endDate,
+  public List<QuizWithAttempt> getQuizzesWithAttemptByCollectionId(@Argument Long collectionId,
       @ContextValue(required = false) Long userId,
       @ContextValue(name = "authError", required = false) String authError) {
-
     validateUserAuthContext(userId, authError);
 
-    return userQuizAttemptService.getQuizGardens(startDate, endDate, userId);
+    return quizRepository.getQuizzesByCollectionIdWithAttempts(collectionId, userId);
   }
+
 }

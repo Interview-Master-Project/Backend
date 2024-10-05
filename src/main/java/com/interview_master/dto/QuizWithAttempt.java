@@ -12,10 +12,10 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class QuizWithAttempts {
+public class QuizWithAttempt {
 
   private Quiz quiz;
   private long totalAttempts;
-  private long correctAttempts;
+  private long totalCorrectAttempts;
   private LocalDateTime recentAnswerAt;
 }

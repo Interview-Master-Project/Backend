@@ -1,4 +1,4 @@
-package com.interview_master.ui.request;
+package com.interview_master.resolver.request;
 
 import com.interview_master.domain.Access;
 import lombok.*;

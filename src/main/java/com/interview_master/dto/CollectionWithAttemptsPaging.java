@@ -1,8 +1,6 @@
-package com.interview_master.ui.response;
+package com.interview_master.dto;
 
 
-import com.interview_master.dto.CollectionWithAttempts;
-import com.interview_master.dto.PageInfo;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -15,7 +13,7 @@ import lombok.NoArgsConstructor;
 @Builder
 public class CollectionWithAttemptsPaging {
 
-    private List<CollectionWithAttempts> collectionWithAttempts;
+    private List<CollectionWithAttempt> collectionsWithAttempt;
 
     private PageInfo pageInfo;
 }

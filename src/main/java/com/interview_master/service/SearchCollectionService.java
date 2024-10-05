@@ -3,7 +3,7 @@ package com.interview_master.service;
 import static com.interview_master.util.PageSortUtils.createPageable;
 import static com.interview_master.util.PageSortUtils.createSort;
 
-import com.interview_master.dto.CollectionWithAttempts;
+import com.interview_master.dto.CollectionWithAttempt;
 import com.interview_master.dto.DataPage;
 import com.interview_master.dto.SortOrder;
 import com.interview_master.infrastructure.CollectionRepository;
@@ -21,7 +21,7 @@ public class SearchCollectionService {
   private final CollectionRepository collectionRepository;
   private final CategoryService categoryService;
 
-  public Page<CollectionWithAttempts> searchCollections(
+  public Page<CollectionWithAttempt> searchCollections(
       List<Long> categoryIds, List<String> keywords, Integer maxCorrectRate, DataPage paging,
       SortOrder sortOrder, Long userId) {
     // categoryIds 있으면 검증

@@ -1,9 +1,9 @@
-package com.interview_master.ui;
+package com.interview_master.resolver;
 
 import com.interview_master.service.UpsertCollectionService;
 import com.interview_master.domain.collection.Collection;
-import com.interview_master.ui.request.CreateCollectionReq;
-import com.interview_master.ui.request.EditCollectionReq;
+import com.interview_master.resolver.request.CreateCollectionReq;
+import com.interview_master.resolver.request.EditCollectionReq;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
