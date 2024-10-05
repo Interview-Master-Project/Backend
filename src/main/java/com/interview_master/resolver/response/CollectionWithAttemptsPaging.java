@@ -1,4 +1,4 @@
-package com.interview_master.ui.response;
+package com.interview_master.resolver.response;
 
 
 import com.interview_master.dto.CollectionWithAttempt;

@@ -1,4 +1,4 @@
-package com.interview_master.ui;
+package com.interview_master.resolver;
 
 import com.interview_master.domain.category.Category;
 import com.interview_master.infrastructure.CategoryRepository;

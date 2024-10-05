@@ -1,4 +1,4 @@
-package com.interview_master.ui;
+package com.interview_master.resolver;
 
 import static com.interview_master.util.GraphQLAuthUtils.validateUserAuthContext;
 

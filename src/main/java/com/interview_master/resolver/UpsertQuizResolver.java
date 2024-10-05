@@ -1,11 +1,11 @@
-package com.interview_master.ui;
+package com.interview_master.resolver;
 
 import static com.interview_master.util.GraphQLAuthUtils.validateUserAuthContext;
 
 import com.interview_master.service.UpsertQuizService;
 import com.interview_master.domain.quiz.Quiz;
-import com.interview_master.ui.request.CreateQuizInput;
-import com.interview_master.ui.request.EditQuizInput;
+import com.interview_master.resolver.request.CreateQuizInput;
+import com.interview_master.resolver.request.EditQuizInput;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
