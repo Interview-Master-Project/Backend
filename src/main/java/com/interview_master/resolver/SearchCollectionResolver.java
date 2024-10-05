@@ -1,11 +1,11 @@
-package com.interview_master.ui;
+package com.interview_master.resolver;
 
-import com.interview_master.dto.CollectionWithAttempts;
+import com.interview_master.dto.CollectionWithAttempt;
 import com.interview_master.dto.DataPage;
 import com.interview_master.dto.PageInfo;
 import com.interview_master.dto.SortOrder;
 import com.interview_master.service.SearchCollectionService;
-import com.interview_master.ui.response.CollectionWithAttemptsPaging;
+import com.interview_master.dto.CollectionWithAttemptsPaging;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.graphql.data.method.annotation.Argument;
@@ -27,11 +27,11 @@ public class SearchCollectionResolver {
       @Argument Integer maxCorrectRate, @Argument DataPage paging,
       @Argument SortOrder sort, @ContextValue(required = false) Long userId) {
 
-    Page<CollectionWithAttempts> result = searchCollectionService.searchCollections(
+    Page<CollectionWithAttempt> result = searchCollectionService.searchCollections(
         categoryIds, keywords, maxCorrectRate, paging, sort, userId);
 
     return CollectionWithAttemptsPaging.builder()
-        .collectionWithAttempts(result.getContent())
+        .collectionsWithAttempt(result.getContent())
         .pageInfo(PageInfo.builder()
             .currentPage(result.getNumber() + 1)
             .hasNextPage(result.hasNext())

@@ -1,4 +1,4 @@
-package com.interview_master.ui;
+package com.interview_master.resolver;
 
 import com.interview_master.common.token.AuthTokenGenerator;
 import com.interview_master.common.token.AuthTokens;
@@ -6,7 +6,7 @@ import com.interview_master.domain.user.User;
 import com.interview_master.login.OAuthLoginService;
 import com.interview_master.login.kakao.KakaoLoginParams;
 import com.interview_master.login.naver.NaverLoginParams;
-import com.interview_master.ui.response.LoginRes;
+import com.interview_master.resolver.response.LoginRes;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
