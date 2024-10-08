@@ -8,4 +8,6 @@ import org.springframework.data.repository.Repository;
 public interface UserCollectionAttemptRepository extends Repository<UserCollectionAttempt, Long> {
 
   List<UserCollectionAttempt> findByCollectionIn(List<Collection> collections);
+
+  UserCollectionAttempt save(UserCollectionAttempt userCollectionAttempt);
 }

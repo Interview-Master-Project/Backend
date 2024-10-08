@@ -15,6 +15,10 @@ type Mutation {
     deleteCollection(
         collectionId: ID!
     ): String
+
+    startSolveCollection(
+        collectionId: ID!
+    ) : UserCollectionAttempt!
 }
 
 input CreateQuizInput {

@@ -15,6 +15,8 @@ public interface CollectionRepository extends Repository<Collection, Long>, Coll
 
   Collection save(Collection collection);
 
+  Optional<Collection> findByIdAndIsDeletedFalse(Long id);
+
   @Query("select c from Collection c "
       + "left join fetch c.quizzes q "
       + "where c.id = :id "
