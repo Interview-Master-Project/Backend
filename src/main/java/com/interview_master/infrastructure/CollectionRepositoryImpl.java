@@ -97,7 +97,7 @@ public class CollectionRepositoryImpl implements CollectionRepositoryCustom {
 
     query.where(whereClause);
 
-    if (pageable.getSort().getOrderFor("accuracy") != null && userId != null) {
+    if (userId != null && pageable.getSort().getOrderFor("accuracy") != null) {
       // LOWEST_ACCURACY sorting (로그인 사용자에게만 적용)
       NumberExpression<Integer> accuracyExpression =
           userCollectionAttempt.correctQuizCount.multiply(100)
