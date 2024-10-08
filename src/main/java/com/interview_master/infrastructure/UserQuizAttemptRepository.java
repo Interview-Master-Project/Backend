@@ -2,14 +2,13 @@ package com.interview_master.infrastructure;
 
 import com.interview_master.domain.userquizattempt.UserQuizAttempt;
 import com.interview_master.dto.QuizLog;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.Repository;
-import org.springframework.data.repository.query.Param;
-
 import java.time.LocalDate;
 import java.util.List;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
-public interface UserQuizAttemptRepository extends Repository<UserQuizAttempt, Long> {
+public interface UserQuizAttemptRepository extends JpaRepository<UserQuizAttempt, Long> {
 
   @Query(value =
       "WITH date_range AS (" +

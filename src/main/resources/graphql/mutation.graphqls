@@ -1,3 +1,5 @@
+scalar DateTime
+
 type Mutation {
     createQuiz(
         createQuizInput: CreateQuizInput!
@@ -19,6 +21,17 @@ type Mutation {
     startSolveCollection(
         collectionId: ID!
     ) : UserCollectionAttempt!
+
+    solveQuizzes(
+        userCollectionAttemptId: ID!,
+        quizResults: [QuizResultInput!]!
+    ) : String
+}
+
+input QuizResultInput {
+    quizId: ID!
+    correct: Boolean!
+    answeredAt: DateTime
 }
 
 input CreateQuizInput {
