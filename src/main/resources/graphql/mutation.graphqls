@@ -26,6 +26,10 @@ type Mutation {
         userCollectionAttemptId: ID!,
         quizResults: [QuizResultInput!]!
     ) : String
+
+    finishSolveCollection(
+        userCollectionAttemptId: ID!
+    ) : UserCollectionAttempt!
 }
 
 input QuizResultInput {

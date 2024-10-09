@@ -31,4 +31,11 @@ public interface UserQuizAttemptRepository extends JpaRepository<UserQuizAttempt
       @Param("endDate") LocalDate endDate,
       @Param("userId") Long userId
   );
+
+  // collectionAttemptId와 userId에 해당하는 퀴즈 기록들 중에서 맞은 퀴즈 개수만 가져오기
+  @Query("select count(*) from UserQuizAttempt "
+      + "where collectionAttempt.id = :ucaId "
+      + "and user.id = :userId "
+      + "and isCorrect = true")
+  int countCorrectAttempts(@Param("ucaId") Long collectionAttemptId, @Param("userId") Long userId);
 }

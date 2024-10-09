@@ -40,4 +40,13 @@ public class SolveCollectionResolver {
     return "success";
   }
 
+  @MutationMapping
+  public UserCollectionAttempt finishSolveCollection(@Argument Long userCollectionAttemptId,
+      @ContextValue(required = false) Long userId,
+      @ContextValue(name = "authError", required = false) String authError) {
+    validateUserAuthContext(userId, authError);
+
+    return userCollectionAttemptService.finishSolveCollection(userCollectionAttemptId, userId);
+  }
+
 }
