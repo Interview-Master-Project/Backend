@@ -67,7 +67,7 @@ jobs:
 
         run: |       
           # 패키지 파일을 NCP 인스턴스로 복사
-          sshpass -p "$NCP_PASSWORD" scp -o StrictHostKeyChecking=no build/libs/interview-0.0.1-SNAPSHOT.jar ${NCP_USER}@${NCP_HOST}:/home/${NCP_USER}/interview-server
+          sshpass -p "$NCP_PASSWORD" scp -o StrictHostKeyChecking=no build/libs/interview-0.0.1-SNAPSHOT.jar ${NCP_USER}@${NCP_HOST}:/home/interview-server
           
           # 인스턴스에서 JAR 파일 실행
           sshpass -p "$NCP_PASSWORD" ssh -o StrictHostKeyChecking=no ${NCP_USER}@${NCP_HOST} "pgrep java | xargs kill -9; nohup java -Dfile.encoding=UTF-8 -Duser.timezone=Asia/Seoul -jar /home/interview-server/interview-0.0.1-SNAPSHOT.jar > /home/interview-server/log/app.log 2>&1 &"
