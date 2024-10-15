@@ -91,8 +91,9 @@ public class ReadCollectionService {
           int totalCorrectAttempts = attempts.stream()
               .mapToInt(UserCollectionAttempt::getCorrectQuizCount).sum();
 
+
           UserCollectionAttempt recentAttempt = attempts.stream()
-              .max(Comparator.comparing(UserCollectionAttempt::getCompletedAt))
+              .max(Comparator.comparing(UserCollectionAttempt::getCompletedAt)) // TODO : 히스토리 조회 시, "other" is null 이라는 오류 발생
               .orElse(null);
 
           return CollectionWithAttempt.builder()
