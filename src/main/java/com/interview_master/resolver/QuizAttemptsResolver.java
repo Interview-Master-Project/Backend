@@ -2,6 +2,7 @@ package com.interview_master.resolver;
 
 import static com.interview_master.util.GraphQLAuthUtils.validateUserAuthContext;
 
+import com.interview_master.domain.userquizattempt.UserQuizAttempt;
 import com.interview_master.service.UserQuizAttemptService;
 import com.interview_master.dto.QuizGarden;
 import java.time.LocalDate;
@@ -26,5 +27,14 @@ public class QuizAttemptsResolver {
     validateUserAuthContext(userId, authError);
 
     return userQuizAttemptService.getQuizGardens(startDate, endDate, userId);
+  }
+
+  @QueryMapping
+  public List<UserQuizAttempt> getUserQuizAttempts(@Argument Long quizId,
+      @ContextValue(required = false) Long userId,
+      @ContextValue(name = "authError", required = false) String authError) {
+    validateUserAuthContext(userId, authError);
+
+    return userQuizAttemptService.getUserQuizAttempts(quizId, userId);
   }
 }

@@ -12,6 +12,7 @@ public enum ErrorCode {
   NULL_EXCEPTION(HttpStatus.BAD_REQUEST, "해당 값이 null 입니다."),
   FORBIDDEN_MODIFICATION(HttpStatus.FORBIDDEN, "수정 권한이 없습니다."),
   SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "서버 에러 입니다."),
+  USER_MISMATCH(HttpStatus.BAD_REQUEST, "사용자 정보가 일치하지 않습니다."),
 
   // USER
   UNAUTHORIZED_USER(HttpStatus.UNAUTHORIZED, "미인증 유저의 요청입니다."),
@@ -22,6 +23,9 @@ public enum ErrorCode {
 
   // COLLECTION
   COLLECTION_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 컬렉션은 존재하지 않습니다."),
+
+  // USER_COLLECTION_ATTEMPT
+  USER_COLLECTION_ATTEMPT_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 컬렉션 시도 기록은 존재하지 않습니다."),
 
   // TOKEN
   AUTHORIZATION_TOKEN_NOT_FOUND(HttpStatus.NOT_FOUND, "로그인이 필요합니다."),
