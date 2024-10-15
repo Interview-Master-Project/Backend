@@ -1,32 +1,39 @@
 scalar DateTime
 
 type Mutation {
+    """퀴즈 생성하기"""
     createQuiz(
         createQuizInput: CreateQuizInput!
     ): Quiz!
 
+    """퀴즈 수정하기"""
     editQuiz(
         quizId: ID!,
         editQuizInput: EditQuizInput!
     ): Quiz!
 
+    """퀴즈 삭제하기"""
     deleteQuiz(
         quizId: ID!
     ): String
 
+    """컬렉션 삭제하기"""
     deleteCollection(
         collectionId: ID!
     ): String
 
+    """컬렉션 풀기 시작하기"""
     startSolveCollection(
         collectionId: ID!
     ) : UserCollectionAttempt!
 
+    """퀴즈 푼 기록들 저장하기"""
     solveQuizzes(
         userCollectionAttemptId: ID!,
         quizResults: [QuizResultInput!]!
     ) : String
 
+    """컬렉션 풀기 끝내기"""
     finishSolveCollection(
         userCollectionAttemptId: ID!
     ) : UserCollectionAttempt!
