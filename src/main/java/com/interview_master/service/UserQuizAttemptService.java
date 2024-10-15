@@ -56,6 +56,9 @@ public class UserQuizAttemptService {
     quizAttemptRepository.saveAll(uqaList);
   }
 
+  public List<UserQuizAttempt> getUserQuizAttempts(Long quizId, Long userId) {
+    return quizAttemptRepository.findAllByQuizIdAndUserIdOrderByAnsweredAtDesc(quizId, userId);
+  }
   /**
    * 날짜의 요일을 인덱스로 반환 0(sun) ~ 6(sat)
    */

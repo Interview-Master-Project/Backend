@@ -1,0 +1,9 @@
+
+type UserQuizAttempt {
+    id : ID!
+    collectionAttempt : UserCollectionAttempt!
+    quiz : Quiz!
+    user : User!
+    isCorrect : Boolean!
+    answeredAt : String!
+}

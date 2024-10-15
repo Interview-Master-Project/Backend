@@ -38,4 +38,6 @@ public interface UserQuizAttemptRepository extends JpaRepository<UserQuizAttempt
       + "and user.id = :userId "
       + "and isCorrect = true")
   int countCorrectAttempts(@Param("ucaId") Long collectionAttemptId, @Param("userId") Long userId);
+
+  List<UserQuizAttempt> findAllByQuizIdAndUserIdOrderByAnsweredAtDesc(Long quizId, Long userId);
 }
