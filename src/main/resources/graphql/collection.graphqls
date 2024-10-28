@@ -4,6 +4,7 @@ type Collection {
     name: String
     description: String
     imgUrl: String
+    likes: Int
     access: Access
     category: Category
     creator: User

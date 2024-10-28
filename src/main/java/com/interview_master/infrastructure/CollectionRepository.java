@@ -3,10 +3,12 @@ package com.interview_master.infrastructure;
 import com.interview_master.domain.Access;
 import com.interview_master.domain.collection.Collection;
 import com.interview_master.dto.CollectionWithAttempt;
+import jakarta.persistence.LockModeType;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.Lock;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.Repository;
 import org.springframework.data.repository.query.Param;
@@ -16,6 +18,9 @@ public interface CollectionRepository extends Repository<Collection, Long>, Coll
   Collection save(Collection collection);
 
   Optional<Collection> findByIdAndIsDeletedFalse(Long id);
+
+  @Lock(LockModeType.PESSIMISTIC_WRITE)
+  Optional<Collection> findWithLockByIdAndIsDeletedFalse(Long id);
 
   @Query("select c from Collection c "
       + "left join fetch c.quizzes q "

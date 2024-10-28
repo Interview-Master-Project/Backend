@@ -37,6 +37,16 @@ type Mutation {
     finishSolveCollection(
         userCollectionAttemptId: ID!
     ) : UserCollectionAttempt!
+
+    """컬렉션 좋아요 누르기"""
+    like(
+        collectionId: ID!
+    ) : String
+
+    unlike(
+        collectionId: ID!
+    ) : String
+
 }
 
 input QuizResultInput {

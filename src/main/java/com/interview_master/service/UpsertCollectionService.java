@@ -4,13 +4,16 @@ import com.interview_master.common.exception.ApiException;
 import com.interview_master.common.exception.ErrorCode;
 import com.interview_master.domain.category.Category;
 import com.interview_master.domain.collection.Collection;
+import com.interview_master.domain.collectionlike.CollectionsLikes;
 import com.interview_master.domain.user.User;
 import com.interview_master.infrastructure.CategoryRepository;
 import com.interview_master.infrastructure.CollectionRepository;
+import com.interview_master.infrastructure.CollectionsLikesRepository;
 import com.interview_master.infrastructure.UserRepository;
 import com.interview_master.resolver.request.CreateCollectionReq;
 import com.interview_master.resolver.request.EditCollectionReq;
 import com.interview_master.util.ExtractUserId;
+import java.time.LocalDateTime;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,6 +27,8 @@ public class UpsertCollectionService {
   private final UserRepository userRepository;
   private final NcpImageService imageService;
   private final CategoryRepository categoryRepository;
+  private final CollectionsLikesRepository collectionsLikesRepository;
+
 
   public Collection saveCollection(CreateCollectionReq createCollectionReq) {
     // token의 userId 가져오기
@@ -92,5 +97,44 @@ public class UpsertCollectionService {
     collection.isOwner(userId);
 
     collection.markDeleted();
+  }
+
+  public void likeCollection(Long collectionId, Long userId) {
+    // 이미 좋아요 눌렀었는지 검증
+    boolean exists = collectionsLikesRepository.existsByCollectionIdAndUserId(
+        collectionId, userId);
+    if (exists) {
+      throw new ApiException(ErrorCode.ALREADY_LIKED);
+    }
+
+    Collection collection = collectionRepository.findWithLockByIdAndIsDeletedFalse(collectionId)
+        .orElseThrow(() -> new ApiException(ErrorCode.COLLECTION_NOT_FOUND));
+
+    User user = userRepository.findByIdAndIsDeletedFalse(userId)
+        .orElseThrow(() -> new ApiException(ErrorCode.USER_NOT_FOUND));
+
+    collection.canAccess(userId);
+
+    collectionsLikesRepository.save(
+        CollectionsLikes.builder()
+            .collection(collection)
+            .user(user)
+            .createdAt(LocalDateTime.now())
+            .build()
+    );
+    collection.like();
+  }
+
+  public void unlikeCollection(Long collectionId, Long userId) {
+    CollectionsLikes collectionLike = collectionsLikesRepository.findByCollectionIdAndUserId(
+            collectionId, userId)
+        .orElseThrow(() -> new ApiException(ErrorCode.COLLECTION_LIKE_NOT_FOUND));
+
+    Collection collection = collectionRepository.findWithLockByIdAndIsDeletedFalse(collectionId)
+        .orElseThrow(() -> new ApiException(ErrorCode.COLLECTION_NOT_FOUND));
+
+    // 정상적인 경우(좋아요 누른 거에 대한 취소 요청)
+    collectionsLikesRepository.delete(collectionLike);
+    collection.unlike();
   }
 }
