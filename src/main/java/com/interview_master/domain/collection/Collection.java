@@ -36,6 +36,8 @@ public class Collection extends BaseEntity {
 
   private String imgUrl;
 
+  private Integer likes;
+
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "creator_id")
   private User creator;
@@ -99,6 +101,20 @@ public class Collection extends BaseEntity {
     if (!isCreator) {
       throw new ApiException(ErrorCode.FORBIDDEN_MODIFICATION);
     }
+  }
+
+  /**
+   * 좋아요  로직
+   */
+  public void like() {
+    this.likes++;
+  }
+
+  /**
+   * 좋아요 취소 로직
+   */
+  public void unlike() {
+    this.likes--;
   }
 
   // setter
