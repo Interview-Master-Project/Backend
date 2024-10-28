@@ -99,7 +99,6 @@ public class UpsertCollectionService {
     collection.markDeleted();
   }
 
-  @Transactional
   public void likeCollection(Long collectionId, Long userId) {
     // 이미 좋아요 눌렀었는지 검증
     boolean exists = collectionsLikesRepository.existsByCollectionIdAndUserIdAndLikedIsTrue(
@@ -125,6 +124,27 @@ public class UpsertCollectionService {
             .build()
     );
     collection.like();
+  }
 
+  public void unlikeCollection(Long collectionId, Long userId) {
+    CollectionsLikes collectionLike = collectionsLikesRepository.findByCollectionIdAndUserId(
+        collectionId, userId).orElse(null);
+
+    // 좋아요 누른 기록이 없는 경우
+    if (collectionLike == null) {
+      throw new ApiException(ErrorCode.COLLECTION_LIKE_NOT_FOUND);
+    }
+
+    // 이미 unlike한 경우
+    if (!collectionLike.getLiked()) {
+      throw new ApiException(ErrorCode.ALREADY_UNLIKED);
+    }
+
+    Collection collection = collectionRepository.findWithLockByIdAndIsDeletedFalse(collectionId)
+        .orElseThrow(() -> new ApiException(ErrorCode.COLLECTION_NOT_FOUND));
+
+    // 정상적인 경우(좋아요 누른 거에 대한 취소 요청)
+    collectionLike.unlike();
+    collection.unlike();
   }
 }

@@ -51,7 +51,9 @@ public enum ErrorCode {
   UNSUPPORTED_SORT_ORDER(HttpStatus.BAD_REQUEST, "지원하지 않는 정렬 조건입니다."),
 
   // COLLECTION_LIKE
+  COLLECTION_LIKE_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 컬렉션에 대한 좋아요 기록은 존재하지 않습니다."),
   ALREADY_LIKED(HttpStatus.BAD_REQUEST, "이미 좋아요한 게시물입니다."),
+  ALREADY_UNLIKED(HttpStatus.BAD_REQUEST, "이미 좋아요 취소한 게시물입니다."),
   ;
 
   private final HttpStatus httpStatusCode;

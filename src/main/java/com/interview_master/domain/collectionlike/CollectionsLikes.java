@@ -34,7 +34,11 @@ public class CollectionsLikes {
   @JoinColumn(name = "user_id")
   private User user;
 
-  private boolean liked;
+  private Boolean liked;
 
   private LocalDateTime createdAt;
+
+  public void unlike() {
+    this.liked = false;
+  }
 }

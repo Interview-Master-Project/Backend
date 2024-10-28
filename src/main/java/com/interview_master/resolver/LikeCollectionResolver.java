@@ -15,13 +15,22 @@ public class LikeCollectionResolver {
 
   private final UpsertCollectionService upsertCollectionService;
 
-
   @MutationMapping
   public String like(@Argument Long collectionId, @ContextValue(required = false) Long userId,
       @ContextValue(name = "authError", required = false) String authError) {
     validateUserAuthContext(userId, authError);
 
     upsertCollectionService.likeCollection(collectionId, userId);
+
+    return "success";
+  }
+
+  @MutationMapping
+  public String unlike(@Argument Long collectionId, @ContextValue(required = false) Long userId,
+      @ContextValue(name = "authError", required = false) String authError) {
+    validateUserAuthContext(userId, authError);
+
+    upsertCollectionService.unlikeCollection(collectionId, userId);
 
     return "success";
   }
