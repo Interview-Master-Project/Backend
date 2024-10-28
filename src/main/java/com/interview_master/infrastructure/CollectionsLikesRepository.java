@@ -6,7 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface CollectionsLikesRepository extends JpaRepository<CollectionsLikes, Long> {
 
-  boolean existsByCollectionIdAndUserIdAndLikedIsTrue(Long collectionId, Long userId);
+  boolean existsByCollectionIdAndUserId(Long collectionId, Long userId);
 
   Optional<CollectionsLikes> findByCollectionIdAndUserId(Long collectionId, Long userId);
 
