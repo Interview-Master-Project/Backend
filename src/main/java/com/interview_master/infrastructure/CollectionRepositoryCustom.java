@@ -7,7 +7,7 @@ import org.springframework.data.domain.Pageable;
 
 public interface CollectionRepositoryCustom {
 
-  Page<CollectionWithAttempt> searchCollections(List<Long> categoryIds,
+  Page<CollectionWithAttempt> searchCollectionsForAuthUser(List<Long> categoryIds,
       List<String> keywords,
       Integer maxCorrectRate, Pageable pageable, Long userId);
 

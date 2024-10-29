@@ -32,7 +32,7 @@ public class SearchCollectionService {
     Sort sort = createSort(sortOrder);
     Pageable pageable = createPageable(paging, sort);
 
-    return collectionRepository.searchCollections(
+    return collectionRepository.searchCollectionsForAuthUser(
         categoryIds, keywords, maxCorrectRate, pageable, userId);
   }
 }

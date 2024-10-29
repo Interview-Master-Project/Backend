@@ -49,6 +49,6 @@ public interface CollectionRepository extends Repository<Collection, Long>, Coll
       @Param("access") Access access, Pageable pageable);
 
   @Override
-  Page<CollectionWithAttempt> searchCollections(List<Long> categoryIds, List<String> keywords,
+  Page<CollectionWithAttempt> searchCollectionsForAuthUser(List<Long> categoryIds, List<String> keywords,
       Integer maxCorrectRate, Pageable pageable, Long userId);
 }
