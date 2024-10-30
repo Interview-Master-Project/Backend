@@ -26,8 +26,8 @@ public interface CollectionRepository extends Repository<Collection, Long>, Coll
       + "left join fetch c.quizzes q "
       + "where c.id = :id "
       + "and c.isDeleted = false "
-      + "and q.isDeleted = false "
-      + "order by q.updatedAt desc ")
+      + "and (q is null or q.isDeleted = false) "
+      + "order by case when q is not null then q.updatedAt else c.updatedAt end desc")
   Optional<Collection> findByIdWithQuizzes(@Param("id") Long id);
 
   /**
