@@ -70,7 +70,7 @@ public class ReadCollectionService {
   }
 
   /**
-   * 각 collection에 해당하는 유저의 최근 시도 정보와 누적 시도 정보를 페이징 정보와 함께 반환하는 메서드
+   * 각 collection에 대해 유저의 최근 시도 정보, 누적 시도 정보, 페이징 정보 반환하는 메서드
    */
   private CollectionWithAttemptsPaging getCollectionWithAttemptsPaging(
       Page<Collection> collections) {
@@ -93,7 +93,8 @@ public class ReadCollectionService {
 
 
           UserCollectionAttempt recentAttempt = attempts.stream()
-              .max(Comparator.comparing(UserCollectionAttempt::getCompletedAt)) // TODO : 히스토리 조회 시, "other" is null 이라는 오류 발생
+              .filter(attempt -> attempt.getCompletedAt() != null)
+              .max(Comparator.comparing(UserCollectionAttempt::getCompletedAt))
               .orElse(null);
 
           return CollectionWithAttempt.builder()
