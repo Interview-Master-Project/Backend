@@ -74,9 +74,17 @@ public class CollectionRepositoryImpl implements CollectionRepositoryCustom {
         .from(collection)
         .where(whereClause)
         .where(collection.access.eq(Access.PUBLIC))
-        .orderBy(collection.likes.desc()); // likes 수 기준 내림차순 정렬
+        .orderBy(collection.likes.desc(),
+            collection.createdAt.desc()); // likes 수 기준 내림차순 정렬 -> likes 수 같으면 최신순
 
+    long total = query.fetchCount();
 
+    // Apply pagination
+    query.offset(pageable.getOffset()).limit(pageable.getPageSize());
+    List<CollectionWithAttempt> content = query.fetch();
+
+    int pageNumber = (int) (pageable.getOffset() / pageable.getPageSize());
+    return new PageImpl<>(content, PageRequest.of(pageNumber, pageable.getPageSize()), total);
   }
 
 
@@ -139,8 +147,7 @@ public class CollectionRepositoryImpl implements CollectionRepositoryCustom {
                         .and(recentAttempt.user.id.eq(userId))
                         .and(recentAttempt.completedAt.isNotNull()))
             )))
-        .where(collection.access.eq(Access.PUBLIC).or(collection.creator.id.eq(userId)))
-
+        .where(collection.access.eq(Access.PUBLIC).or(collection.creator.id.eq(userId)));
 
     // Max correct rate (정답률 x% 이하 조건)
     NumberExpression<Integer> accuracyExpression = recentAttempt.correctQuizCount

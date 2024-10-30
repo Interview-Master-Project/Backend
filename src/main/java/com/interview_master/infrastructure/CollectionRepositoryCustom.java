@@ -11,4 +11,7 @@ public interface CollectionRepositoryCustom {
       List<String> keywords,
       Integer maxCorrectRate, Pageable pageable, Long userId);
 
+  Page<CollectionWithAttempt> searchCollectionsForGuest(List<Long> categoryIds,
+      List<String> keywords, Pageable pageable);
+
 }
