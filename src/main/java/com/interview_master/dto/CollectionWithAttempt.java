@@ -20,9 +20,11 @@ public class CollectionWithAttempt {
   private int recentCorrectAttempts;
 
   // CollectionRepositoryImpl에서 필요한 생성자
-  public CollectionWithAttempt(Collection collection, int quizCount, int recentAttempts, int recentCorrectAttempts) {
+  public CollectionWithAttempt(Collection collection, int quizCount, Integer totalAttempts, Integer totalCorrectAttempts, Integer recentAttempts, Integer recentCorrectAttempts) {
     this.collection = collection;
     this.quizCount = quizCount;
+    this.totalAttempts = totalAttempts != null ? totalAttempts : 0;
+    this.totalCorrectAttempts = totalCorrectAttempts != null ? totalCorrectAttempts : 0;
     this.recentAttempts = recentAttempts;
     this.recentCorrectAttempts = recentCorrectAttempts;
   }

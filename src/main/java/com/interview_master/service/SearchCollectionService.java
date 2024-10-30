@@ -21,7 +21,7 @@ public class SearchCollectionService {
   private final CollectionRepository collectionRepository;
   private final CategoryService categoryService;
 
-  public Page<CollectionWithAttempt> searchCollections(
+  public Page<CollectionWithAttempt> searchCollectionsForAuthUser(
       List<Long> categoryIds, List<String> keywords, Integer maxCorrectRate, DataPage paging,
       SortOrder sortOrder, Long userId) {
     // categoryIds 있으면 검증
@@ -32,7 +32,17 @@ public class SearchCollectionService {
     Sort sort = createSort(sortOrder);
     Pageable pageable = createPageable(paging, sort);
 
-    return collectionRepository.searchCollections(
+    return collectionRepository.searchCollectionsForAuthUser(
         categoryIds, keywords, maxCorrectRate, pageable, userId);
+  }
+
+  public Page<CollectionWithAttempt> searchCollectionsForGuest(List<Long> categoryIds,
+      List<String> keywords, DataPage paging) {
+    // categoryIds 있으면 검증
+    categoryService.areAllCategoriesExist(categoryIds);
+
+    Pageable pageable = createPageable(paging);
+
+    return collectionRepository.searchCollectionsForGuest(categoryIds, keywords, pageable);
   }
 }

@@ -28,7 +28,7 @@ class SearchCollectionServiceTest {
   private SearchCollectionService searchCollectionService;
 
   @Test
-  void testSearchCollectionsWithUserId_CategoryIds_Keywords_MaxCorrectRate() {
+  void testSearchCollectionsForAuthUserWithUserId_CategoryIds_Keywords_MaxCorrectRate() {
     // Given
     Long userId = 1L;
     List<Long> categoryIds = Arrays.asList(1L, 2L);
@@ -37,7 +37,7 @@ class SearchCollectionServiceTest {
     DataPage dataPage = new DataPage(0, 10);
     SortOrder sortOrder = SortOrder.LATEST;
 
-    Page<CollectionWithAttempt> result = searchCollectionService.searchCollections(categoryIds,
+    Page<CollectionWithAttempt> result = searchCollectionService.searchCollectionsForAuthUser(categoryIds,
         keywords, maxCorrectRate, dataPage, sortOrder, userId);
 
     assertNotNull(result);
@@ -80,7 +80,7 @@ class SearchCollectionServiceTest {
   }
 
   @Test
-  void testSearchCollectionsWithoutUserId() {
+  void testSearchCollectionsForAuthUserWithoutUserId() {
     // Given
     Long userId = null;
     List<Long> categoryIds = List.of(1L, 2L);
@@ -89,7 +89,7 @@ class SearchCollectionServiceTest {
     DataPage dataPage = new DataPage(0, 10);
     SortOrder sortOrder = SortOrder.LATEST;
 
-    Page<CollectionWithAttempt> result = searchCollectionService.searchCollections(categoryIds,
+    Page<CollectionWithAttempt> result = searchCollectionService.searchCollectionsForAuthUser(categoryIds,
         keywords, maxCorrectRate, dataPage, sortOrder, userId);
 
     assertNotNull(result);
@@ -104,7 +104,7 @@ class SearchCollectionServiceTest {
 
   // categoryId가 없는 경우
   @Test
-  void testSearchCollectionsWithNonExistentCategoryId() {
+  void testSearchCollectionsForAuthUserWithNonExistentCategoryId() {
     // Given
     Long userId = 1L;
     List<Long> categoryIds = List.of(9999L); // Assuming this category ID doesn't exist
@@ -113,13 +113,13 @@ class SearchCollectionServiceTest {
     DataPage dataPage = new DataPage(0, 10);
     SortOrder sortOrder = SortOrder.LATEST;
 
-    assertThrows(ApiException.class, () -> searchCollectionService.searchCollections(categoryIds, keywords, maxCorrectRate, dataPage,
+    assertThrows(ApiException.class, () -> searchCollectionService.searchCollectionsForAuthUser(categoryIds, keywords, maxCorrectRate, dataPage,
         sortOrder, userId), "Should throw ApiException for non-existent category");
   }
 
   // 존재하는 categoryId와 categoryId가 섞여 있는 경우
   @Test
-  void testSearchCollectionsWithMixedExistingAndNonExistingCategoryIds() {
+  void testSearchCollectionsForAuthUserWithMixedExistingAndNonExistingCategoryIds() {
     // Given
     Long userId = 1L;
     List<Long> categoryIds = Arrays.asList(1L, 9999L); // Assuming 1L exists and 9999L doesn't
@@ -128,13 +128,13 @@ class SearchCollectionServiceTest {
     DataPage dataPage = new DataPage(0, 10);
     SortOrder sortOrder = SortOrder.LATEST;
 
-    assertThrows(ApiException.class, () -> searchCollectionService.searchCollections(categoryIds, keywords, maxCorrectRate, dataPage,
+    assertThrows(ApiException.class, () -> searchCollectionService.searchCollectionsForAuthUser(categoryIds, keywords, maxCorrectRate, dataPage,
         sortOrder, userId), "Should throw ApiException when at least one category doesn't exist");
   }
 
   // 정답률이 음수인 경우 -> 시도하지 않은 경우들로 반환
   @Test
-  void testSearchCollectionsWithNegativeMaxCorrectRate() {
+  void testSearchCollectionsForAuthUserWithNegativeMaxCorrectRate() {
     // Given
     Long userId = 1L;
     List<Long> categoryIds = Arrays.asList(1L, 2L);
@@ -143,7 +143,7 @@ class SearchCollectionServiceTest {
     DataPage dataPage = new DataPage(0, 10);
     SortOrder sortOrder = SortOrder.LATEST;
 
-    Page<CollectionWithAttempt> result = searchCollectionService.searchCollections(categoryIds,
+    Page<CollectionWithAttempt> result = searchCollectionService.searchCollectionsForAuthUser(categoryIds,
         keywords, maxCorrectRate, dataPage, sortOrder, userId);
 
     for (CollectionWithAttempt c : result.getContent()) {
@@ -153,7 +153,7 @@ class SearchCollectionServiceTest {
   }
 
   @Test
-  void testSearchCollectionsWithLowestAccuracySorting() {
+  void testSearchCollectionsForAuthUserWithLowestAccuracySorting() {
     // Given
     Long userId = 1L;
     List<Long> categoryIds = Arrays.asList(1L, 2L);
@@ -162,7 +162,7 @@ class SearchCollectionServiceTest {
     DataPage dataPage = new DataPage(0, 10);
     SortOrder sortOrder = SortOrder.LOWEST_ACCURACY;
 
-    Page<CollectionWithAttempt> result = searchCollectionService.searchCollections(categoryIds,
+    Page<CollectionWithAttempt> result = searchCollectionService.searchCollectionsForAuthUser(categoryIds,
         keywords, maxCorrectRate, dataPage, sortOrder, userId);
 
     assertNotNull(result);

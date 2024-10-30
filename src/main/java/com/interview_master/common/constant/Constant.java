@@ -17,5 +17,6 @@ public class Constant {
   public static final String SORT_LATEST = "createdAt";
 
   public static final String SORT_LOWACCURACY = "accuracy";
+  public static final String SORT_MOSTLIKED = "liked";
 
 }
