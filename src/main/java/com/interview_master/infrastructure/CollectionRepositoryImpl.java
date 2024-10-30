@@ -1,6 +1,7 @@
 package com.interview_master.infrastructure;
 
 import static com.interview_master.domain.collection.QCollection.collection;
+import static com.interview_master.domain.usercollectionattempt.QUserCollectionAttempt.userCollectionAttempt;
 
 import com.interview_master.common.exception.ApiException;
 import com.interview_master.common.exception.ErrorCode;
@@ -9,6 +10,7 @@ import com.interview_master.domain.usercollectionattempt.QUserCollectionAttempt;
 import com.interview_master.dto.CollectionWithAttempt;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.Projections;
+import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.core.types.dsl.NumberExpression;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.JPQLQuery;
@@ -28,6 +30,55 @@ public class CollectionRepositoryImpl implements CollectionRepositoryCustom {
   public CollectionRepositoryImpl(EntityManager em) {
     this.queryFactory = new JPAQueryFactory(em);
   }
+
+  @Override
+  public Page<CollectionWithAttempt> searchCollectionsForGuest(List<Long> categoryIds,
+      List<String> keywords, Pageable pageable) {
+
+    BooleanBuilder whereClause = new BooleanBuilder();
+
+    whereClause.and(collection.isDeleted.eq(false));
+
+    // Category IDs
+    if (categoryIds != null && !categoryIds.isEmpty()) {
+      whereClause.and(collection.category.id.in(categoryIds));
+    }
+
+    // Keywords
+    if (keywords != null && !keywords.isEmpty()) {
+      BooleanBuilder keywordCondition = new BooleanBuilder();
+      for (String keyword : keywords) {
+        keywordCondition.or(collection.name.containsIgnoreCase(keyword)
+            .or(collection.description.containsIgnoreCase(keyword)));
+      }
+      whereClause.and(keywordCondition);
+    }
+
+    JPQLQuery<CollectionWithAttempt> query = queryFactory
+        .select(Projections.constructor(CollectionWithAttempt.class,
+            collection,
+            collection.quizzes.size(),
+            // 전체 시도 횟수와 정답 횟수는 모든 사용자의 기록을 집계
+            JPAExpressions
+                .select(userCollectionAttempt.totalQuizCount.sum().coalesce(0))
+                .from(userCollectionAttempt)
+                .where(userCollectionAttempt.collection.eq(collection)
+                    .and(userCollectionAttempt.completedAt.isNotNull())),
+            JPAExpressions
+                .select(userCollectionAttempt.correctQuizCount.sum().coalesce(0))
+                .from(userCollectionAttempt)
+                .where(userCollectionAttempt.collection.eq(collection)
+                    .and(userCollectionAttempt.completedAt.isNotNull())),
+            Expressions.constant(0),  // recentAttempts
+            Expressions.constant(0))) // recentCorrectAttempts
+        .from(collection)
+        .where(whereClause)
+        .where(collection.access.eq(Access.PUBLIC))
+        .orderBy(collection.likes.desc()); // likes 수 기준 내림차순 정렬
+
+
+  }
+
 
   @Override
   public Page<CollectionWithAttempt> searchCollectionsForAuthUser(List<Long> categoryIds,
@@ -64,8 +115,16 @@ public class CollectionRepositoryImpl implements CollectionRepositoryCustom {
         .select(Projections.constructor(CollectionWithAttempt.class,
             collection,
             collection.quizzes.size(),
-            totalAttempt.totalQuizCount.sum(),
-            totalAttempt.correctQuizCount.sum(),
+            JPAExpressions
+                .select(totalAttempt.totalQuizCount.sum().coalesce(0))
+                .from(totalAttempt)
+                .where(totalAttempt.collection.eq(collection)
+                    .and(totalAttempt.completedAt.isNotNull())),
+            JPAExpressions
+                .select(totalAttempt.correctQuizCount.sum().coalesce(0))
+                .from(totalAttempt)
+                .where(totalAttempt.collection.eq(collection)
+                    .and(totalAttempt.completedAt.isNotNull())),
             recentAttempt.totalQuizCount,
             recentAttempt.correctQuizCount))
         .from(collection)
@@ -80,13 +139,8 @@ public class CollectionRepositoryImpl implements CollectionRepositoryCustom {
                         .and(recentAttempt.user.id.eq(userId))
                         .and(recentAttempt.completedAt.isNotNull()))
             )))
-        .leftJoin(totalAttempt)
-        .on(totalAttempt.collection.eq(collection)
-            .and(totalAttempt.completedAt.isNotNull())
-        )
         .where(collection.access.eq(Access.PUBLIC).or(collection.creator.id.eq(userId)))
-        .groupBy(collection, collection.quizzes.size(), recentAttempt.totalQuizCount,
-            recentAttempt.correctQuizCount);
+
 
     // Max correct rate (정답률 x% 이하 조건)
     NumberExpression<Integer> accuracyExpression = recentAttempt.correctQuizCount
@@ -127,4 +181,6 @@ public class CollectionRepositoryImpl implements CollectionRepositoryCustom {
     int pageNumber = (int) (pageable.getOffset() / pageable.getPageSize());
     return new PageImpl<>(content, PageRequest.of(pageNumber, pageable.getPageSize()), total);
   }
+
+
 }
