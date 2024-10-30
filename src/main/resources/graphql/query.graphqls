@@ -63,6 +63,8 @@ enum SortOrder {
     LATEST
     "정답률 낮은 순"
     LOWEST_ACCURACY
+    "좋아요 많은 순"
+    MOST_LIKED
 }
 
 input DataPage {

@@ -1,5 +1,7 @@
 package com.interview_master.infrastructure;
 
+import static com.interview_master.common.constant.Constant.SORT_LOWACCURACY;
+import static com.interview_master.common.constant.Constant.SORT_MOSTLIKED;
 import static com.interview_master.domain.collection.QCollection.collection;
 import static com.interview_master.domain.usercollectionattempt.QUserCollectionAttempt.userCollectionAttempt;
 
@@ -164,16 +166,21 @@ public class CollectionRepositoryImpl implements CollectionRepositoryCustom {
     query.where(whereClause);
 
     // LOWEST_ACCURACY sorting
-    if (pageable.getSort().getOrderFor("accuracy") != null) {
+    if (pageable.getSort().getOrderFor(SORT_LOWACCURACY) != null) {
       accuracyExpression =
           recentAttempt.correctQuizCount.multiply(100)
               .divide(recentAttempt.totalQuizCount.coalesce(1));
 
-      if (pageable.getSort().getOrderFor("accuracy").isAscending()) {
+      if (pageable.getSort().getOrderFor(SORT_LOWACCURACY).isAscending()) {
         query.orderBy(accuracyExpression.asc());
       } else {
         query.orderBy(accuracyExpression.desc());
       }
+    } else if (pageable.getSort().getOrderFor(SORT_MOSTLIKED) != null) {
+      query.orderBy(
+          collection.likes.desc(),
+          collection.createdAt.desc()
+      );
     } else {
       // LATEST sorting
       query.orderBy(collection.createdAt.desc());

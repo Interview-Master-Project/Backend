@@ -2,6 +2,7 @@ package com.interview_master.util;
 
 import static com.interview_master.common.constant.Constant.SORT_LATEST;
 import static com.interview_master.common.constant.Constant.SORT_LOWACCURACY;
+import static com.interview_master.common.constant.Constant.SORT_MOSTLIKED;
 
 import com.interview_master.dto.DataPage;
 import com.interview_master.dto.SortOrder;
@@ -15,6 +16,7 @@ public class PageSortUtils {
     return switch (sortOrder) {
       case LATEST -> Sort.by(Sort.Direction.DESC, SORT_LATEST);
       case LOWEST_ACCURACY -> Sort.by(Sort.Direction.ASC, SORT_LOWACCURACY);
+      case MOST_LIKED -> Sort.by(Sort.Direction.DESC, SORT_MOSTLIKED);
     };
   }
 
