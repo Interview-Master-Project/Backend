@@ -1,11 +1,11 @@
 package com.interview_master.infrastructure;
 
 import static com.interview_master.domain.collection.QCollection.collection;
-import static com.interview_master.domain.usercollectionattempt.QUserCollectionAttempt.userCollectionAttempt;
 
 import com.interview_master.common.exception.ApiException;
 import com.interview_master.common.exception.ErrorCode;
 import com.interview_master.domain.Access;
+import com.interview_master.domain.usercollectionattempt.QUserCollectionAttempt;
 import com.interview_master.dto.CollectionWithAttempt;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.Projections;
@@ -55,37 +55,48 @@ public class CollectionRepositoryImpl implements CollectionRepositoryCustom {
       whereClause.and(keywordCondition);
     }
 
+    QUserCollectionAttempt recentAttempt = new QUserCollectionAttempt("recentAttempt");
+    QUserCollectionAttempt totalAttempt = new QUserCollectionAttempt("totalAttempt");
+
     JPQLQuery<CollectionWithAttempt> query;
 
     query = queryFactory
         .select(Projections.constructor(CollectionWithAttempt.class,
             collection,
             collection.quizzes.size(),
-            userCollectionAttempt.totalQuizCount,
-            userCollectionAttempt.correctQuizCount))
+            totalAttempt.totalQuizCount.sum(),
+            totalAttempt.correctQuizCount.sum(),
+            recentAttempt.totalQuizCount,
+            recentAttempt.correctQuizCount))
         .from(collection)
-        .leftJoin(userCollectionAttempt)
-        .on(userCollectionAttempt.collection.eq(collection)
-            .and(userCollectionAttempt.user.id.eq(userId))
-            .and(userCollectionAttempt.completedAt.isNotNull())
-            .and(userCollectionAttempt.completedAt.eq(
-                JPAExpressions.select(userCollectionAttempt.completedAt.max())
-                    .from(userCollectionAttempt)
-                    .where(userCollectionAttempt.collection.eq(collection)
-                        .and(userCollectionAttempt.user.id.eq(userId))
-                        .and(userCollectionAttempt.completedAt.isNotNull()))
+        .leftJoin(recentAttempt)
+        .on(recentAttempt.collection.eq(collection)
+            .and(recentAttempt.user.id.eq(userId))
+            .and(recentAttempt.completedAt.isNotNull())
+            .and(recentAttempt.completedAt.eq(
+                JPAExpressions.select(recentAttempt.completedAt.max())
+                    .from(recentAttempt)
+                    .where(recentAttempt.collection.eq(collection)
+                        .and(recentAttempt.user.id.eq(userId))
+                        .and(recentAttempt.completedAt.isNotNull()))
             )))
-        .where(collection.access.eq(Access.PUBLIC).or(collection.creator.id.eq(userId)));
+        .leftJoin(totalAttempt)
+        .on(totalAttempt.collection.eq(collection)
+            .and(totalAttempt.completedAt.isNotNull())
+        )
+        .where(collection.access.eq(Access.PUBLIC).or(collection.creator.id.eq(userId)))
+        .groupBy(collection, collection.quizzes.size(), recentAttempt.totalQuizCount,
+            recentAttempt.correctQuizCount);
 
     // Max correct rate (정답률 x% 이하 조건)
-    NumberExpression<Integer> accuracyExpression = userCollectionAttempt.correctQuizCount
+    NumberExpression<Integer> accuracyExpression = recentAttempt.correctQuizCount
         .multiply(100.0)
-        .divide(userCollectionAttempt.totalQuizCount.coalesce(1));
+        .divide(recentAttempt.totalQuizCount.coalesce(1));
 
     if (maxCorrectRate != null) {
       whereClause
-          .and(userCollectionAttempt.completedAt.isNotNull()) // 정상적으로 완료되고
-          .and(userCollectionAttempt.totalQuizCount.gt(0) // 실제 문제 풀었던 기록에 대해서
+          .and(recentAttempt.completedAt.isNotNull()) // 정상적으로 완료되고
+          .and(recentAttempt.totalQuizCount.gt(0) // 실제 문제 풀었던 기록에 대해서
               .and(accuracyExpression.loe(maxCorrectRate)));
     }
 
@@ -94,8 +105,8 @@ public class CollectionRepositoryImpl implements CollectionRepositoryCustom {
     // LOWEST_ACCURACY sorting
     if (pageable.getSort().getOrderFor("accuracy") != null) {
       accuracyExpression =
-          userCollectionAttempt.correctQuizCount.multiply(100)
-              .divide(userCollectionAttempt.totalQuizCount.coalesce(1));
+          recentAttempt.correctQuizCount.multiply(100)
+              .divide(recentAttempt.totalQuizCount.coalesce(1));
 
       if (pageable.getSort().getOrderFor("accuracy").isAscending()) {
         query.orderBy(accuracyExpression.asc());
