@@ -34,13 +34,20 @@ type Query {
     """로그인한 유저의 정보"""
     me: User
 
-    """컬렉션 검색"""
-    searchCollections(
+    """컬렉션 검색 (로그인한 유저 전용)"""
+    searchCollectionsForAuthUser(
         paging: DataPage,
         sort: SortOrder = LATEST,
         categoryIds: [Int],
         keywords: [String],
         maxCorrectRate: Int
+    ) : CollectionWithAttemptsPaging
+
+    """컬렉션 검색 (비로그인 유저 전용)"""
+    searchCollectionsForGuest(
+        paging: DataPage,
+        categoryIds: [Int],
+        keywords: [String],
     ) : CollectionWithAttemptsPaging
 
     """로그인 유저의 퀴즈에 대한 시도들"""
@@ -56,6 +63,8 @@ enum SortOrder {
     LATEST
     "정답률 낮은 순"
     LOWEST_ACCURACY
+    "좋아요 많은 순"
+    MOST_LIKED
 }
 
 input DataPage {
