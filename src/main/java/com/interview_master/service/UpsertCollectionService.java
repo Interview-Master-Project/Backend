@@ -52,6 +52,7 @@ public class UpsertCollectionService {
     Collection newCollection = Collection.builder()
         .name(createCollectionReq.getName())
         .description(createCollectionReq.getDescription())
+        .likes(0)
         .access(createCollectionReq.getAccess())
         .category(category)
         .imgUrl(imgUrl)
