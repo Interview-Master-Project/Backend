@@ -55,6 +55,14 @@ type Query {
         quizId: ID!
     ) : [UserQuizAttempt!]!
 
+    searchQuizzes(
+        paging: DataPage,
+        sort: SortOrder = LATEST,
+        categoryIds: [Int],
+        maxCorrectRate: Int
+        keywords: [String],
+    ) : QuizzesWithAttemptPaging
+
 }
 
 """정렬 조건"""
@@ -88,6 +96,11 @@ interface RecentAttempt {
     recentCorrectAttempts: Int
 }
 
+type QuizzesWithAttemptPaging {
+    quizzesWithAttempt: [QuizWithAttempt!]!
+    pageInfo: PageInfo!
+}
+
 type CollectionWithAttemptsPaging {
     collectionsWithAttempt: [CollectionWithAttempt!]!
     pageInfo: PageInfo!
@@ -102,7 +115,7 @@ type CollectionWithAttempt implements TotalAttempt & RecentAttempt {
     recentCorrectAttempts: Int
 }
 
-type QuizWithAttempt implements TotalAttempt{
+type QuizWithAttempt implements TotalAttempt {
     quiz: Quiz
     totalAttempts: Int
     totalCorrectAttempts: Int
