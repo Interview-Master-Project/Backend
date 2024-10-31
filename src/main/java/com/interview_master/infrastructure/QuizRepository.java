@@ -9,7 +9,7 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 import java.util.Optional;
 
-public interface QuizRepository extends Repository<Quiz, Long> {
+public interface QuizRepository extends Repository<Quiz, Long>, QuizRepositoryCustom{
 
   Optional<Quiz> findByIdAndIsDeletedFalse(Long quizId);
 
