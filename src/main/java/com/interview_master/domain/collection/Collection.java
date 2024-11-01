@@ -1,5 +1,6 @@
 package com.interview_master.domain.collection;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.interview_master.common.exception.ApiException;
 import com.interview_master.common.exception.ErrorCode;
 import com.interview_master.domain.Access;
@@ -40,10 +41,12 @@ public class Collection extends BaseEntity {
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "creator_id")
+  @JsonIgnore
   private User creator;
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "category_id")
+  @JsonIgnore
   private Category category;
 
   @Enumerated(EnumType.STRING)
@@ -124,10 +127,6 @@ public class Collection extends BaseEntity {
 
   private void setAccess(Access access) {
     this.access = access;
-  }
-
-  private void setCreator(User creator) {
-    this.creator = creator;
   }
 
   private void setCategory(Category category) {

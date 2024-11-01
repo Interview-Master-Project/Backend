@@ -15,12 +15,14 @@ import com.interview_master.resolver.request.EditCollectionReq;
 import com.interview_master.util.ExtractUserId;
 import java.time.LocalDateTime;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
 @Transactional
+@Slf4j
 public class UpsertCollectionService {
 
   private final CollectionRepository collectionRepository;
@@ -66,7 +68,7 @@ public class UpsertCollectionService {
   public Collection editCollection(Long collectionId, EditCollectionReq editReq) {
     Long userId = ExtractUserId.extractUserIdFromContextHolder();
 
-    Collection collection = collectionRepository.findByIdWithQuizzes(collectionId)
+    Collection collection = collectionRepository.findByIdAndIsDeletedFalse(collectionId)
         .orElseThrow(() -> new ApiException(ErrorCode.COLLECTION_NOT_FOUND));
 
     // 수정 가능한지 검증
