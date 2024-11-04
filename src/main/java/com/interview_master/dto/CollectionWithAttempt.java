@@ -20,7 +20,7 @@ public class CollectionWithAttempt {
   private int recentCorrectAttempts;
   private Boolean isLiked;
 
-  // CollectionRepositoryImpl에서 필요한 생성자
+  // ForAuth 쿼리용 생성자
   public CollectionWithAttempt(Collection collection, int quizCount, Integer totalAttempts, Integer totalCorrectAttempts, Integer recentAttempts, Integer recentCorrectAttempts, Boolean isLiked) {
     this.collection = collection;
     this.quizCount = quizCount;
@@ -29,6 +29,16 @@ public class CollectionWithAttempt {
     this.recentAttempts = recentAttempts;
     this.recentCorrectAttempts = recentCorrectAttempts;
     this.isLiked = isLiked;
+  }
+
+  // ForGuest 쿼리용 생성자
+  public CollectionWithAttempt(Collection collection, int quizCount, Integer totalAttempts, Integer totalCorrectAttempts, Integer recentAttempts, Integer recentCorrectAttempts) {
+    this.collection = collection;
+    this.quizCount = quizCount;
+    this.totalAttempts = totalAttempts != null ? totalAttempts : 0;
+    this.totalCorrectAttempts = totalCorrectAttempts != null ? totalCorrectAttempts : 0;
+    this.recentAttempts = recentAttempts;
+    this.recentCorrectAttempts = recentCorrectAttempts;
   }
 
 }

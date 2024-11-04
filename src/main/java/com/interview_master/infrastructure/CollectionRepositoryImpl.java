@@ -9,7 +9,6 @@ import static com.interview_master.domain.usercollectionattempt.QUserCollectionA
 import com.interview_master.common.exception.ApiException;
 import com.interview_master.common.exception.ErrorCode;
 import com.interview_master.domain.Access;
-import com.interview_master.domain.collectionlike.QCollectionsLikes;
 import com.interview_master.domain.usercollectionattempt.QUserCollectionAttempt;
 import com.interview_master.dto.CollectionWithAttempt;
 import com.querydsl.core.BooleanBuilder;
