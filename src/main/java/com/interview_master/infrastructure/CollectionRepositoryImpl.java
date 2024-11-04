@@ -4,6 +4,7 @@ import static com.interview_master.common.constant.Constant.SORT_LOWACCURACY;
 import static com.interview_master.common.constant.Constant.SORT_MOSTLIKED;
 import static com.interview_master.domain.collection.QCollection.collection;
 import static com.interview_master.domain.collectionlike.QCollectionsLikes.collectionsLikes;
+import static com.interview_master.domain.quiz.QQuiz.quiz;
 import static com.interview_master.domain.usercollectionattempt.QUserCollectionAttempt.userCollectionAttempt;
 
 import com.interview_master.common.exception.ApiException;
@@ -60,7 +61,7 @@ public class CollectionRepositoryImpl implements CollectionRepositoryCustom {
     JPQLQuery<CollectionWithAttempt> query = queryFactory
         .select(Projections.constructor(CollectionWithAttempt.class,
             collection,
-            collection.quizzes.size(),
+            quiz.id.count().intValue(),
             // 전체 시도 횟수와 정답 횟수는 모든 사용자의 기록을 집계
             JPAExpressions
                 .select(userCollectionAttempt.totalQuizCount.sum().coalesce(0))
@@ -75,8 +76,13 @@ public class CollectionRepositoryImpl implements CollectionRepositoryCustom {
             Expressions.constant(0),  // recentAttempts
             Expressions.constant(0))) // recentCorrectAttempts
         .from(collection)
+
+        .leftJoin(collection.quizzes, quiz)
+        .on(quiz.isDeleted.eq(false))  // isDeleted = false인 퀴즈만 join
+
         .where(whereClause)
         .where(collection.access.eq(Access.PUBLIC))
+        .groupBy(collection)
         .orderBy(collection.likes.desc(),
             collection.createdAt.desc()); // likes 수 기준 내림차순 정렬 -> likes 수 같으면 최신순
 
@@ -125,7 +131,7 @@ public class CollectionRepositoryImpl implements CollectionRepositoryCustom {
     query = queryFactory
         .select(Projections.constructor(CollectionWithAttempt.class,
             collection,
-            collection.quizzes.size(),
+            quiz.id.count().intValue(),
             JPAExpressions
                 .select(totalAttempt.totalQuizCount.sum().coalesce(0))
                 .from(totalAttempt)
@@ -138,11 +144,16 @@ public class CollectionRepositoryImpl implements CollectionRepositoryCustom {
                     .and(totalAttempt.completedAt.isNotNull())),
             recentAttempt.totalQuizCount,
             recentAttempt.correctQuizCount,
-            collectionsLikes.isNotNull()))
+            collectionsLikes.id.isNotNull()))
         .from(collection)
+
+        .leftJoin(collection.quizzes, quiz)
+        .on(quiz.isDeleted.eq(false))  // isDeleted = false인 퀴즈만 join
+
         .leftJoin(collectionsLikes)
         .on(collectionsLikes.collection.eq(collection)
             .and(collectionsLikes.user.id.eq(userId)))
+
         .leftJoin(recentAttempt)
         .on(recentAttempt.collection.eq(collection)
             .and(recentAttempt.user.id.eq(userId))
@@ -154,7 +165,8 @@ public class CollectionRepositoryImpl implements CollectionRepositoryCustom {
                         .and(recentAttempt.user.id.eq(userId))
                         .and(recentAttempt.completedAt.isNotNull()))
             )))
-        .where(collection.access.eq(Access.PUBLIC).or(collection.creator.id.eq(userId)));
+        .where(collection.access.eq(Access.PUBLIC).or(collection.creator.id.eq(userId)))
+        .groupBy(collection, collectionsLikes.id, recentAttempt.totalQuizCount, recentAttempt.correctQuizCount);
 
     // Max correct rate (정답률 x% 이하 조건)
     NumberExpression<Integer> accuracyExpression = recentAttempt.correctQuizCount

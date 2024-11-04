@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 public class CollectionWithAttempt {
 
   private Collection collection;
-  private int quizCount;
+  private Integer quizCount;
   private int totalAttempts;
   private int totalCorrectAttempts;
   private int recentAttempts;
@@ -21,7 +21,7 @@ public class CollectionWithAttempt {
   private Boolean isLiked;
 
   // ForAuth 쿼리용 생성자
-  public CollectionWithAttempt(Collection collection, int quizCount, Integer totalAttempts, Integer totalCorrectAttempts, Integer recentAttempts, Integer recentCorrectAttempts, Boolean isLiked) {
+  public CollectionWithAttempt(Collection collection, Integer quizCount, Integer totalAttempts, Integer totalCorrectAttempts, Integer recentAttempts, Integer recentCorrectAttempts, Boolean isLiked) {
     this.collection = collection;
     this.quizCount = quizCount;
     this.totalAttempts = totalAttempts != null ? totalAttempts : 0;
@@ -32,7 +32,7 @@ public class CollectionWithAttempt {
   }
 
   // ForGuest 쿼리용 생성자
-  public CollectionWithAttempt(Collection collection, int quizCount, Integer totalAttempts, Integer totalCorrectAttempts, Integer recentAttempts, Integer recentCorrectAttempts) {
+  public CollectionWithAttempt(Collection collection, Integer quizCount, Integer totalAttempts, Integer totalCorrectAttempts, Integer recentAttempts, Integer recentCorrectAttempts) {
     this.collection = collection;
     this.quizCount = quizCount;
     this.totalAttempts = totalAttempts != null ? totalAttempts : 0;
