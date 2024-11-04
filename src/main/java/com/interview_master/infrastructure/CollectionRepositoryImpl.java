@@ -3,11 +3,13 @@ package com.interview_master.infrastructure;
 import static com.interview_master.common.constant.Constant.SORT_LOWACCURACY;
 import static com.interview_master.common.constant.Constant.SORT_MOSTLIKED;
 import static com.interview_master.domain.collection.QCollection.collection;
+import static com.interview_master.domain.collectionlike.QCollectionsLikes.collectionsLikes;
 import static com.interview_master.domain.usercollectionattempt.QUserCollectionAttempt.userCollectionAttempt;
 
 import com.interview_master.common.exception.ApiException;
 import com.interview_master.common.exception.ErrorCode;
 import com.interview_master.domain.Access;
+import com.interview_master.domain.collectionlike.QCollectionsLikes;
 import com.interview_master.domain.usercollectionattempt.QUserCollectionAttempt;
 import com.interview_master.dto.CollectionWithAttempt;
 import com.querydsl.core.BooleanBuilder;
@@ -136,8 +138,12 @@ public class CollectionRepositoryImpl implements CollectionRepositoryCustom {
                 .where(totalAttempt.collection.eq(collection)
                     .and(totalAttempt.completedAt.isNotNull())),
             recentAttempt.totalQuizCount,
-            recentAttempt.correctQuizCount))
+            recentAttempt.correctQuizCount,
+            collectionsLikes.isNotNull()))
         .from(collection)
+        .leftJoin(collectionsLikes)
+        .on(collectionsLikes.collection.eq(collection)
+            .and(collectionsLikes.user.id.eq(userId)))
         .leftJoin(recentAttempt)
         .on(recentAttempt.collection.eq(collection)
             .and(recentAttempt.user.id.eq(userId))

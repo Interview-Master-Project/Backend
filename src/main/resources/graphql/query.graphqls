@@ -113,6 +113,7 @@ type CollectionWithAttempt implements TotalAttempt & RecentAttempt {
     totalCorrectAttempts: Int
     recentAttempts: Int
     recentCorrectAttempts: Int
+    isLiked: Boolean
 }
 
 type QuizWithAttempt implements TotalAttempt {
