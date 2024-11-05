@@ -6,6 +6,7 @@ import static com.interview_master.domain.userquizattempt.QUserQuizAttempt.userQ
 
 import com.interview_master.common.exception.ApiException;
 import com.interview_master.common.exception.ErrorCode;
+import com.interview_master.domain.Access;
 import com.interview_master.dto.QuizWithAttempt;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.Projections;
@@ -43,6 +44,12 @@ public class QuizRepositoryImpl implements QuizRepositoryCustom {
 
     whereClause.and(quiz.isDeleted.eq(false));
 
+    whereClause.and(
+        quiz.creator.id.eq(userId)
+            .or(quiz.collection.access.eq(Access.PUBLIC))
+    );
+
+
     if (categoryIds != null && !categoryIds.isEmpty()) {
       whereClause.and(quiz.collection.category.id.in(categoryIds));
     }
@@ -64,8 +71,7 @@ public class QuizRepositoryImpl implements QuizRepositoryCustom {
         ))
         .from(quiz)
         .leftJoin(userQuizAttempt).on(userQuizAttempt.quiz.eq(quiz)
-            .and(userQuizAttempt.user.id.eq(userId)))
-        .where(quiz.creator.id.eq(userId));
+            .and(userQuizAttempt.user.id.eq(userId)));
 
     query.where(whereClause);
 
