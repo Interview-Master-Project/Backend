@@ -213,5 +213,87 @@ public class CollectionRepositoryImpl implements CollectionRepositoryCustom {
     return new PageImpl<>(content, PageRequest.of(pageNumber, pageable.getPageSize()), total);
   }
 
+  @Override
+  public Page<CollectionWithAttempt> myCollections(Long userId, Pageable pageable) {
+    if (userId == null) {
+      throw new ApiException(ErrorCode.AUTHORIZATION_TOKEN_NOT_FOUND);
+    }
+
+    BooleanBuilder whereClause = new BooleanBuilder();
+    whereClause.and(collection.isDeleted.eq(false));
+
+    QUserCollectionAttempt totalAttempt = new QUserCollectionAttempt("totalAttempt");
+    // 정확도 계산을 위한 서브쿼리
+    NumberExpression<Integer> accuracySubQuery = Expressions.numberTemplate(Integer.class,
+        "(SELECT COALESCE(SUM(totalAttempt.correctQuizCount) * 100 / NULLIF(SUM(totalAttempt.totalQuizCount), 0), 0) " +
+            "FROM UserCollectionAttempt totalAttempt " +
+            "WHERE totalAttempt.collection = {0} " +
+            "AND totalAttempt.user.id = {1} " +
+            "AND totalAttempt.completedAt IS NOT NULL)",
+        collection, userId);
+
+
+    JPQLQuery<CollectionWithAttempt> query;
+    query = queryFactory
+        .select(Projections.constructor(CollectionWithAttempt.class,
+            collection,
+            quiz.id.count().intValue(),
+            JPAExpressions
+                .select(totalAttempt.totalQuizCount.sum().coalesce(0))
+                .from(totalAttempt)
+                .where(totalAttempt.collection.eq(collection)
+                    .and(totalAttempt.user.id.eq(userId))
+                    .and(totalAttempt.completedAt.isNotNull())),
+            JPAExpressions
+                .select(totalAttempt.correctQuizCount.sum().coalesce(0))
+                .from(totalAttempt)
+                .where(totalAttempt.collection.eq(collection)
+                    .and(totalAttempt.user.id.eq(userId))
+                    .and(totalAttempt.completedAt.isNotNull())),
+            Expressions.constant(0),
+            Expressions.constant(0),
+            collectionsLikes.id.isNotNull()))
+        .from(collection)
+
+        .leftJoin(collection.quizzes, quiz)
+        .on(quiz.isDeleted.eq(false))  // isDeleted = false인 퀴즈만 join
+
+        .leftJoin(collectionsLikes)
+        .on(collectionsLikes.collection.eq(collection)
+            .and(collectionsLikes.user.id.eq(userId)))
+
+        .where(collection.creator.id.eq(userId))
+        .groupBy(collection, collectionsLikes.id);
+
+    query.where(whereClause);
+
+    NumberExpression<Integer> accuracyExpression;
+    // LOWEST_ACCURACY sorting
+    if (pageable.getSort().getOrderFor(SORT_LOWACCURACY) != null) {
+      if (pageable.getSort().getOrderFor(SORT_LOWACCURACY).isAscending()) {
+        query.orderBy(accuracySubQuery.coalesce(0).asc(), collection.createdAt.desc());
+      } else {
+        query.orderBy(accuracySubQuery.coalesce(0).desc(), collection.createdAt.desc());
+      }
+    } else if (pageable.getSort().getOrderFor(SORT_MOSTLIKED) != null) {
+      query.orderBy(
+          collection.likes.desc(),
+          collection.createdAt.desc()
+      );
+    } else {
+      // LATEST sorting
+      query.orderBy(collection.createdAt.desc());
+    }
+
+    long total = query.fetchCount();
+
+    // Apply pagination
+    query.offset(pageable.getOffset()).limit(pageable.getPageSize());
+    List<CollectionWithAttempt> content = query.fetch();
+
+    int pageNumber = (int) (pageable.getOffset() / pageable.getPageSize());
+    return new PageImpl<>(content, PageRequest.of(pageNumber, pageable.getPageSize()), total);
+  }
+
 
 }

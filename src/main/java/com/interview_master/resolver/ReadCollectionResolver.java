@@ -6,11 +6,14 @@ import com.interview_master.common.exception.ApiException;
 import com.interview_master.common.exception.ErrorCode;
 import com.interview_master.domain.Access;
 import com.interview_master.domain.collection.Collection;
+import com.interview_master.dto.CollectionWithAttempt;
 import com.interview_master.dto.CollectionWithAttemptsPaging;
 import com.interview_master.dto.DataPage;
+import com.interview_master.dto.PageInfo;
 import com.interview_master.dto.SortOrder;
 import com.interview_master.service.ReadCollectionService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.ContextValue;
 import org.springframework.graphql.data.method.annotation.QueryMapping;
@@ -45,7 +48,17 @@ public class ReadCollectionResolver {
       @ContextValue(name = "authError", required = false) String authError) {
     validateUserAuthContext(userId, authError);
 
-    return readCollectionService.userCollections(userId, paging, sort);
+    Page<CollectionWithAttempt> result = readCollectionService.userCollections(
+        userId, paging, sort);
+
+    return CollectionWithAttemptsPaging.builder()
+        .collectionsWithAttempt(result.getContent())
+        .pageInfo(PageInfo.builder()
+            .currentPage(result.getNumber() + 1)
+            .hasNextPage(result.hasNext())
+            .totalPages(result.getTotalPages())
+            .build())
+        .build();
   }
 
   /**

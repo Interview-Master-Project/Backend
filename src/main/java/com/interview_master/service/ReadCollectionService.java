@@ -45,15 +45,13 @@ public class ReadCollectionService {
   /**
    * user의 컬렉션을 offset 기반으로 페이징 + 정렬 (최신 생성 순 or 낮은 최근 정답률 순)
    */
-  public CollectionWithAttemptsPaging userCollections(Long userId, DataPage paging,
+  public Page<CollectionWithAttempt> userCollections(Long userId, DataPage paging,
       SortOrder sortOrder) {
     Sort sort = createSort(sortOrder);
     Pageable pageable = createPageable(paging, sort);
 
-    Page<Collection> collections = collectionRepository.findByCreatorIdAndIsDeletedFalse(userId,
+    return collectionRepository.myCollections(userId,
         pageable);
-
-    return getCollectionWithAttemptsPaging(collections);
   }
 
   /**
