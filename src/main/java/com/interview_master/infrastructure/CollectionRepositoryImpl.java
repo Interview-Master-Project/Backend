@@ -3,6 +3,8 @@ package com.interview_master.infrastructure;
 import static com.interview_master.common.constant.Constant.SORT_LOWACCURACY;
 import static com.interview_master.common.constant.Constant.SORT_MOSTLIKED;
 import static com.interview_master.domain.collection.QCollection.collection;
+import static com.interview_master.domain.collectionlike.QCollectionsLikes.collectionsLikes;
+import static com.interview_master.domain.quiz.QQuiz.quiz;
 import static com.interview_master.domain.usercollectionattempt.QUserCollectionAttempt.userCollectionAttempt;
 
 import com.interview_master.common.exception.ApiException;
@@ -59,7 +61,7 @@ public class CollectionRepositoryImpl implements CollectionRepositoryCustom {
     JPQLQuery<CollectionWithAttempt> query = queryFactory
         .select(Projections.constructor(CollectionWithAttempt.class,
             collection,
-            collection.quizzes.size(),
+            quiz.id.count().intValue(),
             // 전체 시도 횟수와 정답 횟수는 모든 사용자의 기록을 집계
             JPAExpressions
                 .select(userCollectionAttempt.totalQuizCount.sum().coalesce(0))
@@ -74,8 +76,13 @@ public class CollectionRepositoryImpl implements CollectionRepositoryCustom {
             Expressions.constant(0),  // recentAttempts
             Expressions.constant(0))) // recentCorrectAttempts
         .from(collection)
+
+        .leftJoin(collection.quizzes, quiz)
+        .on(quiz.isDeleted.eq(false))  // isDeleted = false인 퀴즈만 join
+
         .where(whereClause)
         .where(collection.access.eq(Access.PUBLIC))
+        .groupBy(collection)
         .orderBy(collection.likes.desc(),
             collection.createdAt.desc()); // likes 수 기준 내림차순 정렬 -> likes 수 같으면 최신순
 
@@ -124,7 +131,7 @@ public class CollectionRepositoryImpl implements CollectionRepositoryCustom {
     query = queryFactory
         .select(Projections.constructor(CollectionWithAttempt.class,
             collection,
-            collection.quizzes.size(),
+            quiz.id.count().intValue(),
             JPAExpressions
                 .select(totalAttempt.totalQuizCount.sum().coalesce(0))
                 .from(totalAttempt)
@@ -136,8 +143,17 @@ public class CollectionRepositoryImpl implements CollectionRepositoryCustom {
                 .where(totalAttempt.collection.eq(collection)
                     .and(totalAttempt.completedAt.isNotNull())),
             recentAttempt.totalQuizCount,
-            recentAttempt.correctQuizCount))
+            recentAttempt.correctQuizCount,
+            collectionsLikes.id.isNotNull()))
         .from(collection)
+
+        .leftJoin(collection.quizzes, quiz)
+        .on(quiz.isDeleted.eq(false))  // isDeleted = false인 퀴즈만 join
+
+        .leftJoin(collectionsLikes)
+        .on(collectionsLikes.collection.eq(collection)
+            .and(collectionsLikes.user.id.eq(userId)))
+
         .leftJoin(recentAttempt)
         .on(recentAttempt.collection.eq(collection)
             .and(recentAttempt.user.id.eq(userId))
@@ -149,7 +165,8 @@ public class CollectionRepositoryImpl implements CollectionRepositoryCustom {
                         .and(recentAttempt.user.id.eq(userId))
                         .and(recentAttempt.completedAt.isNotNull()))
             )))
-        .where(collection.access.eq(Access.PUBLIC).or(collection.creator.id.eq(userId)));
+        .where(collection.access.eq(Access.PUBLIC).or(collection.creator.id.eq(userId)))
+        .groupBy(collection, collectionsLikes.id, recentAttempt.totalQuizCount, recentAttempt.correctQuizCount);
 
     // Max correct rate (정답률 x% 이하 조건)
     NumberExpression<Integer> accuracyExpression = recentAttempt.correctQuizCount
@@ -185,6 +202,143 @@ public class CollectionRepositoryImpl implements CollectionRepositoryCustom {
       // LATEST sorting
       query.orderBy(collection.createdAt.desc());
     }
+
+    long total = query.fetchCount();
+
+    // Apply pagination
+    query.offset(pageable.getOffset()).limit(pageable.getPageSize());
+    List<CollectionWithAttempt> content = query.fetch();
+
+    int pageNumber = (int) (pageable.getOffset() / pageable.getPageSize());
+    return new PageImpl<>(content, PageRequest.of(pageNumber, pageable.getPageSize()), total);
+  }
+
+  @Override
+  public Page<CollectionWithAttempt> myCollections(Long userId, Pageable pageable) {
+    if (userId == null) {
+      throw new ApiException(ErrorCode.AUTHORIZATION_TOKEN_NOT_FOUND);
+    }
+
+    BooleanBuilder whereClause = new BooleanBuilder();
+    whereClause.and(collection.isDeleted.eq(false));
+
+    QUserCollectionAttempt totalAttempt = new QUserCollectionAttempt("totalAttempt");
+    // 정확도 계산을 위한 서브쿼리
+    NumberExpression<Integer> accuracySubQuery = Expressions.numberTemplate(Integer.class,
+        "(SELECT COALESCE(SUM(totalAttempt.correctQuizCount) * 100 / NULLIF(SUM(totalAttempt.totalQuizCount), 0), 0) " +
+            "FROM UserCollectionAttempt totalAttempt " +
+            "WHERE totalAttempt.collection = {0} " +
+            "AND totalAttempt.user.id = {1} " +
+            "AND totalAttempt.completedAt IS NOT NULL)",
+        collection, userId);
+
+
+    JPQLQuery<CollectionWithAttempt> query;
+    query = queryFactory
+        .select(Projections.constructor(CollectionWithAttempt.class,
+            collection,
+            quiz.id.count().intValue(),
+            JPAExpressions
+                .select(totalAttempt.totalQuizCount.sum().coalesce(0))
+                .from(totalAttempt)
+                .where(totalAttempt.collection.eq(collection)
+                    .and(totalAttempt.user.id.eq(userId))
+                    .and(totalAttempt.completedAt.isNotNull())),
+            JPAExpressions
+                .select(totalAttempt.correctQuizCount.sum().coalesce(0))
+                .from(totalAttempt)
+                .where(totalAttempt.collection.eq(collection)
+                    .and(totalAttempt.user.id.eq(userId))
+                    .and(totalAttempt.completedAt.isNotNull())),
+            Expressions.constant(0),
+            Expressions.constant(0),
+            collectionsLikes.id.isNotNull()))
+        .from(collection)
+
+        .leftJoin(collection.quizzes, quiz)
+        .on(quiz.isDeleted.eq(false))  // isDeleted = false인 퀴즈만 join
+
+        .leftJoin(collectionsLikes)
+        .on(collectionsLikes.collection.eq(collection)
+            .and(collectionsLikes.user.id.eq(userId)))
+
+        .where(collection.creator.id.eq(userId))
+        .groupBy(collection, collectionsLikes.id);
+
+    query.where(whereClause);
+
+    NumberExpression<Integer> accuracyExpression;
+    // LOWEST_ACCURACY sorting
+    if (pageable.getSort().getOrderFor(SORT_LOWACCURACY) != null) {
+      if (pageable.getSort().getOrderFor(SORT_LOWACCURACY).isAscending()) {
+        query.orderBy(accuracySubQuery.coalesce(0).asc(), collection.createdAt.desc());
+      } else {
+        query.orderBy(accuracySubQuery.coalesce(0).desc(), collection.createdAt.desc());
+      }
+    } else if (pageable.getSort().getOrderFor(SORT_MOSTLIKED) != null) {
+      query.orderBy(
+          collection.likes.desc(),
+          collection.createdAt.desc()
+      );
+    } else {
+      // LATEST sorting
+      query.orderBy(collection.createdAt.desc());
+    }
+
+    long total = query.fetchCount();
+
+    // Apply pagination
+    query.offset(pageable.getOffset()).limit(pageable.getPageSize());
+    List<CollectionWithAttempt> content = query.fetch();
+
+    int pageNumber = (int) (pageable.getOffset() / pageable.getPageSize());
+    return new PageImpl<>(content, PageRequest.of(pageNumber, pageable.getPageSize()), total);
+  }
+
+  @Override
+  public Page<CollectionWithAttempt> getHistory(Long userId, Access access, Pageable pageable) {
+    if (userId == null) {
+      throw new ApiException(ErrorCode.AUTHORIZATION_TOKEN_NOT_FOUND);
+    }
+
+    QUserCollectionAttempt totalAttempt = new QUserCollectionAttempt("totalAttempt");
+
+    JPQLQuery<CollectionWithAttempt> query = queryFactory
+        .select(Projections.constructor(CollectionWithAttempt.class,
+            collection,
+            quiz.id.count().intValue(),
+            JPAExpressions
+                .select(totalAttempt.totalQuizCount.sum().coalesce(0))
+                .from(totalAttempt)
+                .where(totalAttempt.collection.eq(collection)
+                    .and(totalAttempt.completedAt.isNotNull())),
+            JPAExpressions
+                .select(totalAttempt.correctQuizCount.sum().coalesce(0))
+                .from(totalAttempt)
+                .where(totalAttempt.collection.eq(collection)
+                    .and(totalAttempt.completedAt.isNotNull())),
+            Expressions.constant(0),
+            Expressions.constant(0),
+            collectionsLikes.id.isNotNull()))
+        .from(collection)
+
+        .leftJoin(collection.quizzes, quiz)
+        .on(quiz.isDeleted.eq(false))  // isDeleted = false인 퀴즈만 join
+
+        .leftJoin(collectionsLikes)
+        .on(collectionsLikes.collection.eq(collection)
+            .and(collectionsLikes.user.id.eq(userId)))
+
+        .join(totalAttempt)
+        .on(totalAttempt.collection.eq(collection)
+            .and(totalAttempt.user.id.eq(userId)))
+
+        .where(
+            collection.isDeleted.eq(false),
+            access != null ? collection.access.eq(access) : null
+        )
+        .groupBy(collection.id, collectionsLikes.id)
+        .orderBy(totalAttempt.startedAt.max().desc());
 
     long total = query.fetchCount();
 

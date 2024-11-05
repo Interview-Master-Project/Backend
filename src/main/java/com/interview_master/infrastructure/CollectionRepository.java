@@ -3,6 +3,7 @@ package com.interview_master.infrastructure;
 import com.interview_master.domain.Access;
 import com.interview_master.domain.collection.Collection;
 import com.interview_master.dto.CollectionWithAttempt;
+import com.interview_master.dto.CollectionWithLike;
 import jakarta.persistence.LockModeType;
 import java.util.List;
 import java.util.Optional;
@@ -38,14 +39,18 @@ public interface CollectionRepository extends Repository<Collection, Long>, Coll
   /**
    * user가 최근에 시도한 컬렉션 리스트
    */
-  @Query("select c from Collection c " +
+  @Query("select new com.interview_master.dto.CollectionWithLike(" +
+      "c," +
+      "case when cl.id is not null then true else false end) " +
+      "from Collection c " +
       "join UserCollectionAttempt uca on uca.collection.id = c.id " +
+      "left join CollectionsLikes cl on cl.collection.id = c.id and cl.user.id = :userId " +
       "where uca.user.id = :userId " +
       "and (:access is null or c.access = :access) " +
       "and c.isDeleted = false " +
       "group by c.id " +
       "order by max(uca.startedAt) desc")
-  Page<Collection> findUserCollectionHistory(@Param("userId") Long userId,
+  Page<CollectionWithLike> findUserCollectionHistory(@Param("userId") Long userId,
       @Param("access") Access access, Pageable pageable);
 
   @Override
