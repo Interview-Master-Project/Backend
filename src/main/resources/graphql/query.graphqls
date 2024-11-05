@@ -63,6 +63,9 @@ type Query {
         keywords: [String],
     ) : QuizzesWithAttemptPaging
 
+    """유저가 컬렉션 좋아요 눌렀는지"""
+    isLiked(collectionId: ID!): Boolean!
+
 }
 
 """정렬 조건"""
@@ -96,6 +99,11 @@ interface RecentAttempt {
     recentCorrectAttempts: Int
 }
 
+type CollectionWithLike {
+    collection: Collection
+    isLiked: Boolean
+}
+
 type QuizzesWithAttemptPaging {
     quizzesWithAttempt: [QuizWithAttempt!]!
     pageInfo: PageInfo!
@@ -113,6 +121,7 @@ type CollectionWithAttempt implements TotalAttempt & RecentAttempt {
     totalCorrectAttempts: Int
     recentAttempts: Int
     recentCorrectAttempts: Int
+    isLiked: Boolean
 }
 
 type QuizWithAttempt implements TotalAttempt {
