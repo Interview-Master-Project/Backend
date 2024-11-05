@@ -63,6 +63,9 @@ type Query {
         keywords: [String],
     ) : QuizzesWithAttemptPaging
 
+    """유저가 컬렉션 좋아요 눌렀는지"""
+    isLiked(collectionId: ID!): Boolean!
+
 }
 
 """정렬 조건"""
