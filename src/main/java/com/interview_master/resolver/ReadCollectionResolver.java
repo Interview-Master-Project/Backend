@@ -70,8 +70,17 @@ public class ReadCollectionResolver {
       @ContextValue(name = "authError", required = false) String authError) {
     validateUserAuthContext(userId, authError);
 
-    return readCollectionService.getMyCollectionHistory(userId, paging,
+    Page<CollectionWithAttempt> result = readCollectionService.getMyCollectionHistory(
+        userId, paging,
         filter);
 
+    return CollectionWithAttemptsPaging.builder()
+        .collectionsWithAttempt(result.getContent())
+        .pageInfo(PageInfo.builder()
+            .currentPage(result.getNumber() + 1)
+            .hasNextPage(result.hasNext())
+            .totalPages(result.getTotalPages())
+            .build())
+        .build();
   }
 }

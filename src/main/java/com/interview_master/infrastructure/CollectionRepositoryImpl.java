@@ -295,5 +295,60 @@ public class CollectionRepositoryImpl implements CollectionRepositoryCustom {
     return new PageImpl<>(content, PageRequest.of(pageNumber, pageable.getPageSize()), total);
   }
 
+  @Override
+  public Page<CollectionWithAttempt> getHistory(Long userId, Access access, Pageable pageable) {
+    if (userId == null) {
+      throw new ApiException(ErrorCode.AUTHORIZATION_TOKEN_NOT_FOUND);
+    }
+
+    QUserCollectionAttempt totalAttempt = new QUserCollectionAttempt("totalAttempt");
+
+    JPQLQuery<CollectionWithAttempt> query = queryFactory
+        .select(Projections.constructor(CollectionWithAttempt.class,
+            collection,
+            quiz.id.count().intValue(),
+            JPAExpressions
+                .select(totalAttempt.totalQuizCount.sum().coalesce(0))
+                .from(totalAttempt)
+                .where(totalAttempt.collection.eq(collection)
+                    .and(totalAttempt.completedAt.isNotNull())),
+            JPAExpressions
+                .select(totalAttempt.correctQuizCount.sum().coalesce(0))
+                .from(totalAttempt)
+                .where(totalAttempt.collection.eq(collection)
+                    .and(totalAttempt.completedAt.isNotNull())),
+            Expressions.constant(0),
+            Expressions.constant(0),
+            collectionsLikes.id.isNotNull()))
+        .from(collection)
+
+        .leftJoin(collection.quizzes, quiz)
+        .on(quiz.isDeleted.eq(false))  // isDeleted = false인 퀴즈만 join
+
+        .leftJoin(collectionsLikes)
+        .on(collectionsLikes.collection.eq(collection)
+            .and(collectionsLikes.user.id.eq(userId)))
+
+        .join(totalAttempt)
+        .on(totalAttempt.collection.eq(collection)
+            .and(totalAttempt.user.id.eq(userId)))
+
+        .where(
+            collection.isDeleted.eq(false),
+            access != null ? collection.access.eq(access) : null
+        )
+        .groupBy(collection.id, collectionsLikes.id)
+        .orderBy(totalAttempt.startedAt.max().desc());
+
+    long total = query.fetchCount();
+
+    // Apply pagination
+    query.offset(pageable.getOffset()).limit(pageable.getPageSize());
+    List<CollectionWithAttempt> content = query.fetch();
+
+    int pageNumber = (int) (pageable.getOffset() / pageable.getPageSize());
+    return new PageImpl<>(content, PageRequest.of(pageNumber, pageable.getPageSize()), total);
+  }
+
 
 }

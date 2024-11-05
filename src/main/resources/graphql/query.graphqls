@@ -96,6 +96,11 @@ interface RecentAttempt {
     recentCorrectAttempts: Int
 }
 
+type CollectionWithLike {
+    collection: Collection
+    isLiked: Boolean
+}
+
 type QuizzesWithAttemptPaging {
     quizzesWithAttempt: [QuizWithAttempt!]!
     pageInfo: PageInfo!

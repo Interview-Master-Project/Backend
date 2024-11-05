@@ -1,5 +1,6 @@
 package com.interview_master.infrastructure;
 
+import com.interview_master.domain.Access;
 import com.interview_master.dto.CollectionWithAttempt;
 import java.util.List;
 import org.springframework.data.domain.Page;
@@ -15,4 +16,6 @@ public interface CollectionRepositoryCustom {
       List<String> keywords, Pageable pageable);
 
   Page<CollectionWithAttempt> myCollections(Long userId, Pageable pageable);
+
+  Page<CollectionWithAttempt> getHistory (Long userId, Access access, Pageable pageable);
 }
