@@ -43,9 +43,13 @@ type Mutation {
         collectionId: ID!
     ) : String
 
+   """좋아요 취소"""
     unlike(
         collectionId: ID!
     ) : String
+
+    """유저 탈퇴"""
+    deleteUser : String
 
 }
 

@@ -53,4 +53,12 @@ public class UserProfileService {
 
     return user;
   }
+
+  @Transactional
+  public void deleteUser(Long userId) {
+    User user = userRepository.findByIdAndIsDeletedFalse(userId)
+        .orElseThrow(() -> new ApiException(ErrorCode.USER_NOT_FOUND));
+
+    user.markDeleted();
+  }
 }
