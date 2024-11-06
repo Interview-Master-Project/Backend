@@ -1,6 +1,7 @@
 spring:
   datasource:
-    url: jdbc:h2:tcp://localhost/~/interview-master;MODE=PostgreSQL;DATABASE_TO_LOWER=TRUE;DEFAULT_NULL_ORDERING=HIGH
+#    url: jdbc:h2:tcp://localhost/~/interview-master;MODE=PostgreSQL;DATABASE_TO_LOWER=TRUE;DEFAULT_NULL_ORDERING=HIGH
+    url: jdbc:h2:mem:test
     username: sa
     password:
     driver-class-name: org.h2.Driver
@@ -9,3 +10,5 @@ spring:
     database-platform: rg.hibernate.dialect.H2Dialect
     hibernate:
       ddl-auto: update
+
+    show-sql: true

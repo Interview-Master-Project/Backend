@@ -18,7 +18,7 @@ public class OAuthLoginService {
   }
 
   private User findOrCreateUser(OAuthInfoResponse oAuthInfoResponse) {
-    return userRepository.findByEmail(oAuthInfoResponse.getEmail())
+    return userRepository.findByEmailAndIsDeletedFalse(oAuthInfoResponse.getEmail())
         .orElseGet(() -> newUser(oAuthInfoResponse));
   }
 

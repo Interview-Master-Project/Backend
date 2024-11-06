@@ -35,5 +35,21 @@ public class User extends BaseEntity {
   @Enumerated(EnumType.STRING)
   private OAuthProvider oAuthProvider;
 
+  private void setNickname(String nickname) {
+    this.nickname = nickname;
+  }
+
+  private void setImgUrl(String imgUrl) {
+    this.imgUrl = imgUrl;
+  }
+
+  public void edit(String name, String imgUrl) {
+    setImgUrl(imgUrl);
+    boolean nameChanged = name != null && !name.equals(this.nickname);
+
+    if (nameChanged) {
+      setNickname(name);
+    }
+  }
 }
 
