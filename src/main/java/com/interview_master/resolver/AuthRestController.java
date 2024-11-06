@@ -41,6 +41,7 @@ public class AuthRestController {
         .body(LoginRes.builder()
             .userId(user.getId())
             .nickname(user.getNickname())
+            .imgUrl(user.getImgUrl())
             .build());
   }
 
@@ -59,6 +60,7 @@ public class AuthRestController {
         .body(LoginRes.builder()
             .userId(user.getId())
             .nickname(user.getNickname())
+            .imgUrl(user.getImgUrl())
             .build());
   }
 }
