@@ -2,7 +2,13 @@ package com.interview_master.domain.user;
 
 import com.interview_master.domain.BaseEntity;
 import com.interview_master.login.OAuthProvider;
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -24,6 +30,8 @@ public class User extends BaseEntity {
 
   private String email;
 
+  private String imgUrl;
+
   @Enumerated(EnumType.STRING)
   private OAuthProvider oAuthProvider;
 
@@ -31,12 +39,17 @@ public class User extends BaseEntity {
     this.nickname = nickname;
   }
 
-  private void setEmail(String email) {
-    this.email = email;
+  private void setImgUrl(String imgUrl) {
+    this.imgUrl = imgUrl;
   }
 
-  private void setOAuthProvider(OAuthProvider oAuthProvider) {
-    this.oAuthProvider = oAuthProvider;
+  public void edit(String name, String imgUrl) {
+    setImgUrl(imgUrl);
+    boolean nameChanged = name != null && !name.equals(this.nickname);
+
+    if (nameChanged) {
+      setNickname(name);
+    }
   }
 }
 
