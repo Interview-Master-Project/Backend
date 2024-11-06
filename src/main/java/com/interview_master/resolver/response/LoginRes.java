@@ -13,4 +13,5 @@ public class LoginRes {
 
   private String nickname;
   private Long userId;
+  private String imgUrl;
 }

@@ -19,6 +19,7 @@ public class NaverInfoResponse implements OAuthInfoResponse {
 
     private String email;
     private String nickname;
+    private String profileImage;
   }
 
   @Override
@@ -34,5 +35,10 @@ public class NaverInfoResponse implements OAuthInfoResponse {
   @Override
   public OAuthProvider getOAuthProvider() {
     return OAuthProvider.NAVER;
+  }
+
+  @Override
+  public String getImageUrl() {
+    return response.profileImage;
   }
 }
