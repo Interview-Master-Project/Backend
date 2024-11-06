@@ -26,8 +26,10 @@ public class OAuthLoginService {
     User newUser = User.builder()
         .email(oAuthInfoResponse.getEmail())
         .nickname(oAuthInfoResponse.getNickname())
+        .imgUrl(oAuthInfoResponse.getImageUrl())
         .oAuthProvider(oAuthInfoResponse.getOAuthProvider())
         .build();
+
     return userRepository.save(newUser);
   }
 }

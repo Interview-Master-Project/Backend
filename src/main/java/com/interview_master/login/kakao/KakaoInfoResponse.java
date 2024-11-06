@@ -26,6 +26,7 @@ public class KakaoInfoResponse implements OAuthInfoResponse {
   static class KakaoProfile {
 
     private String nickname;
+    private String thumbnailImageUrl;
   }
 
   @Override
@@ -41,5 +42,10 @@ public class KakaoInfoResponse implements OAuthInfoResponse {
   @Override
   public OAuthProvider getOAuthProvider() {
     return OAuthProvider.KAKAO;
+  }
+
+  @Override
+  public String getImageUrl() {
+    return kakaoAccount.profile.thumbnailImageUrl;
   }
 }

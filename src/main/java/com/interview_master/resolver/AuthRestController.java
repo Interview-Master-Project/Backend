@@ -47,8 +47,8 @@ public class AuthRestController {
 
   @PostMapping("/naver")
   public ResponseEntity<LoginRes> loginNaver(@RequestBody NaverLoginParams params) {
-    log.info("{} login params {}, {}", "Naver", params.getAuthorizationCode(),
-        params.getState());
+    log.info("{} login params {}, {}, {}", "Naver", params.getAuthorizationCode(),
+        params.getState(), params);
     User user = oAuthLoginService.login(params);
     AuthTokens tokens = authTokenGenerator.generate(user.getId());
 
