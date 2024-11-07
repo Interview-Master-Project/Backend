@@ -6,12 +6,14 @@ import com.interview_master.common.exception.ApiException;
 import com.interview_master.common.exception.ErrorCode;
 import com.interview_master.domain.Access;
 import com.interview_master.domain.collection.Collection;
+import com.interview_master.domain.usercollectionattempt.UserCollectionAttempt;
 import com.interview_master.dto.CollectionWithAttempt;
 import com.interview_master.dto.CollectionWithAttemptsPaging;
 import com.interview_master.dto.DataPage;
 import com.interview_master.dto.PageInfo;
 import com.interview_master.dto.SortOrder;
 import com.interview_master.service.ReadCollectionService;
+import com.interview_master.service.UserCollectionAttemptService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.graphql.data.method.annotation.Argument;
@@ -24,6 +26,7 @@ import org.springframework.stereotype.Controller;
 public class ReadCollectionResolver {
 
   private final ReadCollectionService readCollectionService;
+  private final UserCollectionAttemptService userCollectionAttemptService;
 
   /**
    * 컬렉션 조회
@@ -82,5 +85,15 @@ public class ReadCollectionResolver {
             .totalPages(result.getTotalPages())
             .build())
         .build();
+  }
+
+  @QueryMapping
+  public UserCollectionAttempt getLatestCollectionAttempt(@Argument Long collectionId,
+      @ContextValue(required = false) Long userId,
+      @ContextValue(name = "authError", required = false) String authError) {
+
+    validateUserAuthContext(userId, authError);
+
+    return userCollectionAttemptService.getLatestCollectionAttempt(collectionId, userId);
   }
 }

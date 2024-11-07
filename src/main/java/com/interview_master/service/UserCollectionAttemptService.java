@@ -59,4 +59,10 @@ public class UserCollectionAttemptService {
     return uca;
   }
 
+  // 가장 최신 기록 가져오기
+  public UserCollectionAttempt getLatestCollectionAttempt(Long collectionId, Long userId) {
+    return userCollectionAttemptRepository.findFirstByCollectionIdAndUserIdOrderByStartedAtDesc(
+            collectionId, userId)
+        .orElseThrow(() -> new ApiException(ErrorCode.USER_COLLECTION_ATTEMPT_NOT_FOUND));
+  }
 }

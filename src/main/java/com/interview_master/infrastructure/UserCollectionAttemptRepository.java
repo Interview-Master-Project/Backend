@@ -13,4 +13,7 @@ public interface UserCollectionAttemptRepository extends Repository<UserCollecti
   List<UserCollectionAttempt> findByCollectionIn(List<Collection> collections);
 
   UserCollectionAttempt save(UserCollectionAttempt userCollectionAttempt);
+
+  // 가장 최신 시도 기록 가져오기
+  Optional<UserCollectionAttempt> findFirstByCollectionIdAndUserIdOrderByStartedAtDesc(Long collectionId, Long userId);
 }
