@@ -11,7 +11,6 @@ import com.interview_master.dto.CollectionWithAttempt;
 import com.interview_master.dto.DataPage;
 import com.interview_master.dto.SortOrder;
 import com.interview_master.infrastructure.CollectionRepository;
-import com.interview_master.infrastructure.UserCollectionAttemptRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -27,7 +26,6 @@ import org.springframework.transaction.annotation.Transactional;
 public class ReadCollectionService {
 
   private final CollectionRepository collectionRepository;
-  private final UserCollectionAttemptRepository userCollectionAttemptRepository;
 
   public Collection getCollectionById(Long collectionId) {
     return collectionRepository.findByIdWithQuizzes(collectionId)

@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class UserCollectionAttemptService {
 
   private final UserCollectionAttemptRepository userCollectionAttemptRepository;
@@ -25,7 +26,6 @@ public class UserCollectionAttemptService {
   private final EntityManager em;
 
 
-  @Transactional
   public UserCollectionAttempt startSolveCollection(Long collectionId, Long userId) {
     // 컬렉션 존재 여부 검증
     Collection collection = collectionRepository.findByIdAndIsDeletedFalse(collectionId)
@@ -41,7 +41,6 @@ public class UserCollectionAttemptService {
     return userCollectionAttemptRepository.save(uca);
   }
 
-  @Transactional
   public UserCollectionAttempt finishSolveCollection(Long ucaId, Long userId) {
     // uca 존재 여부 검증
     UserCollectionAttempt uca = userCollectionAttemptRepository.findById(ucaId)
@@ -60,9 +59,15 @@ public class UserCollectionAttemptService {
   }
 
   // 가장 최신 기록 가져오기
+  @Transactional(readOnly = true)
   public UserCollectionAttempt getLatestCollectionAttempt(Long collectionId, Long userId) {
     return userCollectionAttemptRepository.findFirstByCollectionIdAndUserIdOrderByStartedAtDesc(
             collectionId, userId)
         .orElseThrow(() -> new ApiException(ErrorCode.USER_COLLECTION_ATTEMPT_NOT_FOUND));
+  }
+
+  // 최신 기록 지우기 (연관된 userQuizAttempt들도 db의 cascade on delete 설정으로 인해 같이 삭제됨)
+  public void deleteAttempt(Long ucaId, Long userId) {
+    userCollectionAttemptRepository.deleteByIdAndUserId(ucaId, userId);
   }
 }
