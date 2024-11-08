@@ -73,6 +73,11 @@ type Query {
     getLatestCollectionAttempt(
         collectionId: ID!
     ) : UserCollectionAttempt!
+
+    """최근 퀴즈 시도 기록 가져오기 (이어서 풀기로 결정했을 때 사용)"""
+    getLatestQuizzesAttempt(
+        userCollectionAttemptId: ID!
+    ) : [UserQuizAttempt!]!
 }
 
 """정렬 조건"""

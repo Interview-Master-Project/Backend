@@ -59,6 +59,14 @@ public class UserQuizAttemptService {
   public List<UserQuizAttempt> getUserQuizAttempts(Long quizId, Long userId) {
     return quizAttemptRepository.findAllByQuizIdAndUserIdOrderByAnsweredAtDesc(quizId, userId);
   }
+
+  /**
+   * collectionAttempt에 속한 퀴즈 시도 기록들 가져오기
+   */
+  public List<UserQuizAttempt> getQuizzesAttemptsByCollectionAttempt(Long ucaId, Long userId) {
+    return quizAttemptRepository.findAllByCollectionAttemptIdAndUserIdOrderByQuizId(ucaId, userId);
+  }
+
   /**
    * 날짜의 요일을 인덱스로 반환 0(sun) ~ 6(sat)
    */
