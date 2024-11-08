@@ -55,6 +55,7 @@ type Query {
         quizId: ID!
     ) : [UserQuizAttempt!]!
 
+    """퀴즈 검색(로그인 전용)"""
     searchQuizzes(
         paging: DataPage,
         sort: SortOrder = LATEST,
@@ -64,8 +65,19 @@ type Query {
     ) : QuizzesWithAttemptPaging
 
     """유저가 컬렉션 좋아요 눌렀는지"""
-    isLiked(collectionId: ID!): Boolean!
+    isLiked(
+        collectionId: ID!
+    ): Boolean!
 
+    """컬렉션에 대한 가장 최신 시도 기록 가져오기 -> 이어서 풀기 여부 확인하기 위해서"""
+    getLatestCollectionAttempt(
+        collectionId: ID!
+    ) : UserCollectionAttempt!
+
+    """최근 퀴즈 시도 기록 가져오기 (이어서 풀기로 결정했을 때 사용)"""
+    getLatestQuizzesAttempt(
+        userCollectionAttemptId: ID!
+    ) : [UserQuizAttempt!]!
 }
 
 """정렬 조건"""

@@ -3,6 +3,7 @@ type User {
     id: ID
     email: String
     nickname: String
+    imgUrl: String
     oAuthProvider: OAuthProvider
     isDeleted: Boolean
     createdAt: String

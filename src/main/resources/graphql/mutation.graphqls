@@ -51,6 +51,10 @@ type Mutation {
     """유저 탈퇴"""
     deleteUser : String
 
+    """최신 시도 기록 삭제하기"""
+    deleteRecentAttempt(
+        userCollectionAttemptId: ID!
+    ) : String
 }
 
 input QuizResultInput {
