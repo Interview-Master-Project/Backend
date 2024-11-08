@@ -29,4 +29,5 @@ public class QuizWithAttemptsResolver {
     return quizRepository.getQuizzesByCollectionIdWithAttempts(collectionId, userId);
   }
 
+
 }

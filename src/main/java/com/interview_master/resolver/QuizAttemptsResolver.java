@@ -3,8 +3,8 @@ package com.interview_master.resolver;
 import static com.interview_master.util.GraphQLAuthUtils.validateUserAuthContext;
 
 import com.interview_master.domain.userquizattempt.UserQuizAttempt;
-import com.interview_master.service.UserQuizAttemptService;
 import com.interview_master.dto.QuizGarden;
+import com.interview_master.service.UserQuizAttemptService;
 import java.time.LocalDate;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -36,5 +36,14 @@ public class QuizAttemptsResolver {
     validateUserAuthContext(userId, authError);
 
     return userQuizAttemptService.getUserQuizAttempts(quizId, userId);
+  }
+
+  @QueryMapping
+  public List<UserQuizAttempt> getLatestQuizzesAttempt(@Argument Long userCollectionAttemptId,
+      @ContextValue(required = false) Long userId,
+      @ContextValue(name = "authError", required = false) String authError) {
+    validateUserAuthContext(userId, authError);
+    return userQuizAttemptService.getQuizzesAttemptsByCollectionAttempt(userCollectionAttemptId,
+        userId);
   }
 }
