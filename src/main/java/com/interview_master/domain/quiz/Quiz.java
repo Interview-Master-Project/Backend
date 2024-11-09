@@ -29,7 +29,6 @@ public class Quiz extends BaseEntity {
   @Column(columnDefinition = "TEXT")
   private String answer;
 
-
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "collection_id")
   private Collection collection;

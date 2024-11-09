@@ -28,4 +28,12 @@ public interface QuizRepository extends Repository<Quiz, Long>, QuizRepositoryCu
       @Param("collectionId") Long collectionId,
       @Param("userId") Long userId
   );
+
+  /**
+   * user들이 생성한 퀴즈들 모두 삭제
+   */
+  int deleteByCreatorIdIn(List<Long> userIds);
+
+  // deleteUserScheduler 테스트 용 쿼리
+  List<Quiz> findByCreatorId(Long userId);
 }

@@ -56,4 +56,12 @@ public interface CollectionRepository extends Repository<Collection, Long>, Coll
   @Override
   Page<CollectionWithAttempt> searchCollectionsForAuthUser(List<Long> categoryIds, List<String> keywords,
       Integer maxCorrectRate, Pageable pageable, Long userId);
+
+  /**
+   * user들이 생성한 컬렉션들 모두 삭제
+   */
+  int deleteByCreatorIdIn(List<Long> userIds);
+
+  // deleteUserScheduler 테스트 용 쿼리
+  List<Collection> findByCreatorId(Long userId);
 }
