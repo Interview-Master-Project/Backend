@@ -40,7 +40,7 @@ public class DeleteUserScheduler {
     }
 
     // 2. CollectionAttempt 삭제 (QuizAttempt도 자동 삭제)
-    int deletedCollectionAttempts = userCollectionAttemptRepository.deleteByUserIdIn(deleteUserIds);
+    int deletedCollectionAttempts = userCollectionAttemptRepository.deleteAllByUserIdIn(deleteUserIds);
     log.info("==================== Collection Attempt 삭제 완료 : {} 건", deletedCollectionAttempts);
 
     // 3. quiz들 삭제
