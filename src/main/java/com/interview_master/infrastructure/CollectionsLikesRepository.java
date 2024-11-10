@@ -14,7 +14,12 @@ public interface CollectionsLikesRepository extends JpaRepository<CollectionsLik
   /**
    * user들이 생성한 좋아요 기록 모두 삭제
    */
-  int deleteByUserIdIn(List<Long> userIds);
+  int deleteAllByUserIdIn(List<Long> userIds);
+
+  /**
+   * collection에 관련된 좋아요 기록 모두 삭제
+   */
+  int deleteAllByCollectionIdIn(List<Long> collectionIds);
 
   // deleteUserScheduler 테스트 용 쿼리
   List<CollectionsLikes> findByUserId(Long userId);

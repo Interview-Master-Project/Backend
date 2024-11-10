@@ -115,7 +115,7 @@ class DeleteUserSchedulerTest {
 
     // then
     // 모든 데이터가 삭제되었는지 확인
-    assertThat(userRepository.findByIsDeletedTrue()).isEmpty();
+    assertThat(userRepository.findIdsByIsDeletedTrue()).isEmpty();
     assertThat(collectionRepository.findByCreatorId(deletedUser.getId())).isEmpty();
     assertThat(quizRepository.findByCreatorId(deletedUser.getId())).isEmpty();
     assertThat(collectionsLikesRepository.findByUserId(deletedUser.getId())).isEmpty();

@@ -34,6 +34,11 @@ public interface QuizRepository extends Repository<Quiz, Long>, QuizRepositoryCu
    */
   int deleteByCreatorIdIn(List<Long> userIds);
 
+  /**
+   * 컬렉션들에 속한 퀴즈들 모두 삭제
+   */
+  int deleteAllByCollectionIdIn(List<Long> collectionIds);
+
   // deleteUserScheduler 테스트 용 쿼리
   List<Quiz> findByCreatorId(Long userId);
 }

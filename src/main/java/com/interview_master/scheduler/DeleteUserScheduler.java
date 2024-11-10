@@ -1,6 +1,5 @@
 package com.interview_master.scheduler;
 
-import com.interview_master.domain.user.User;
 import com.interview_master.infrastructure.CollectionRepository;
 import com.interview_master.infrastructure.CollectionsLikesRepository;
 import com.interview_master.infrastructure.QuizRepository;
@@ -29,10 +28,9 @@ public class DeleteUserScheduler {
   @Transactional
   public void scheduleUserDataCleanup() {
     log.info("==================== 탈퇴 유저 삭제 스케줄링 시작 ====================");
+
     // 1. 삭제할 유저의 id 리스트 가져오기
-    List<Long> deleteUserIds = userRepository.findByIsDeletedTrue().stream()
-        .map(User::getId)
-        .toList();
+    List<Long> deleteUserIds = userRepository.findIdsByIsDeletedTrue();
     log.info("==================== 삭제 대상 유저 ID 목록 : {}", deleteUserIds);
 
     // 삭제할 유저 없으면 종료
@@ -50,11 +48,11 @@ public class DeleteUserScheduler {
     log.info("==================== Quiz 삭제 완료 : {} 건", deletedQuizzes);
 
     // 4. 좋아요 기록 삭제
-    int deletedLikes = collectionsLikesRepository.deleteByUserIdIn(deleteUserIds);
+    int deletedLikes = collectionsLikesRepository.deleteAllByUserIdIn(deleteUserIds);
     log.info("==================== 좋아요 기록 삭제 완료 : {} 건", deletedLikes);
 
     // 5. 컬렉션 삭제
-    int deletedCollections = collectionRepository.deleteByCreatorIdIn(deleteUserIds);
+    int deletedCollections = collectionRepository.deleteAllByCreatorIdIn(deleteUserIds);
     log.info("==================== Collection 기록 삭제 완료 : {} 건", deletedCollections);
 
     // 6. 유저 삭제
