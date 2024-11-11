@@ -2,7 +2,6 @@ package com.interview_master.scheduler;
 
 import com.interview_master.infrastructure.CollectionRepository;
 import com.interview_master.infrastructure.QuizRepository;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;

@@ -39,7 +39,13 @@ public interface UserQuizAttemptRepository extends JpaRepository<UserQuizAttempt
       + "and isCorrect = true")
   int countCorrectAttempts(@Param("ucaId") Long collectionAttemptId, @Param("userId") Long userId);
 
-  List<UserQuizAttempt> findAllByQuizIdAndUserIdOrderByAnsweredAtDesc(Long quizId, Long userId);
+  @Query("select uqa from UserQuizAttempt uqa "
+      + "where uqa.quiz.id = :quizId "
+      + "and uqa.user.id = :userId "
+      + "and uqa.quiz.isDeleted = false "
+      + "and uqa.quiz.collection.isDeleted = false "
+      + "order by uqa.answeredAt desc")
+  List<UserQuizAttempt> findAllByQuizIdAndUserIdOrderByAnsweredAtDesc(@Param("quizId") Long quizId, @Param("userId") Long userId);
 
   List<UserQuizAttempt> findAllByCollectionAttemptIdAndUserIdOrderByQuizId(Long collectionAttemptId,
       Long userId);
