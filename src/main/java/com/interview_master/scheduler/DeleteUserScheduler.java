@@ -1,8 +1,6 @@
 package com.interview_master.scheduler;
 
-import com.interview_master.infrastructure.CollectionRepository;
 import com.interview_master.infrastructure.CollectionsLikesRepository;
-import com.interview_master.infrastructure.QuizRepository;
 import com.interview_master.infrastructure.UserCollectionAttemptRepository;
 import com.interview_master.infrastructure.UserQuizAttemptRepository;
 import com.interview_master.infrastructure.UserRepository;
@@ -21,9 +19,7 @@ public class DeleteUserScheduler {
   private final UserRepository userRepository;
   private final UserCollectionAttemptRepository userCollectionAttemptRepository;
   private final UserQuizAttemptRepository userQuizAttemptRepository;
-  private final QuizRepository quizRepository;
   private final CollectionsLikesRepository collectionsLikesRepository;
-  private final CollectionRepository collectionRepository;
 
   // 매달 1일 새벽 4시에 탈퇴 유저와 연관된 데이터들 모두 삭제
   @Scheduled(cron = "0 0 4 1 * *", zone = "Asia/Seoul")
