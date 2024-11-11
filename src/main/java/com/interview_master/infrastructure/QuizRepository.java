@@ -21,7 +21,9 @@ public interface QuizRepository extends Repository<Quiz, Long>, QuizRepositoryCu
       "MAX(uqa.answeredAt)) " +
       "FROM Quiz q " +
       "LEFT JOIN UserQuizAttempt uqa ON q.id = uqa.quiz.id AND uqa.user.id = :userId " +
-      "WHERE q.collection.id = :collectionId AND q.isDeleted = false " +
+      "WHERE q.collection.id = :collectionId "
+      + "AND q.collection.isDeleted = false "
+      + "AND q.isDeleted = false " +
       "GROUP BY q.id, q.question " +
       "ORDER BY q.id DESC")
   List<QuizWithAttempt> getQuizzesByCollectionIdWithAttempts(
