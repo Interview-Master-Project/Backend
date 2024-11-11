@@ -17,7 +17,7 @@ public class DeleteQuizScheduler {
   private final CollectionRepository collectionRepository;
 
   // 매일 새벽 4시에 soft delete된 퀴즈들과 퀴즈 시도 기록 삭제
-  @Scheduled(cron = "0 0 4 * * *", zone = "Asia/Seoul")
+  @Scheduled(cron = "0 30 3 * * *", zone = "Asia/Seoul")
   @Transactional
   public void scheduleQuizDataCleanup() {
     log.info("==================== 퀴즈 삭제 스케줄링 시작 ====================");

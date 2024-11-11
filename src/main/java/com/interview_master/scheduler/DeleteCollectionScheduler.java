@@ -24,7 +24,7 @@ public class DeleteCollectionScheduler {
   private final CollectionRepository collectionRepository;
 
   // 매일 새벽 3시 30분에 soft delete된 컬렉션들과 연관된 데이터들 모두 삭제
-  @Scheduled(cron = "0 30 3 * * *", zone = "Asia/Seoul")
+  @Scheduled(cron = "0 0 3 * * *", zone = "Asia/Seoul")
   @Transactional
   public void scheduleCollectionDataCleanup() {
     log.info("==================== 컬렉션 삭제 스케줄링 시작 ====================");
