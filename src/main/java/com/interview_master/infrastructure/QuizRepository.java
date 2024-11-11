@@ -31,10 +31,15 @@ public interface QuizRepository extends Repository<Quiz, Long>, QuizRepositoryCu
       @Param("userId") Long userId
   );
 
+  @Query("select q.id from Quiz q where q.isDeleted = true")
+  List<Long> findIdsByIsDeletedTrue();
+
   /**
    * user들이 생성한 퀴즈들 모두 삭제
    */
   int deleteByCreatorIdIn(List<Long> userIds);
+
+  int deleteAllByIdIn(List<Long> quizIds);
 
   /**
    * 컬렉션들에 속한 퀴즈들 모두 삭제

@@ -66,6 +66,8 @@ public interface UserQuizAttemptRepository extends JpaRepository<UserQuizAttempt
       + "where uqa.collectionAttempt.collection.id in :collectionIds")
   int deleteAllByCollectionIdIn(@Param("collectionIds") List<Long> collectionIds);
 
+  int deleteAllByQuizIdIn(List<Long> quizIds);
+
   /**
    * 유저 탈퇴로 인한 시도 기록 익명 처리
    */
