@@ -44,6 +44,8 @@ public class QuizRepositoryImpl implements QuizRepositoryCustom {
 
     whereClause.and(quiz.isDeleted.eq(false));
 
+    whereClause.and(quiz.collection.isDeleted.eq(false));
+
     whereClause.and(
         quiz.creator.id.eq(userId)
             .or(quiz.collection.access.eq(Access.PUBLIC))
