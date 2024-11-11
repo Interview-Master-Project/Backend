@@ -19,8 +19,6 @@ public interface UserCollectionAttemptRepository extends Repository<UserCollecti
 
   void deleteByIdAndUserId(Long id, Long userId);
 
-  int deleteAllByUserIdIn(List<Long> userIds);
-
   int deleteAllByCollectionIdIn(List<Long> collectionIds);
 
   List<UserCollectionAttempt> findByUserId(Long userId);
