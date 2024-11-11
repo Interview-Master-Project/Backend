@@ -4,13 +4,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.interview_master.domain.Access;
 import com.interview_master.domain.collection.Collection;
-import com.interview_master.domain.collectionlike.CollectionsLikes;
 import com.interview_master.domain.quiz.Quiz;
 import com.interview_master.domain.user.User;
 import com.interview_master.domain.usercollectionattempt.UserCollectionAttempt;
 import com.interview_master.domain.userquizattempt.UserQuizAttempt;
 import com.interview_master.infrastructure.CollectionRepository;
-import com.interview_master.infrastructure.CollectionsLikesRepository;
 import com.interview_master.infrastructure.QuizRepository;
 import com.interview_master.infrastructure.UserCollectionAttemptRepository;
 import com.interview_master.infrastructure.UserQuizAttemptRepository;
@@ -23,10 +21,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class DeleteCollectionSchedulerTest {
+class DeleteQuizSchedulerTest {
 
   @Autowired
-  private DeleteCollectionScheduler deleteCollectionScheduler;
+  private DeleteQuizScheduler deleteQuizScheduler;
 
   @Autowired
   private UserRepository userRepository;
@@ -38,20 +36,17 @@ class DeleteCollectionSchedulerTest {
   private QuizRepository quizRepository;
 
   @Autowired
-  private CollectionsLikesRepository collectionsLikesRepository;
-
-  @Autowired
   private UserCollectionAttemptRepository userCollectionAttemptRepository;
 
   @Autowired
   private UserQuizAttemptRepository userQuizAttemptRepository;
 
   @Test
-  void scheduleCollectionDataCleanupTest() {
+  void scheduleQuizDataCleanupTest() {
     // given
     // 1. 탈퇴 유저 생성
     User deletedUser = User.builder()
-        .nickname("탈퇴예정유저_컬렉션삭제스케줄러")
+        .nickname("탈퇴예정유저_퀴즈삭제스케줄러")
         .email("deleted@test.com")
         .imgUrl("http://test.com/img.jpg")
         .oAuthProvider(OAuthProvider.NAVER)
@@ -68,7 +63,7 @@ class DeleteCollectionSchedulerTest {
         .creator(deletedUser)
         .access(Access.PUBLIC)
         .build();
-    collection.markDeleted();
+    collection.markDeleted(); //테스트 데이터니깐 나중에 컬렉션삭제 스케줄러를 통해 삭제될 수 있도록 soft delete 처리
     collectionRepository.save(collection);
 
     // 3. Quiz 생성
@@ -79,15 +74,8 @@ class DeleteCollectionSchedulerTest {
         .creator(deletedUser)
         .access(Access.PUBLIC)
         .build();
+    quiz.markDeleted();
     quizRepository.save(quiz);
-
-    // 4. Collection 좋아요 생성
-    CollectionsLikes collectionsLikes = CollectionsLikes.builder()
-        .collection(collection)
-        .user(deletedUser)
-        .createdAt(LocalDateTime.now())
-        .build();
-    collectionsLikesRepository.save(collectionsLikes);
 
     // 5. Collection Attempt 생성
     UserCollectionAttempt collectionAttempt = UserCollectionAttempt.builder()
@@ -111,15 +99,12 @@ class DeleteCollectionSchedulerTest {
     userQuizAttemptRepository.save(quizAttempt);
 
     // when
-    deleteCollectionScheduler.scheduleCollectionDataCleanup();
+    deleteQuizScheduler.scheduleQuizDataCleanup();
 
     // then
-    // 모든 데이터가 삭제되었는지 확인
-    assertThat(collectionRepository.findIdsByIsDeletedTrue()).isEmpty();
-    assertThat(quizRepository.deleteAllByCollectionIdIn(List.of(collection.getId()))).isEqualTo(0);
-    assertThat(collectionsLikesRepository.deleteAllByCollectionIdIn(
-        List.of(collection.getId()))).isEqualTo(0);
-    assertThat(userCollectionAttemptRepository.deleteAllByCollectionIdIn(
-        List.of(collection.getId()))).isEqualTo(0);
+    // 퀴즈와 퀴즈 시도 기록 삭제되었는지 확인
+    assertThat(quizRepository.deleteAllByIdIn(List.of(quiz.getId()))).isEqualTo(0);
+    assertThat(userQuizAttemptRepository.deleteAllByQuizIdIn(
+        List.of(quiz.getId()))).isEqualTo(0);
   }
 }

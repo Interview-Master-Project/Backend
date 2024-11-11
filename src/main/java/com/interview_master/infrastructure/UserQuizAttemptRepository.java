@@ -74,4 +74,7 @@ public interface UserQuizAttemptRepository extends JpaRepository<UserQuizAttempt
   @Modifying
   @Query("update UserQuizAttempt qa set qa.user.id = 0L where qa.user.id in :userIds")
   int anonymizedByUserIdIn(@Param("userIds") List<Long> userIds);
+
+  // 탈퇴유저 삭제 스케줄러 테스트를 위한 쿼리
+  List<UserQuizAttempt> findByUserId(Long userId);
 }

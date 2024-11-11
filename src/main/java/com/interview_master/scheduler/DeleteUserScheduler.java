@@ -49,7 +49,7 @@ public class DeleteUserScheduler {
     int deletedLikes = collectionsLikesRepository.deleteAllByUserIdIn(deleteUserIds);
     log.info("==================== 좋아요 기록 삭제 완료 : {} 건", deletedLikes);
 
-    // 6. 유저 삭제
+    // 유저 삭제
     int deletedUsers = userRepository.deleteByIdIn(deleteUserIds);
     log.info("==================== User 기록 삭제 완료 : {} 건", deletedUsers);
 
