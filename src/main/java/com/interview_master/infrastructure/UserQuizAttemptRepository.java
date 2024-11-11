@@ -45,8 +45,18 @@ public interface UserQuizAttemptRepository extends JpaRepository<UserQuizAttempt
       + "and uqa.quiz.isDeleted = false "
       + "and uqa.quiz.collection.isDeleted = false "
       + "order by uqa.answeredAt desc")
-  List<UserQuizAttempt> findAllByQuizIdAndUserIdOrderByAnsweredAtDesc(@Param("quizId") Long quizId, @Param("userId") Long userId);
+  List<UserQuizAttempt> findAllByQuizIdAndUserIdOrderByAnsweredAtDesc(@Param("quizId") Long quizId,
+      @Param("userId") Long userId);
 
-  List<UserQuizAttempt> findAllByCollectionAttemptIdAndUserIdOrderByQuizId(Long collectionAttemptId,
-      Long userId);
+
+  @Query("SELECT uqa FROM UserQuizAttempt uqa " +
+      "WHERE uqa.collectionAttempt.id = :collectionAttemptId " +
+      "AND uqa.user.id = :userId " +
+      "AND uqa.quiz.isDeleted = false " +
+      "AND uqa.quiz.collection.isDeleted = false " +
+      "ORDER BY uqa.quiz.id")
+  List<UserQuizAttempt> findAllByCollectionAttemptIdAndUserIdOrderByQuizId(
+      @Param("collectionAttemptId") Long collectionAttemptId,
+      @Param("userId") Long userId
+  );
 }
