@@ -5,6 +5,7 @@ import com.interview_master.dto.QuizLog;
 import java.time.LocalDate;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
@@ -39,8 +40,41 @@ public interface UserQuizAttemptRepository extends JpaRepository<UserQuizAttempt
       + "and isCorrect = true")
   int countCorrectAttempts(@Param("ucaId") Long collectionAttemptId, @Param("userId") Long userId);
 
-  List<UserQuizAttempt> findAllByQuizIdAndUserIdOrderByAnsweredAtDesc(Long quizId, Long userId);
+  @Query("select uqa from UserQuizAttempt uqa "
+      + "where uqa.quiz.id = :quizId "
+      + "and uqa.user.id = :userId "
+      + "and uqa.quiz.isDeleted = false "
+      + "and uqa.quiz.collection.isDeleted = false "
+      + "order by uqa.answeredAt desc")
+  List<UserQuizAttempt> findAllByQuizIdAndUserIdOrderByAnsweredAtDesc(@Param("quizId") Long quizId,
+      @Param("userId") Long userId);
 
-  List<UserQuizAttempt> findAllByCollectionAttemptIdAndUserIdOrderByQuizId(Long collectionAttemptId,
-      Long userId);
+
+  @Query("SELECT uqa FROM UserQuizAttempt uqa " +
+      "WHERE uqa.collectionAttempt.id = :collectionAttemptId " +
+      "AND uqa.user.id = :userId " +
+      "AND uqa.quiz.isDeleted = false " +
+      "AND uqa.quiz.collection.isDeleted = false " +
+      "ORDER BY uqa.quiz.id")
+  List<UserQuizAttempt> findAllByCollectionAttemptIdAndUserIdOrderByQuizId(
+      @Param("collectionAttemptId") Long collectionAttemptId,
+      @Param("userId") Long userId
+  );
+
+  @Modifying
+  @Query("delete from UserQuizAttempt uqa "
+      + "where uqa.collectionAttempt.collection.id in :collectionIds")
+  int deleteAllByCollectionIdIn(@Param("collectionIds") List<Long> collectionIds);
+
+  int deleteAllByQuizIdIn(List<Long> quizIds);
+
+  /**
+   * 유저 탈퇴로 인한 시도 기록 익명 처리
+   */
+  @Modifying
+  @Query("update UserQuizAttempt qa set qa.user.id = 0L where qa.user.id in :userIds")
+  int anonymizedByUserIdIn(@Param("userIds") List<Long> userIds);
+
+  // 탈퇴유저 삭제 스케줄러 테스트를 위한 쿼리
+  List<UserQuizAttempt> findByUserId(Long userId);
 }

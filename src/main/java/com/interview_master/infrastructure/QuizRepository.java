@@ -21,11 +21,31 @@ public interface QuizRepository extends Repository<Quiz, Long>, QuizRepositoryCu
       "MAX(uqa.answeredAt)) " +
       "FROM Quiz q " +
       "LEFT JOIN UserQuizAttempt uqa ON q.id = uqa.quiz.id AND uqa.user.id = :userId " +
-      "WHERE q.collection.id = :collectionId AND q.isDeleted = false " +
+      "WHERE q.collection.id = :collectionId "
+      + "AND q.collection.isDeleted = false "
+      + "AND q.isDeleted = false " +
       "GROUP BY q.id, q.question " +
       "ORDER BY q.id DESC")
   List<QuizWithAttempt> getQuizzesByCollectionIdWithAttempts(
       @Param("collectionId") Long collectionId,
       @Param("userId") Long userId
   );
+
+  @Query("select q.id from Quiz q where q.isDeleted = true")
+  List<Long> findIdsByIsDeletedTrue();
+
+  /**
+   * user들이 생성한 퀴즈들 모두 삭제
+   */
+  int deleteByCreatorIdIn(List<Long> userIds);
+
+  int deleteAllByIdIn(List<Long> quizIds);
+
+  /**
+   * 컬렉션들에 속한 퀴즈들 모두 삭제
+   */
+  int deleteAllByCollectionIdIn(List<Long> collectionIds);
+
+  // deleteUserScheduler 테스트 용 쿼리
+  List<Quiz> findByCreatorId(Long userId);
 }
