@@ -11,7 +11,6 @@ public interface UserRepository extends Repository<User, Long> {
 
   User save(User user);
 
-  Optional<User> findById(Long userId);
 
   Optional<User> findByEmailAndIsDeletedFalse(String email);
 
@@ -21,4 +20,9 @@ public interface UserRepository extends Repository<User, Long> {
   List<Long> findIdsByIsDeletedTrue();
 
   int deleteByIdIn(List<Long> userIds);
+
+  /**
+   * 테스트 용
+   */
+  Optional<User> findById(Long userId);
 }
