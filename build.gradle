@@ -34,9 +34,11 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-validation'
     implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
 
-//    implementation "com.netflix.graphql.dgs:graphql-dgs-spring-boot-starter:latest.release"
-//    implementation "name.nkonev.multipart-spring-graphql:multipart-spring-graphql:1.+"
     implementation 'com.graphql-java:graphql-java-extended-scalars:22.0'
+
+    // kafka
+    implementation 'org.springframework.kafka:spring-kafka'
+    testImplementation 'org.springframework.kafka:spring-kafka-test'
 
     compileOnly 'org.projectlombok:lombok'
     runtimeOnly 'org.postgresql:postgresql'

@@ -10,6 +10,7 @@ import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Lock;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.Repository;
 import org.springframework.data.repository.query.Param;
@@ -72,4 +73,8 @@ public interface CollectionRepository extends Repository<Collection, Long>, Coll
 
   @Query("select c.id from Collection c where c.isDeleted = true")
   List<Long> findIdsByIsDeletedTrue();
+
+  @Modifying
+  @Query("update Collection c set c.isDeleted = true where c.creator.id = :userId")
+  int softDeleteAllByUserId(@Param("userId") Long userId);
 }

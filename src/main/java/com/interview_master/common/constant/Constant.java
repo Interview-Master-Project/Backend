@@ -17,6 +17,14 @@ public class Constant {
   public static final String SORT_LATEST = "createdAt";
 
   public static final String SORT_LOWACCURACY = "accuracy";
+
   public static final String SORT_MOSTLIKED = "liked";
 
+  // kafka
+  public static final String USER_DELETE_TOPIC = "user-delete";
+  public static final String USER_GROUP_ID = "user";
+  public static final String COLLECTION_DELETE_TOPIC = "collection-delete";
+  public static final String COLLECTION_GROUP_ID = "collection";
+  public static final String QUIZ_DELETE_TOPIC = "quiz-delete";
+  public static final String QUIZ_GROUP_ID = "quiz";
 }
