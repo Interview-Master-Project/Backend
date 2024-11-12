@@ -2,7 +2,6 @@ package com.interview_master.service;
 
 import static com.interview_master.common.constant.Constant.USER_DELETE_TOPIC;
 
-import com.interview_master.common.constant.Constant;
 import com.interview_master.common.exception.ApiException;
 import com.interview_master.common.exception.ErrorCode;
 import com.interview_master.domain.user.User;
