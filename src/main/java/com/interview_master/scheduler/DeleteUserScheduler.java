@@ -22,7 +22,8 @@ public class DeleteUserScheduler {
   private final CollectionsLikesRepository collectionsLikesRepository;
 
   // 매달 1일 새벽 4시에 탈퇴 유저와 연관된 데이터들 모두 삭제
-  @Scheduled(cron = "0 0 4 1 * *", zone = "Asia/Seoul")
+  // TODO : 0 0 4 1 * * 로 수정하기
+  @Scheduled(cron = "0 0 4 * * *", zone = "Asia/Seoul")
   @Transactional
   public void scheduleUserDataCleanup() {
     log.info("==================== 탈퇴 유저 삭제 스케줄링 시작 ====================");
