@@ -2,6 +2,7 @@ package com.interview_master.infrastructure;
 
 import com.interview_master.domain.quiz.Quiz;
 import com.interview_master.dto.QuizWithAttempt;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.Repository;
 import org.springframework.data.repository.query.Param;
@@ -48,4 +49,8 @@ public interface QuizRepository extends Repository<Quiz, Long>, QuizRepositoryCu
 
   // deleteUserScheduler 테스트 용 쿼리
   List<Quiz> findByCreatorId(Long userId);
+
+  @Modifying
+  @Query("update Quiz q set q.isDeleted = true where q.creator.id = :userId")
+  int softDeleteAllByUserId(@Param("userId") Long userId);
 }
