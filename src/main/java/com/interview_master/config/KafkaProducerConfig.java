@@ -3,7 +3,6 @@ package com.interview_master.config;
 import com.interview_master.domain.collection.Collection;
 import com.interview_master.domain.quiz.Quiz;
 import com.interview_master.domain.user.User;
-import com.nimbusds.jose.shaded.gson.JsonSerializer;
 import java.util.HashMap;
 import java.util.Map;
 import org.apache.kafka.clients.producer.ProducerConfig;
@@ -14,11 +13,12 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.kafka.core.DefaultKafkaProducerFactory;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.core.ProducerFactory;
+import org.springframework.kafka.support.serializer.JsonSerializer;
 
 @Configuration
 public class KafkaProducerConfig {
 
-  @Value("${kafka.boostrap.servers}")
+  @Value("${kafka.bootstrap.servers}")
   private String bootStrapServers;
 
   @Bean

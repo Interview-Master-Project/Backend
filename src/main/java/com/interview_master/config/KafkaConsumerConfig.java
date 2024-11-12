@@ -23,7 +23,7 @@ import org.springframework.kafka.support.serializer.JsonDeserializer;
 @Configuration
 public class KafkaConsumerConfig {
 
-  @Value("${kafka.boostrap.servers")
+  @Value("${kafka.bootstrap.servers}")
   private String bootstrapServers;
 
   @Bean

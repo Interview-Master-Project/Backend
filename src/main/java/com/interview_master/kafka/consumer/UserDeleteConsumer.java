@@ -11,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 @Component
 @RequiredArgsConstructor
@@ -20,7 +21,8 @@ public class UserDeleteConsumer {
   private final CollectionRepository collectionRepository;
   private final QuizRepository quizRepository;
 
-  @KafkaListener(topics = USER_DELETE_TOPIC, groupId = USER_GROUP_ID, containerFactory = "userDeleteConsumerFactory")
+  @KafkaListener(topics = USER_DELETE_TOPIC, groupId = USER_GROUP_ID, containerFactory = "userDeleteKafkaListenerContainerFactory")
+  @Transactional
   public void userDelete(@Payload User dUser) {
     log.info("========== [Consumer] 유저 탈퇴 비동기 처리 메시지 수행 ==========");
     // 유저가 만든 collection들 soft delete
