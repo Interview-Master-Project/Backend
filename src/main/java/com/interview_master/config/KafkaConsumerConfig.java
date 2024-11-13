@@ -10,6 +10,7 @@ import com.interview_master.domain.user.User;
 import java.util.HashMap;
 import java.util.Map;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
+import org.apache.kafka.common.serialization.LongDeserializer;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -45,6 +46,21 @@ public class KafkaConsumerConfig {
     Map<String, Object> configProps = getConfigProps(QUIZ_GROUP_ID);
     return new DefaultKafkaConsumerFactory<>(configProps, new StringDeserializer(),
         new JsonDeserializer<>(Quiz.class));
+  }
+
+  @Bean
+  public ConsumerFactory<String, Long> defaultConsumerFactory() {
+    Map<String, Object> configProps = getConfigProps(QUIZ_GROUP_ID);
+    return new DefaultKafkaConsumerFactory<>(configProps, new StringDeserializer(),
+        new LongDeserializer());
+  }
+
+  @Bean
+  public ConcurrentKafkaListenerContainerFactory<String, Long> defaultKafkaListenerContainerFactory() {
+    ConcurrentKafkaListenerContainerFactory<String, Long> factory = new ConcurrentKafkaListenerContainerFactory<>();
+    factory.setConsumerFactory(defaultConsumerFactory());
+
+    return factory;
   }
 
   @Bean
