@@ -1,5 +1,7 @@
 package com.interview_master.service;
 
+import static com.interview_master.common.constant.Constant.QUIZ_DELETE_TOPIC;
+
 import com.interview_master.common.exception.ApiException;
 import com.interview_master.common.exception.ErrorCode;
 import com.interview_master.domain.collection.Collection;
@@ -8,6 +10,7 @@ import com.interview_master.domain.user.User;
 import com.interview_master.infrastructure.CollectionRepository;
 import com.interview_master.infrastructure.QuizRepository;
 import com.interview_master.infrastructure.UserRepository;
+import com.interview_master.kafka.producer.QuizProducer;
 import com.interview_master.resolver.request.CreateQuizInput;
 import com.interview_master.resolver.request.EditQuizInput;
 import lombok.RequiredArgsConstructor;
@@ -22,6 +25,7 @@ public class UpsertQuizService {
   private final CollectionRepository collectionRepository;
   private final UserRepository userRepository;
 
+  private final QuizProducer quizProducer;
 
   @Transactional
   public Quiz saveQuiz(CreateQuizInput createQuizInput, Long userId) {
@@ -75,5 +79,7 @@ public class UpsertQuizService {
     quiz.isOwner(userId);
 
     quiz.markDeleted();
+
+    quizProducer.delete(QUIZ_DELETE_TOPIC, quiz.getId());
   }
 }

@@ -2,7 +2,6 @@ package com.interview_master.infrastructure;
 
 import com.interview_master.domain.userquizattempt.UserQuizAttempt;
 import com.interview_master.dto.QuizLog;
-import com.interview_master.dto.UpdateCollectionAttempts;
 import java.time.LocalDate;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -82,12 +81,5 @@ public interface UserQuizAttemptRepository extends JpaRepository<UserQuizAttempt
   /**
    * 퀴즈 삭제 후 컬렉션 시도 기록 수정을 위한 조회
    */
-  @Query("SELECT new com.interview_master.dto.UpdateCollectionAttempts(" +
-      "uqa.userCollectionAttempt.id, " +
-      "COUNT(uqa), " +
-      "COUNT(CASE WHEN uqa.isCorrect = true THEN 1 END)) " +
-      "FROM UserQuizAttempt uqa " +
-      "WHERE uqa.quizId = :quizId " +
-      "GROUP BY uqa.userCollectionAttempt.id")
-  List<UpdateCollectionAttempts> findAttemptCountsByQuizId(@Param("quizId") Long quizId);
+  List<UserQuizAttempt> findAllByQuizId(Long quizId);
 }
