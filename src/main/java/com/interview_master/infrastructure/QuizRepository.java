@@ -53,4 +53,8 @@ public interface QuizRepository extends Repository<Quiz, Long>, QuizRepositoryCu
   @Modifying
   @Query("update Quiz q set q.isDeleted = true where q.creator.id = :userId")
   int softDeleteAllByUserId(@Param("userId") Long userId);
+
+  @Modifying
+  @Query("update Quiz q set q.isDeleted = true where q.collection.id = :collectionId")
+  int softDeleteAllByCollectionId(@Param("collectionId") Long collectionId);
 }

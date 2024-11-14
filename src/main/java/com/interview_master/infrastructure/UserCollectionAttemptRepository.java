@@ -15,7 +15,8 @@ public interface UserCollectionAttemptRepository extends Repository<UserCollecti
   UserCollectionAttempt save(UserCollectionAttempt userCollectionAttempt);
 
   // 가장 최신 시도 기록 가져오기
-  Optional<UserCollectionAttempt> findFirstByCollectionIdAndUserIdOrderByStartedAtDesc(Long collectionId, Long userId);
+  Optional<UserCollectionAttempt> findFirstByCollectionIdAndUserIdOrderByStartedAtDesc(
+      Long collectionId, Long userId);
 
   void deleteByIdAndUserId(Long id, Long userId);
 
@@ -29,5 +30,13 @@ public interface UserCollectionAttemptRepository extends Repository<UserCollecti
   @Modifying
   @Query("update UserCollectionAttempt ca set ca.user.id = 0L where ca.user.id in :userIds")
   int anonymizedByUserIdIn(@Param("userIds") List<Long> userIds);
+
+  @Modifying
+  @Query("update UserCollectionAttempt ca "
+      + "set ca.totalQuizCount = ca.totalQuizCount - 1, "
+      + "ca.correctQuizCount = ca.correctQuizCount - :isCorrect "
+      + "where ca.id = :ucaId")
+  void updateTotalCountAndCorrectCount(@Param("ucaId") Long ucaId,
+      @Param("isCorrect") Integer isCorrect);
 
 }

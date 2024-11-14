@@ -77,4 +77,9 @@ public interface UserQuizAttemptRepository extends JpaRepository<UserQuizAttempt
 
   // 탈퇴유저 삭제 스케줄러 테스트를 위한 쿼리
   List<UserQuizAttempt> findByUserId(Long userId);
+
+  /**
+   * 퀴즈 삭제 후 컬렉션 시도 기록 수정을 위한 조회
+   */
+  List<UserQuizAttempt> findAllByQuizId(Long quizId);
 }
