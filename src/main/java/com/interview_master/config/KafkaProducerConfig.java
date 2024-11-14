@@ -6,6 +6,7 @@ import com.interview_master.domain.user.User;
 import java.util.HashMap;
 import java.util.Map;
 import org.apache.kafka.clients.producer.ProducerConfig;
+import org.apache.kafka.common.serialization.LongSerializer;
 import org.apache.kafka.common.serialization.StringSerializer;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -20,6 +21,21 @@ public class KafkaProducerConfig {
 
   @Value("${kafka.bootstrap.servers}")
   private String bootStrapServers;
+
+  @Bean
+  public ProducerFactory<String, Long> ProducerFactory() {
+    Map<String, Object> configProps = new HashMap<>();
+    configProps.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, bootStrapServers);
+    configProps.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
+    configProps.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, LongSerializer.class);
+
+    return new DefaultKafkaProducerFactory<>(configProps);
+  }
+
+  @Bean
+  public KafkaTemplate<String, Long> kafkaTemplate() {
+    return new KafkaTemplate<>(ProducerFactory());
+  }
 
   @Bean
   public ProducerFactory<String, User> userProducerFactory() {

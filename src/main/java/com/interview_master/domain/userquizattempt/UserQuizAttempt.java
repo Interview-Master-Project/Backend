@@ -33,7 +33,7 @@ public class UserQuizAttempt {
   @ManyToOne(fetch = FetchType.LAZY)
   private User user;
 
-  private boolean isCorrect;
+  private Boolean isCorrect;
 
   private LocalDateTime answeredAt;
 }

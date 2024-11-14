@@ -1,5 +1,6 @@
 package com.interview_master.service;
 
+import com.interview_master.common.constant.Constant;
 import com.interview_master.common.exception.ApiException;
 import com.interview_master.common.exception.ErrorCode;
 import com.interview_master.domain.category.Category;
@@ -10,6 +11,7 @@ import com.interview_master.infrastructure.CategoryRepository;
 import com.interview_master.infrastructure.CollectionRepository;
 import com.interview_master.infrastructure.CollectionsLikesRepository;
 import com.interview_master.infrastructure.UserRepository;
+import com.interview_master.kafka.producer.CollectionProducer;
 import com.interview_master.resolver.request.CreateCollectionReq;
 import com.interview_master.resolver.request.EditCollectionReq;
 import com.interview_master.util.ExtractUserId;
@@ -31,6 +33,7 @@ public class UpsertCollectionService {
   private final CategoryRepository categoryRepository;
   private final CollectionsLikesRepository collectionsLikesRepository;
 
+  private final CollectionProducer collectionProducer;
 
   public Collection saveCollection(CreateCollectionReq createCollectionReq) {
     // token의 userId 가져오기
@@ -100,6 +103,9 @@ public class UpsertCollectionService {
     collection.isOwner(userId);
 
     collection.markDeleted();
+
+    // 컬렉션에 속한 퀴즈들 삭제 처리를 위한 메시지 발행
+    collectionProducer.delete(Constant.COLLECTION_DELETE_TOPIC, collection.getId());
   }
 
   public void likeCollection(Long collectionId, Long userId) {
