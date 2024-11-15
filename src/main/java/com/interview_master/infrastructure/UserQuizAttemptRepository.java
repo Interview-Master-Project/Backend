@@ -82,4 +82,8 @@ public interface UserQuizAttemptRepository extends JpaRepository<UserQuizAttempt
    * 퀴즈 삭제 후 컬렉션 시도 기록 수정을 위한 조회
    */
   List<UserQuizAttempt> findAllByQuizId(Long quizId);
+
+  @Modifying
+  @Query("delete from UserQuizAttempt uqa where uqa.collectionAttempt.id = :dcaId")
+  int deleteAllByCollectionAttemptId(@Param("dcaId") Long dCollectionAttemptId);
 }
