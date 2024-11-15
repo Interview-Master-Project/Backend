@@ -18,7 +18,7 @@ public interface UserCollectionAttemptRepository extends Repository<UserCollecti
   Optional<UserCollectionAttempt> findFirstByCollectionIdAndUserIdOrderByStartedAtDesc(
       Long collectionId, Long userId);
 
-  void deleteByIdAndUserId(Long id, Long userId);
+  Optional<UserCollectionAttempt> findByIdAndUserId(Long id, Long userId);
 
   int deleteAllByCollectionIdIn(List<Long> collectionIds);
 
@@ -39,4 +39,7 @@ public interface UserCollectionAttemptRepository extends Repository<UserCollecti
   void updateTotalCountAndCorrectCount(@Param("ucaId") Long ucaId,
       @Param("isCorrect") Integer isCorrect);
 
+  @Modifying
+  @Query("delete from UserCollectionAttempt u where u.id = :id")
+  int deleteById(@Param("id") Long dCollectionAttemptId);
 }
