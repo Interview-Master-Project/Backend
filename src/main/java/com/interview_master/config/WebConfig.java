@@ -27,6 +27,7 @@ public class WebConfig implements WebMvcConfigurer {
             "https://interviewmaster.co.kr",
             "https://www.interviewmaster.co.kr",
             "https://api.interviewmaster.co.kr"
+
         )
         .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH")
         .allowedHeaders("*")
