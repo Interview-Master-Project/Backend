@@ -18,7 +18,7 @@ type Query {
         filter : Access,
     ): CollectionWithAttemptsPaging
 
-    """컬렉션에 속한 퀴즈들과 유저의 퀴즈 시도 정보"""
+    """컬렉션에 속한 퀴즈들과 유저의 퀴즈 시도 정보 (퀴즈 id순으로 오름차순 정렬)"""
     getQuizzesWithAttemptByCollectionId(
         collectionId: ID!
     ): [QuizWithAttempt!]!

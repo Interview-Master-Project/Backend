@@ -26,7 +26,7 @@ public interface QuizRepository extends Repository<Quiz, Long>, QuizRepositoryCu
       + "AND q.collection.isDeleted = false "
       + "AND q.isDeleted = false " +
       "GROUP BY q.id, q.question " +
-      "ORDER BY q.id DESC")
+      "ORDER BY q.id")
   List<QuizWithAttempt> getQuizzesByCollectionIdWithAttempts(
       @Param("collectionId") Long collectionId,
       @Param("userId") Long userId
