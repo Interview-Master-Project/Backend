@@ -31,10 +31,14 @@ public interface UserCollectionAttemptRepository extends Repository<UserCollecti
   @Query("update UserCollectionAttempt ca set ca.user.id = 0L where ca.user.id in :userIds")
   int anonymizedByUserIdIn(@Param("userIds") List<Long> userIds);
 
+  // 완료된 시도에 대해서만 시도 기록을 빼줘야 함
   @Modifying
   @Query("update UserCollectionAttempt ca "
       + "set ca.totalQuizCount = ca.totalQuizCount - 1, "
-      + "ca.correctQuizCount = ca.correctQuizCount - :isCorrect "
+      + "ca.correctQuizCount = CASE "
+      + "    WHEN ca.completedAt is not null THEN ca.correctQuizCount - :isCorrect "
+      + "    ELSE ca.correctQuizCount "
+      + "END "
       + "where ca.id = :ucaId")
   void updateTotalCountAndCorrectCount(@Param("ucaId") Long ucaId,
       @Param("isCorrect") Integer isCorrect);
