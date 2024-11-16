@@ -27,13 +27,12 @@ public class QuizDeleteConsumer {
   public void quizDelete(@Payload Long dQuizId) {
     log.info("========== [Consumer] 퀴즈 삭제 비동기 처리 메시지 수행 ==========");
 
-    log.info("========== 퀴즈 삭제로 인한 userCollectionAttempt 모두 수정 ==========");
-
     List<UserQuizAttempt> attemptsByQuizId = uqaRepository.findAllByQuizId(dQuizId);
     attemptsByQuizId.forEach(
         uqa -> ucaRepository.updateTotalCountAndCorrectCount(uqa.getCollectionAttempt().getId(),
             uqa.getIsCorrect() ? 1 : 0));
-    log.info("========== 컬렉션 삭제 비동기 처리 완료 ==========");
+    log.info("========== 퀴즈 삭제로 인한 userCollectionAttempt 모두 수정 ==========");
+    log.info("========== 퀴즈 삭제 비동기 처리 완료 ==========");
   }
 
 }
