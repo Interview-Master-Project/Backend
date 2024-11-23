@@ -1,5 +1,7 @@
 package com.interview_master.service;
 
+import static com.interview_master.common.constant.Constant.IMAGE_DELETE_TOPIC;
+
 import com.interview_master.common.constant.Constant;
 import com.interview_master.common.exception.ApiException;
 import com.interview_master.common.exception.ErrorCode;
@@ -12,8 +14,10 @@ import com.interview_master.infrastructure.CollectionRepository;
 import com.interview_master.infrastructure.CollectionsLikesRepository;
 import com.interview_master.infrastructure.UserRepository;
 import com.interview_master.kafka.producer.CollectionProducer;
+import com.interview_master.kafka.producer.ImageDeleteProducer;
 import com.interview_master.resolver.request.CreateCollectionReq;
 import com.interview_master.resolver.request.EditCollectionReq;
+import com.interview_master.resolver.response.EditCollectionRes;
 import com.interview_master.util.ExtractUserId;
 import java.time.LocalDateTime;
 import lombok.RequiredArgsConstructor;
@@ -34,6 +38,7 @@ public class UpsertCollectionService {
   private final CollectionsLikesRepository collectionsLikesRepository;
 
   private final CollectionProducer collectionProducer;
+  private final ImageDeleteProducer imageProducer;
 
   public Collection saveCollection(CreateCollectionReq createCollectionReq) {
     // token의 userId 가져오기
@@ -68,7 +73,7 @@ public class UpsertCollectionService {
     return collectionRepository.save(newCollection);
   }
 
-  public Collection editCollection(Long collectionId, EditCollectionReq editReq) {
+  public EditCollectionRes editCollection(Long collectionId, EditCollectionReq editReq) {
     Long userId = ExtractUserId.extractUserIdFromContextHolder();
 
     Collection collection = collectionRepository.findByIdAndIsDeletedFalse(collectionId)
@@ -80,7 +85,8 @@ public class UpsertCollectionService {
     // image 입력받았으면 기존 이미지 삭제하고 새로운 이미지 업로드
     String newImgUrl = null;
     if (editReq.getImage() != null) {
-      imageService.deleteImageFromBucket(collection.getImgUrl()); // 이미지 삭제 -> 비동기 처리 ..?
+      // 기존 이미지 삭제 -> 비동기 처리
+      imageProducer.delete(IMAGE_DELETE_TOPIC, collection.getImgUrl());
       newImgUrl = imageService.uploadImage(editReq.getImage());
     }
 
@@ -93,7 +99,7 @@ public class UpsertCollectionService {
     collection.edit(editReq.getNewName(), editReq.getNewDescription(), newImgUrl, newCategory,
         editReq.getNewAccess());
 
-    return collection;
+    return EditCollectionRes.from(collection);
   }
 
   public void deleteCollection(Long collectionId, Long userId) {
@@ -103,6 +109,9 @@ public class UpsertCollectionService {
     collection.isOwner(userId);
 
     collection.markDeleted();
+
+    // 컬렉션의 이미지 삭제를 위한 메시지 발행
+    if (collection.getImgUrl() != null) imageProducer.delete(IMAGE_DELETE_TOPIC, collection.getImgUrl());
 
     // 컬렉션에 속한 퀴즈들 삭제 처리를 위한 메시지 발행
     collectionProducer.delete(Constant.COLLECTION_DELETE_TOPIC, collection.getId());

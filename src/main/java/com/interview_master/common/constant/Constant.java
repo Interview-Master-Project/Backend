@@ -29,4 +29,6 @@ public class Constant {
   public static final String QUIZ_GROUP_ID = "quiz";
   public static final String COLLECTION_ATTEMPT_DELETE_TOPIC = "collectionAttempt-delete";
   public static final String COLLECTION_ATTEMPT_GROUP_ID = "collectionAttempt";
+  public static final String IMAGE_DELETE_TOPIC = "image-delete";
+  public static final String IMAGE_GROUP_ID = "image";
 }
