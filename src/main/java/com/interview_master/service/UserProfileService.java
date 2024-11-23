@@ -72,6 +72,8 @@ public class UserProfileService {
 
     user.markDeleted();
 
+    // user 이미지 삭제 비동기 처리
+    if (user.getImgUrl() != null) imageProducer.delete(IMAGE_DELETE_TOPIC, user.getImgUrl());
     // user 탈퇴 비동기 처리 메시지 발행
     userProducer.delete(USER_DELETE_TOPIC, user);
   }
