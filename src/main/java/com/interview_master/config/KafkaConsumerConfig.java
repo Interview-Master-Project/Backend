@@ -1,6 +1,7 @@
 package com.interview_master.config;
 
 import static com.interview_master.common.constant.Constant.COLLECTION_GROUP_ID;
+import static com.interview_master.common.constant.Constant.IMAGE_GROUP_ID;
 import static com.interview_master.common.constant.Constant.QUIZ_GROUP_ID;
 import static com.interview_master.common.constant.Constant.USER_GROUP_ID;
 
@@ -53,6 +54,21 @@ public class KafkaConsumerConfig {
     Map<String, Object> configProps = getConfigProps(QUIZ_GROUP_ID);
     return new DefaultKafkaConsumerFactory<>(configProps, new StringDeserializer(),
         new LongDeserializer());
+  }
+
+  @Bean
+  public ConsumerFactory<String, String> imageDeleteConsumerFactory() {
+    Map<String, Object> configProps = getConfigProps(IMAGE_GROUP_ID);
+    return new DefaultKafkaConsumerFactory<>(configProps, new StringDeserializer(),
+        new StringDeserializer());
+  }
+
+  @Bean
+  public ConcurrentKafkaListenerContainerFactory<String, String> imageDeleteKafkaListenerContainerFactory() {
+    ConcurrentKafkaListenerContainerFactory<String, String> factory = new ConcurrentKafkaListenerContainerFactory<>();
+    factory.setConsumerFactory(imageDeleteConsumerFactory());
+
+    return factory;
   }
 
   @Bean

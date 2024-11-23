@@ -1,5 +1,6 @@
 package com.interview_master.resolver;
 
+import com.interview_master.resolver.response.EditCollectionRes;
 import com.interview_master.service.UpsertCollectionService;
 import com.interview_master.domain.collection.Collection;
 import com.interview_master.resolver.request.CreateCollectionReq;
@@ -26,7 +27,7 @@ public class UpsertCollectionRestController {
   }
 
   @PatchMapping("/api/collections/{collectionId}")
-  public ResponseEntity<Collection> editCollection(@PathVariable Long collectionId,
+  public ResponseEntity<EditCollectionRes> editCollection(@PathVariable Long collectionId,
       @ModelAttribute EditCollectionReq editCollectionReq) {
 
     return ResponseEntity.ok(upsertCollectionService.editCollection(collectionId, editCollectionReq));
