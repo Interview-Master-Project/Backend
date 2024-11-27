@@ -7,4 +7,6 @@ public interface QuizLog {
   LocalDate getDate();
 
   Integer getQuizzesSolved();
+
+
 }
