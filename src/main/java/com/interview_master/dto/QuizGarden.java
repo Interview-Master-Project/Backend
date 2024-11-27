@@ -1,11 +1,10 @@
 package com.interview_master.dto;
 
+import java.time.LocalDate;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.time.LocalDate;
 
 @Data
 @NoArgsConstructor
@@ -15,6 +14,4 @@ public class QuizGarden {
 
   private LocalDate date;
   private Integer quizzesSolved;
-  private Integer dayIndex;
-  private Integer weekIndex;
 }

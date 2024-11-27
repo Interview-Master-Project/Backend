@@ -146,8 +146,6 @@ type QuizWithAttempt implements TotalAttempt {
 type QuizGarden {
     date: String
     quizzesSolved: Int
-    dayIndex: Int
-    weekIndex: Int
 }
 
 type CollectionPage {
